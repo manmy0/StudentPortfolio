@@ -1,0 +1,141 @@
+﻿@page
+@model StudentPortfolio.Pages.Goals.GoalsModel
+
+@{
+    ViewData["Title"] = "Goals";
+}
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Profile/Profile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Dashboard/Dashboard">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-page="/Goals/Goals">Goals</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Networking/Networking">Networking</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Competencies/Competencies">Competencies</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/CDL/CDL">CDL</a>
+    </li>
+</ul>
+
+<div class="input-container">
+    <h3>Date Range</h3>
+    <label for="fromInput">From:</label>
+    <input class="input" type="month" id="fromInput" name="from">
+
+    <label for="toInput">To:</label>
+    <input class="input" type="month" id="toInput" name="to">
+</div>
+
+<div class="info-container">
+    <label for="prof" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Professional Interests:</label>
+    <textarea class="form-control" id="prof" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.CDP[0].ProfessionalInterests</textarea>
+
+    <label for="emp" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Employers of interest:</label>
+    <textarea class="form-control" id="emp" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.CDP[0].EmployersOfInterest</textarea>
+    <div class="info-container">
+        <label for="per" style="display: inline-block; margin-right: 50px; margin-bottom: 20px; vertical-align: middle;">Personal Values:</label>
+        <textarea class="form-control" id="per" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.CDP[0].PersonalValues</textarea>
+
+        <label for="dev" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Development Focus for This Year:</label>
+        <textarea class="form-control" id="dev" rows="3" style="height: 20px; width: 1000px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.CDP[0].DevelopmentFocus</textarea>
+    </div>
+</div>
+
+<button class="btn btn-light">New Goal</button>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                SMART Goal
+            </th>
+            <th>
+                Action Steps
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Goal[0].Timeline)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Goal[0].Progress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Goal[0].Learnings)
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                End Date
+            </th>
+            <th>
+                Completed
+            </th>
+            <th>
+                Completion Notes
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+        @foreach (var item in Model.Goal)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+
+                <td>
+
+                    @foreach (var step in Model.GoalSteps.Where(s => s.GoalId == item.GoalId))
+                    {
+                        <ul>
+                            <li>
+                                @Html.DisplayFor(modelItem => step.Step)
+                            </li>
+                        </ul>
+
+                    }
+
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Timeline)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Progress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Learnings)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompleteDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompletionNotes)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.GoalId">Edit</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.GoalId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

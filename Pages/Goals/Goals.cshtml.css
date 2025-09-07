@@ -1,0 +1,24 @@
+﻿.input-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.input {
+    height: 30px;
+}
+
+.info-container {
+    gap: 30px;
+    align-items: center;
+}
+
+.nav {
+    margin-bottom: 10px;
+}
+
+.table {
+    margin-top: 20px;
+}
