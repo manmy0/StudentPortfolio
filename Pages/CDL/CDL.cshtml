@@ -1,0 +1,68 @@
+﻿@page
+@model StudentPortfolio.Pages.CDL.CDLModel
+
+@{
+    ViewData["Title"] = "CDL";
+}
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Profile/Profile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Dashboard/Dashboard">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Goals/Goals">Goals</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Networking/Networking">Networking</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Competencies/Competencies">Competencies</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-page="/CDL/CDL">CDL</a>
+    </li>
+</ul>
+
+<h3>CDL Learning Files</h3>
+
+<table class="table  table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Cdl[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cdl[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cdl[0].Link)
+            </th>
+            <th>
+                Date Uploaded
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Cdl)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Link)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastUpdated)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

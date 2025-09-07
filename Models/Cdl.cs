@@ -16,6 +16,7 @@ public partial class Cdl
 
     public string? Link { get; set; }
 
+    [DataType(DataType.Date)]
     public DateTime LastUpdated { get; set; }
 
 }
