@@ -1,0 +1,53 @@
+﻿.small-svg {
+    width: 150px; /* Set your desired width */
+    height: 150px; /* Set your desired height */
+    /* Or use max-width and height: auto for responsiveness */
+    /* max-width: 100%; */
+    /* height: auto; */
+}
+.container {
+    display: flex;
+    align-items: center; /* Vertically center items */
+}
+
+.svg {
+    margin-right: 10px; /* Space between SVG and text */
+}
+
+.my-box {
+    width: 500px; /* Sets the width of the box */
+    height: 200px; /* Sets the height of the box */
+    background-color: white; /* Sets the background color */
+    border: 2px solid black; /* Adds a border: width, style, color */
+    padding: 20px; /* Adds space between content and border */
+    margin: 10px; /* Adds space outside the border */
+    position: absolute;
+    top: 430px;
+    margin-right: 500px;
+}
+
+.my-box2 {
+    width: 500px; /* Sets the width of the box */
+    height: 200px; /* Sets the height of the box */
+    background-color: white; /* Sets the background color */
+    border: 2px solid black; /* Adds a border: width, style, color */
+    padding: 20px; /* Adds space between content and border */
+    margin: 10px; /* Adds space outside the border */
+    position: absolute;
+    top: 430px;
+    margin-right: 300px;
+    margin-left: 600px;
+}
+
+.my-box3 {
+    width: 500px; /* Sets the width of the box */
+    height: 200px; /* Sets the height of the box */
+    background-color: white; /* Sets the background color */
+    border: 2px solid black; /* Adds a border: width, style, color */
+    padding: 20px; /* Adds space between content and border */
+    margin: 10px; /* Adds space outside the border */
+    position: absolute;
+    top: 150px;
+    margin-right: 300px;
+    margin-left: 600px;
+}

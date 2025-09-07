@@ -1,0 +1,77 @@
+﻿@page
+@model StudentPortfolio.Pages.Profile.ProfileModel
+@{
+}
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-page="/Profile/Profile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Dashboard/Dashboard">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Goals/Goals">Goals</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Networking/Networking">Networking</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Competencies/Competencies">Competencies</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/CDL/CDL">CDL</a>
+    </li>
+</ul>
+
+
+<div class="container" style="margin-top: 50px; margin-right: 40px;">
+    <div class="mr-6">
+        <div class="container">
+            <svg class="small-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <div class="col">
+                <h1> @Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h1>
+                <p>@Model.CurrentUser.Specialisation</p>
+            </div>
+        </div>
+    </div>
+
+
+    <label for="box3" style="position: absolute; top: 130px; margin-right: 490px; margin-left: 600px;">My Links</label>
+    <div class="my-box3">
+        <div class="col">
+            <ul>
+                <li>
+                    <a href="@Model.CurrentUser.LinkedIn">LinkedIn</a>
+                </li>
+                <li>
+                    <a href="@Model.CurrentUser.Resume">Resume</a>
+                </li>
+                <li>
+                    <a href="@Model.CurrentUser.UserLinks">Supporting Documents</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <label for="box1" style="position: absolute; top: 410px; margin-right: 490px; margin-left: 10px;">Personal Information</label>
+    <div class="my-box" id="box1">
+        <p>@Model.CurrentUser.Introduction</p>
+    </div>
+
+    <label for="box2" style="position: absolute; top: 410px; margin-right: 200px; margin-left: 600px;">Upcoming Actions for Personal Development</label>
+    <div class="my-box2" id="box2">
+        <ul>
+            <li>
+                <p>Climb a tree.</p>
+            </li>
+        </ul>
+    </div>
+</div>
+
