@@ -1,0 +1,105 @@
+﻿@page
+@model StudentPortfolio.Pages.Competencies.CompetenciesModel
+
+@{
+    ViewData["Title"] = "Competencies";
+}
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Profile/Profile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Dashboard/Dashboard">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Goals/Goals">Goals</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Networking/Networking">Networking</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-page="/Competencies/Competencies">Competencies</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/CDL/CDL">CDL</a>
+    </li>
+</ul>
+
+<div class="input-container">
+    <h3>Date Range</h3>
+    <label for="fromInput">From:</label>
+    <input class="input" type="month" id="fromInput" name="startMonth">
+
+    <label for="toInput">To:</label>
+    <input class="input" type="month" id="toInput" name="endMonth">
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                Knowledge and Skill Base Competencies
+            </th>
+            <th>
+                Link to Indicators
+            </th>
+            <th>
+                Levels
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                End Date
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompetencyTracker[0].SkillsReview)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompetencyTracker[0].Evidence)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.CompetencyTracker) {
+        <tr>
+            <td>
+                    @foreach (var comp in Model.Competencies.Where(s => s.CompetencyId== item.CompetencyId))
+                    {
+                         @Html.DisplayFor(modelItem => comp.Description)
+                            
+
+                    }
+            </td>
+            <td>
+                    @foreach (var comp in Model.Competencies.Where(s => s.CompetencyId == item.CompetencyId))
+                    {
+                        @Html.DisplayFor(modelItem => comp.LinkToIndicators)
+
+                    }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Level)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SkillsReview)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Evidence)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
