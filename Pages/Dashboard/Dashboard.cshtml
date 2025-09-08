@@ -4,26 +4,11 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<ul class="nav nav-pills">
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Profile/Profile">Profile</a>
-    </li>
+@section DashboardNav {
     <li class="nav-item">
         <a class="nav-link active" aria-current="page" asp-page="/Dashboard/Dashboard">Dashboard</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Goals/Goals">Goals</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Networking/Networking">Networking</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Competencies/Competencies">Competencies</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/CDL/CDL">CDL</a>
-    </li>
-</ul>
+}
 
 <div class="input-container">
     <h3>Date Range</h3>
