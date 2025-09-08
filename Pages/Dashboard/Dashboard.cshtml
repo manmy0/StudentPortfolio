@@ -1,0 +1,117 @@
+﻿@page
+@model StudentPortfolio.Pages.Dashboard.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Profile/Profile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-page="/Dashboard/Dashboard">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Goals/Goals">Goals</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Networking/Networking">Networking</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Competencies/Competencies">Competencies</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/CDL/CDL">CDL</a>
+    </li>
+</ul>
+
+
+<div class="input-container">
+    <h3>Date Range</h3>
+    <label for="fromInput">From:</label>
+    <input class="input" type="month" id="fromInput" name="from">
+
+    <label for="toInput">To:</label>
+    <input class="input" type="month" id="toInput" name="to">
+</div>
+
+<h3>Competency Performance Summary</h3>
+
+<table class="table w-auto table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                Competency
+            </th>
+            <th>
+                Number of Performance Self Evaluation Examples
+            </th>
+            <th>
+                Highest Attainment Level
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <td>
+                   1.1
+                </td>
+                <td>
+                    1
+                </td>
+                <td>
+                    Emerging
+                </td>
+            </tr>
+    </tbody>
+</table>
+
+<div>
+    <h3 style="position: absolute; margin-left: 800px; top: 140px; clear: both;">Competency Attainment Levels</h3>
+</div>
+
+<div class="chart">
+    <canvas id="myChart"></canvas>
+</div>
+
+<table class="table w-auto table-bordered table-striped" style="position:absolute; margin-left: 900px; bottom: 170px;">
+    <thead>
+        <tr>
+            <th scope="col">Competency</th>
+            <th scope="col">Level</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>EA 1.1</td>
+            <td>Emerging</td>
+        </tr>
+        <tr>
+            <td>EA 1.2</td>
+            <td>Developing</td>
+        </tr>
+    </tbody>
+</table>
+
+<a class="btn btn-primary" asp-page="/SummaryPage/Index">View Summary</a>
+
+<script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Emerging', 'Competent', 'Developing', 'Capable'],
+            datasets: [{
+                label: 'My First dataset',
+                backgroundColor: [ 'rgb(255, 99, 132)',
+      'rgb(54, 162, 235)',
+      'rgb(255, 205, 86)'],
+                borderColor: [ 'rgb(255, 99, 132)',
+      'rgb(54, 162, 235)',
+      'rgb(255, 205, 86)'],
+                data: [0, 10, 5, 2]
+            }]
+        },
+        options: {}
+    });
+</script>
