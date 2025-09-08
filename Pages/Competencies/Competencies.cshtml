@@ -61,7 +61,7 @@
             <td>
                     @foreach (var comp in Model.Competencies.Where(s => s.CompetencyId == item.CompetencyId))
                     {
-                        @Html.DisplayFor(modelItem => comp.LinkToIndicators)
+                        <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
 
                     }
             </td>
