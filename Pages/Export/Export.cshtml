@@ -1,0 +1,104 @@
+﻿@page
+@model StudentPortfolio.Pages.Export.ExportModel
+@{
+    ViewData["Title"] = "Export";
+}
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Profile/Profile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Dashboard/Dashboard">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Goals/Goals">Goals</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Networking/Networking">Networking</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Competencies/Competencies">Competencies</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/CDL/CDL">CDL</a>
+    </li>
+</ul>
+
+
+<div style="display: flex; justify-content: flex-end;">
+    <a class="btn btn-primary" asp-page="/Summary/Summary">Back to Summary</a>
+</div>
+
+<br />
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Export</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Personal Summary</td>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="item1Checkbox">
+                    <label class="form-check-label" for="item1Checkbox"></label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Elevator Pitch</td>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="item2Checkbox">
+                    <label class="form-check-label" for="item2Checkbox"></label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Competencies</td>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="item2Checkbox">
+                    <label class="form-check-label" for="item2Checkbox"></label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Resume</td>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="item2Checkbox">
+                    <label class="form-check-label" for="item2Checkbox"></label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Cover Letter</td>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="item2Checkbox">
+                    <label class="form-check-label" for="item2Checkbox"></label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Goals</td>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="item2Checkbox">
+                    <label class="form-check-label" for="item2Checkbox"></label>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+
+<div class="text-center">
+    <button class="btn btn-warning" style="height: 100px; width: 300px;  font-size: 20px;">Export</button>
+</div>
