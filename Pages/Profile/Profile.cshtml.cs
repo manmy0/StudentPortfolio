@@ -20,14 +20,14 @@ namespace StudentPortfolio.Pages.Profile
         private readonly StudentPortfolio.Data.ApplicationDbContext _context; 
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ApplicationUser CurrentUser { get; set; }
-
         public ProfileModel(StudentPortfolio.Data.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
+        public ApplicationUser CurrentUser { get; set; }
+        public IList<CareerDevelopmentPlan> CDP { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
@@ -36,6 +36,11 @@ namespace StudentPortfolio.Pages.Profile
             if (userId != null)
             {
                 CurrentUser = await _userManager.FindByIdAsync(userId);
+
+                CDP = await _context.CareerDevelopmentPlans
+                   .Where(i => i.UserId == userId)
+                   .Include(i => i.User)
+                   .ToListAsync();
             }
 
         }

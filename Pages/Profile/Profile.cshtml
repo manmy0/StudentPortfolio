@@ -37,7 +37,7 @@
             </svg>
             <div class="col">
                 <h1> @Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h1>
-                <p>@Model.CurrentUser.Specialisation</p>
+                <p>@Model.CurrentUser.Specialisation @Model.CurrentUser.Degree</p>
             </div>
         </div>
     </div>
@@ -67,11 +67,16 @@
 
     <label for="box2" style="position: absolute; top: 410px; margin-right: 200px; margin-left: 600px;">Upcoming Actions for Personal Development</label>
     <div class="my-box2" id="box2">
-        <ul>
-            <li>
-                <p>Climb a tree.</p>
-            </li>
-        </ul>
+            
+        @foreach (var item in Model.CDP)
+        {
+            <ul>
+                <li>
+                    @Html.DisplayFor(modelItem => item.NetworkingPlan)
+                </li>
+            </ul>
+        }
+
     </div>
 </div>
 

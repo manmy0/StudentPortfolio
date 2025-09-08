@@ -78,7 +78,7 @@
                     @Html.DisplayFor(modelItem => item.Details)
                 </td>
                 <td>
-                    @foreach (var question in Model.NetworkingQuestion)
+                    @foreach (var question in Model.NetworkingQuestion.Where(s => s.EventId == item.EventId))
                     {
                         <ul>
                             <li>
@@ -130,7 +130,7 @@
                 @Html.DisplayFor(modelItem => item.Company)
             </td>
             <td>
-                    @foreach (var info in Model.IndustryContactInfo)
+                    @foreach (var info in Model.IndustryContactInfo.Where(s => s.ContactId == item.ContactId))
                     {
                         <ul>
                             <li>
