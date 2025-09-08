@@ -29,6 +29,13 @@ namespace StudentPortfolio.Pages.Profile
         public ApplicationUser CurrentUser { get; set; }
         public IList<CareerDevelopmentPlan> CDP { get; set; } = default!;
 
+        // convert the users byte representation of an image
+        // in the database to base64 which can be displayed
+        public string ProfileImageBase64 =>
+            CurrentUser?.ProfileImage != null
+                ? $"data:image/jpeg;base64,{Convert.ToBase64String(CurrentUser.ProfileImage)}"
+                : null;
+
         public async Task OnGetAsync()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
