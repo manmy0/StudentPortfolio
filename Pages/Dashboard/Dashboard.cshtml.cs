@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,6 +8,7 @@ using System.Security.Claims;
 
 namespace StudentPortfolio.Pages.Dashboard
 {
+    [Authorize]
     public class DashboardModel : PageModel
     {
         private readonly StudentPortfolio.Data.ApplicationDbContext _context;

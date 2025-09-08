@@ -1,0 +1,23 @@
+﻿img {
+    display: block; /* Images are inline by default; make it a block element */
+    margin-left: auto;
+    margin-right: auto;
+    /* Optionally, set a width to ensure margins can take effect */
+    width: 200px;
+    height: 200px;
+}
+
+
+.my-box3 {
+    width: 1300px; /* Sets the width of the box */
+    height: 300px; /* Sets the height of the box */
+    background-color: white; /* Sets the background color */
+    border: 2px solid black; /* Adds a border: width, style, color */
+    padding: 10px; /* Adds space between content and border */
+    margin: 10px; /* Adds space outside the border */
+    display: block;
+}
+
+select {
+    margin-bottom: 50px;
+}
