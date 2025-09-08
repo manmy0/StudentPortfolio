@@ -20,15 +20,66 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
+                        @if (IsSectionDefined("DashboardNav"))
+                        {
+                            @RenderSection("DashboardNav", required: false)
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Dashboard/Dashboard">Dashboard</a>
+                            </li>
+                        }
+                        @if (IsSectionDefined("ProfileNav"))
+                        {
+                            @RenderSection("ProfileNav", required: false)
+                        }
+                        else
+                        {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Profile/Profile">Profile</a>
                         </li>
+                        }
+                        @if (IsSectionDefined("GoalsNav"))
+                        {
+                            @RenderSection("GoalsNav", required: false)
+                        }
+                        else
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Goals/Goals">Goals</a>
+                        </li>
+                        }
+                        @if (IsSectionDefined("NetworkingNav"))
+                        {
+                            @RenderSection("NetworkingNav", required: false)
+                        }
+                        else
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Networking/Networking">Networking</a>
+                        </li>
+                        }
+                        @if (IsSectionDefined("CompetenciesNav"))
+                        {
+                            @RenderSection("CompetenciesNav", required: false)
+                        }
+                        else
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Competencies/Competencies">Competencies</a>
+                        </li>
+                        }
+                        @if (IsSectionDefined("CDLNav"))
+                        {
+                            @RenderSection("CDLNav", required: false)
+                        }
+                        else
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/CDL/CDL">CDL</a>
+                        </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

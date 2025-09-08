@@ -7,27 +7,11 @@
     ViewData["Title"] = "Profile";
 }
 
-<ul class="nav nav-pills">
+@section ProfileNav {
     <li class="nav-item">
         <a class="nav-link active" aria-current="page" asp-page="/Profile/Profile">Profile</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Dashboard/Dashboard">Dashboard</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Goals/Goals">Goals</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Networking/Networking">Networking</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Competencies/Competencies">Competencies</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/CDL/CDL">CDL</a>
-    </li>
-</ul>
-
+}
 
 <div class="container" style="margin-top: 50px; margin-right: 40px;">
     <div class="mr-6">

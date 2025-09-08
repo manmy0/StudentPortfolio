@@ -5,26 +5,11 @@
     ViewData["Title"] = "CDL";
 }
 
-<ul class="nav nav-pills">
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Profile/Profile">Profile</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Dashboard/Dashboard">Dashboard</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Goals/Goals">Goals</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Networking/Networking">Networking</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-page="/Competencies/Competencies">Competencies</a>
-    </li>
+@section CDLNav {
     <li class="nav-item">
         <a class="nav-link active" aria-current="page" asp-page="/CDL/CDL">CDL</a>
     </li>
-</ul>
+}
 
 <h3>CDL Learning Files</h3>
 
