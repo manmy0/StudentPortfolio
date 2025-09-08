@@ -1,0 +1,156 @@
+﻿@page
+@model StudentPortfolio.Pages.Networking.NetworkingModel
+
+@{
+    ViewData["Title"] = "Networking";
+}
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Profile/Profile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Dashboard/Dashboard">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Goals/Goals">Goals</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-page="/Networking/Networking">Networking</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Competencies/Competencies">Competencies</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/CDL/CDL">CDL</a>
+    </li>
+</ul>
+
+<div class="page-container">
+    <div class="column">
+        <div class="content-block">
+            <h4 class="box-title">Elevator Pitch</h4>
+            <div class="info-box">
+                <p>@Model.CurrentUser.Pitch</p>
+            </div>
+        </div>
+        </div>
+</div>
+
+
+<h3>Upcoming Events</h3>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NetworkingEvent[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NetworkingEvent[0].Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NetworkingEvent[0].Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NetworkingEvent[0].Details)
+            </th>
+            <th>
+                Questions to Ask
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.NetworkingEvent)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Details)
+                </td>
+                <td>
+                    @foreach (var question in Model.NetworkingQuestion)
+                    {
+                        <ul>
+                            <li>
+                                @Html.DisplayFor(modelItem => question.Question)
+                            </li>
+                        </ul>
+                    }
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.EventId">Edit</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.EventId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<h3>Industry Contact Log</h3>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IndustryContactLog[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IndustryContactLog[0].Company)
+            </th>
+            <th>
+                Contact Information
+            </th>
+            <th>
+                Progress Notes
+            </th>
+            <th>
+                Date Met
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.IndustryContactLog) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company)
+            </td>
+            <td>
+                    @foreach (var info in Model.IndustryContactInfo)
+                    {
+                        <ul>
+                            <li>
+                                @Html.DisplayFor(modelItem => info.ContactDetails)
+                            </li>
+                        </ul>
+
+                    }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Notes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateMet)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ContactId">Edit</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ContactId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

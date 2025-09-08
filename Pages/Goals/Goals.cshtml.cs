@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StudentPortfolio.Data;
 using StudentPortfolio.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace StudentPortfolio.Pages.Goals
 {
@@ -15,26 +18,45 @@ namespace StudentPortfolio.Pages.Goals
     public class GoalsModel : PageModel
     {
         private readonly StudentPortfolio.Data.ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public GoalsModel(StudentPortfolio.Data.ApplicationDbContext context)
+        public GoalsModel(StudentPortfolio.Data.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+
         }
 
+        public ApplicationUser CurrentUser { get; set; }
         public IList<Goal> Goal { get;set; } = default!;
         public IList<CareerDevelopmentPlan> CDP { get; set; } = default!;
         public IList<GoalStep> GoalSteps { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
-            Goal = await _context.Goals
-                .Include(g => g.User).ToListAsync();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            CDP = await _context.CareerDevelopmentPlans
-                .Include(g => g.User).ToListAsync();
+            if (userId != null)
+            {
+                Goal = await _context.Goals
+                    .Where(i => i.UserId == userId)
+                    .Include(i => i.User)
+                    .ToListAsync();
 
-            GoalSteps = await _context.GoalSteps
-                .Include(g => g.Goal).ToListAsync();
+                var goalIds = await _context.Goals
+                    .Where(i => i.UserId == userId)
+                    .Select(i => i.GoalId)
+                    .ToListAsync();
+
+                GoalSteps = await _context.GoalSteps
+                    .Where(i => goalIds.Contains(i.GoalId))
+                    .ToListAsync(); 
+                
+                CDP = await _context.CareerDevelopmentPlans
+                    .Where(i => i.UserId == userId)
+                    .Include(i => i.User)
+                    .ToListAsync();
+            }
         }
     }
 }
