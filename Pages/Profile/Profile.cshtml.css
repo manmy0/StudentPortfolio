@@ -49,3 +49,9 @@
     padding: 20px;
     box-sizing: border-box;
 }
+
+.nav-item {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
