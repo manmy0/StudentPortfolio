@@ -1,0 +1,68 @@
+﻿@page
+@model StudentPortfolio.Pages.Goals.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Goal</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Goal.UserId" class="control-label"></label>
+                <select asp-for="Goal.UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Goal.Description" class="control-label"></label>
+                <input asp-for="Goal.Description" class="form-control" />
+                <span asp-validation-for="Goal.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Goal.Timeline" class="control-label"></label>
+                <input asp-for="Goal.Timeline" class="form-control" />
+                <span asp-validation-for="Goal.Timeline" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Goal.Progress" class="control-label"></label>
+                <input asp-for="Goal.Progress" class="form-control" />
+                <span asp-validation-for="Goal.Progress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Goal.Learnings" class="control-label"></label>
+                <input asp-for="Goal.Learnings" class="form-control" />
+                <span asp-validation-for="Goal.Learnings" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Goal.EndDate" class="control-label"></label>
+                <input asp-for="Goal.EndDate" class="form-control" />
+                <span asp-validation-for="Goal.EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Goal.CompleteDate" class="control-label"></label>
+                <input asp-for="Goal.CompleteDate" class="form-control" />
+                <span asp-validation-for="Goal.CompleteDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Goal.CompletionNotes" class="control-label"></label>
+                <input asp-for="Goal.CompletionNotes" class="form-control" />
+                <span asp-validation-for="Goal.CompletionNotes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
