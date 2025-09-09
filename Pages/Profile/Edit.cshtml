@@ -1,0 +1,68 @@
+﻿@page
+@model StudentPortfolio.Pages.Profile.EditModel
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="edit-profile-container">
+    <h2>Edit Profile</h2>
+    <hr />
+
+    <!-- calls the OnPostAsync method hehe -->
+    <!-- enctype bit allows for files to be uploaded but I'll worry about that later -->
+    <form method="post" enctype="multipart/form-data">
+
+        <!-- display model validation errors in red -->
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!-- will probs need to change the label names at some point -->
+        <div class="form-group">
+            <label asp-for="Input.FirstName"></label>
+
+            <!-- bind the input element to Input.FirstName -->
+            <input asp-for="Input.FirstName" class="form-control" />
+            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.LastName"></label>
+            <input asp-for="Input.LastName" class="form-control" />
+            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.Degree"></label>
+            <input asp-for="Input.Degree" class="form-control" />
+            <span asp-validation-for="Input.Degree" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.Introduction"></label>
+            <input asp-for="Input.Introduction" class="form-control" />
+            <span asp-validation-for="Input.Introduction" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.Specialisation"></label>
+            <input asp-for="Input.Specialisation" class="form-control" />
+            <span asp-validation-for="Input.Specialisation" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.LinkedIn"></label>
+            <input asp-for="Input.LinkedIn" class="form-control" />
+            <span asp-validation-for="Input.LinkedIn" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.Resume"></label>
+            <input asp-for="Input.Resume" class="form-control" />
+            <span asp-validation-for="Input.Resume" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-page="/Profile/Profile" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

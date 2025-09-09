@@ -31,7 +31,7 @@ namespace StudentPortfolio.Pages.Profile
 
         // convert the users byte representation of an image
         // in the database to base64 which can be displayed
-        public string ProfileImageBase64 =>
+        public string? ProfileImageBase64 =>
             CurrentUser?.ProfileImage != null
                 ? $"data:image/jpeg;base64,{Convert.ToBase64String(CurrentUser.ProfileImage)}"
                 : null;
