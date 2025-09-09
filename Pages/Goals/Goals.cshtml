@@ -79,18 +79,25 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
 
-                <td>
+                <td style="text-align: center;">
 
                     @foreach (var step in Model.GoalSteps.Where(s => s.GoalId == item.GoalId))
                     {
-                        <ul>
+
+                        <ul style="text-align: left;">
+
                             <li>
                                 @Html.DisplayFor(modelItem => step.Step)
                             </li>
                         </ul>
 
                     }
-
+                    
+                    @if (!Model.GoalSteps.Any(s => s.GoalId == item.GoalId))
+                    {
+                        <a class="btn btn-primary"  asp-page="CreateSteps" asp-route-goalId="@item.GoalId">Add Steps</a>
+                    }
+                        
                 </td>
 
                 <td>
