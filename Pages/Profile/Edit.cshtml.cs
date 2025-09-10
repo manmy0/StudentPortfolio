@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StudentPortfolio.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace StudentPortfolio.Pages.Profile
 {
@@ -71,6 +72,20 @@ namespace StudentPortfolio.Pages.Profile
             user.LinkedIn = Input.LinkedIn;
             user.Resume = Input.Resume;
 
+            // check if profile image has been uploaded
+            if (Input.ProfileImage != null && Input.ProfileImage.Length > 0)
+            {
+                // using makes sure that after the byte array is stored in the user model
+                // the memory allocated is freed up again
+                using (var memoryStream = new MemoryStream())
+                {
+                    await Input.ProfileImage.CopyToAsync(memoryStream);
+
+                    // convert memory stream to a byte array
+                    user.ProfileImage = memoryStream.ToArray();
+                }
+            }
+
             // save the updated user to the database
             var result = await _userManager.UpdateAsync(user);
 
@@ -99,5 +114,6 @@ namespace StudentPortfolio.Pages.Profile
         public string? Specialisation { get; set; }
         public string? LinkedIn { get; set; }
         public string? Resume { get; set; }
+        public IFormFile? ProfileImage { get; set; }
     }
 }
