@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentPortfolio.Data;
 using StudentPortfolio.Models;
@@ -31,6 +32,8 @@ namespace StudentPortfolio.Pages.Competencies
 
         public IList<Competency> ParentCompetencies { get; set; } = default!;
 
+        public List<SelectListItem> MyDropdownItems { get; set; }
+        public List<CompetencyTracker> MyDropdown { get; set; }
         public async Task OnGetAsync()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -58,5 +61,20 @@ namespace StudentPortfolio.Pages.Competencies
                     .ToListAsync();
             }
         }
+
+        /*public void OnGet()
+        {
+
+            MyDropdownItems = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Option A", Value = "A", },
+            new SelectListItem { Text = "Option B", Value = "B", Selected = true }, // Pre-select an item
+            new SelectListItem { Text = "Option C", Value = "C" }
+        };
+            MyDropdown = new List<CompetencyTracker>
+            {
+
+            }
+        }*/
     }
 }

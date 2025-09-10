@@ -21,40 +21,49 @@
 </div>
 
 @foreach (var parentComp in Model.ParentCompetencies)
-{   
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>
-                    @Html.DisplayFor(modelItem => parentComp.Description)
-            </th>
-            <th>
-                Link to Indicators
-            </th>
-            <th>
-                Levels
-            </th>
-            <th>
-                Start Date
-            </th>
-            <th>
-                End Date
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CompetencyTracker[0].SkillsReview)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CompetencyTracker[0].Evidence)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+{
+    var number = 1;
+
+    <table class="table table-bordered table-striped collapsible-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                        @Html.DisplayFor(modelItem => parentComp.Description)
+                </th>
+                <th>
+                    Link to Indicators
+                </th>
+                <th>
+                    Levels
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CompetencyTracker[0].SkillsReview)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CompetencyTracker[0].Evidence)
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        
             @foreach (var comp in Model.Competencies.Where(c => c.ParentCompetencyId == parentComp.CompetencyId))
             {
-                var tracker = Model.CompetencyTracker.Where(t => t.CompetencyId == comp.CompetencyId).First();
-
+            number += 1;
+            var tracker = Model.CompetencyTracker.Where(t => t.CompetencyId == comp.CompetencyId);/*.First();*/
+            <tbody class ="master-row">
                 <tr>
+                    <td>
+                        @* @parentComp.CompetencyId  *@
+                        @Html.DisplayFor(modelItem => parentComp.CompetencyId).@number
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => comp.Description)
                     </td>
@@ -62,27 +71,95 @@
                         <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => tracker.Level)
+                        @tracker.First().Level
+                        @* @Html.DisplayFor(modelItem => tracker.Level) *@
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => tracker.StartDate)
+                        @tracker.First().StartDate
+                        @* @Html.DisplayFor(modelItem => tracker.StartDate) *@
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => tracker.EndDate)
+                        @tracker.First().EndDate
+                        @* @Html.DisplayFor(modelItem => tracker.EndDate) *@
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => tracker.SkillsReview)
+                        @tracker.First().SkillsReview
+                        @* @Html.DisplayFor(modelItem => tracker.SkillsReview) *@
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => tracker.Evidence)
+                        @tracker.First().Evidence
+                        @* @Html.DisplayFor(modelItem => tracker.Evidence) *@
                     </td>
                     <td>
                         @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                         @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
                     </td>
+                    <td>
+                        <button class="toggle-details">+</button>
+                        @* <select name="DropdownName" class="form-control">
+                            <option value="">Select an option</option>
+                            @foreach (var level in Model.CompetencyTracker.Where(l => l.CompetencyId == comp.CompetencyId))
+                            {
+                                <option value="@item.Value" @(item.Selected ? "selected" : "")>@item.Text</option>
+                            }
+                        </select> *@
+                    </td>
                 </tr>
+                </tbody>
+                <tbody class="collapsible-content" style="display: none;">
+                @foreach(var level in tracker)
+                {
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            @level.Level
+                            @* @Html.DisplayFor(modelItem => tracker.Level) *@
+                        </td>
+                        <td>
+                            @level.StartDate
+                            @* @Html.DisplayFor(modelItem => tracker.StartDate) *@
+                        </td>
+                        <td>
+                            @level.EndDate
+                            @* @Html.DisplayFor(modelItem => tracker.EndDate) *@
+                        </td>
+                        <td>
+                            @level.SkillsReview
+                            @* @Html.DisplayFor(modelItem => tracker.SkillsReview) *@
+                        </td>
+                        <td>
+                            @level.Evidence
+                            @* @Html.DisplayFor(modelItem => tracker.Evidence) *@
+                        </td>
+                    </tr>
+                }                
+                </tbody>
+            
             }
             
-    </tbody>
+    
 </table>
 }
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.collapsible-table').on('click', '.toggle-details', function () {
+            var $button = $(this);
+            var $masterRow = $button.closest('.master-row');
+            var $detailRow = $masterRow.next('.collapsible-content'); //'.detail-row'
+
+            $detailRow.toggle(); // Toggles display: none and display: block
+            $button.text($detailRow.is(':visible') ? '-' : '+'); // Change button text
+
+            //var collapsibleContent = $(this).closest('tbody').next('.collapsible-content');
+            //collapsibleContent.slideToggle(); // Toggle visibility with a slide effect
+
+            // Toggle the icon
+            //var toggleIcon = $(this).find('.toggle-icon');
+            //toggleIcon.toggleClass('expanded');
+        });
+    });
+</script>
