@@ -5,12 +5,11 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h3>Create New Goal</h3>
 
-<h4>Goal</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="input-group">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -24,24 +23,21 @@
                 <span asp-validation-for="Goal.Timeline" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Goal.StartDate" class="control-label"></label>
+                <label asp-for="Goal.StartDate" class="control-label">Start Date</label>
                 <input asp-for="Goal.StartDate" class="form-control" />
                 <span asp-validation-for="Goal.StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Goal.EndDate" class="control-label"></label>
+                <label asp-for="Goal.EndDate" class="control-label">End Date</label>
                 <input asp-for="Goal.EndDate" class="form-control" />
                 <span asp-validation-for="Goal.EndDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-success" />
+                <a class="btn btn-danger" asp-page="Goals">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div style="margin-top: 20px">
-    <a class="btn btn-primary" asp-page="Goals">Back to Goals Page</a>
 </div>
 
 @section Scripts {

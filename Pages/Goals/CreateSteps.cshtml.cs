@@ -25,11 +25,18 @@ namespace StudentPortfolio.Pages.Goals
 
         [BindProperty]
         public List<GoalStep> GoalSteps { get; set; } = new List<GoalStep>();
+        public IList<Goal> Goal { get; set; } = default!;
 
-        public void OnGet()
+        public async Task OnGet()
         {
             GoalSteps.Add(new GoalStep());
+
+            Goal = await _context.Goals 
+                .Where(g => g.GoalId == Id)
+                .ToListAsync();
+
         }
+
         public async Task<IActionResult> OnPostAsync()
         {
             var idExists = await _context.Goals.AnyAsync(g => g.GoalId == Id);

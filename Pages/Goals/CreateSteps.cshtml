@@ -5,27 +5,32 @@
     ViewData["Title"] = "CreateSteps";
 }
 
-<h1>CreateSteps</h1>
+<h3>Create Steps</h3>
 
-<h4>GoalStep</h4>
 <hr />
+
+<div>
+    <h3> Goal: @Model.Goal[0].Description</h3>
+</div>
 
 <form method="post">
     <div id="stepContainer">
         @for (int i = 0; i < Model.GoalSteps.Count; i++)
         {
             <div class="item-row">
-                <input asp-for="GoalSteps[i].Step" />
+                <label for="step">Step</label>
+                <input class="form-control w-auto" style="margin-bottom: 20px" asp-for="GoalSteps[i].Step" name="step"/>
             </div>
         }
     </div>
-
-    <button type="button" id="addRowButton">Add Another Step</button>
-    <button type="submit">Save All Steps</button>
+    <div>
+        <button class="btn btn-primary" id="addRowButton">Add Another Step</button>
+        <button class="btn btn-success" type="submit">Save All Steps</button>
+    </div>
 </form>
 
-<div>
-    <a asp-page="Goals">Back to Goals</a>
+<div style="margin-top: 20px;">
+    <a class="btn btn-secondary" asp-page="Goals">Back to Goals</a>
 </div>
 
 @section Scripts {
@@ -39,7 +44,8 @@
             const newRow = document.createElement('div');
             newRow.classList.add('item-row');
             newRow.innerHTML = `
-                <input name="GoalSteps[${index}].step" />
+                <label for="step">Step</label>
+                <input class="form-control w-auto" style="margin-bottom: 20px" name="GoalSteps[${index}].step" />
             `;
             container.appendChild(newRow);
         });
