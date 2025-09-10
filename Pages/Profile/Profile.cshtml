@@ -28,8 +28,10 @@
             <h1>@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h1>
             <p>@Model.CurrentUser.Degree</p>
             <p>@Model.CurrentUser.Specialisation </p>
+        </div>
 
-            <!-- edit button -->
+        <!-- edit button -->
+        <div>
             <div class="profile-actions mt-3">
                 <a asp-page="/Profile/Edit" class="btn btn-primary">Edit Profile</a>
             </div>
