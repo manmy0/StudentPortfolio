@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using StudentPortfolio.Data;
 using StudentPortfolio.Models;
 
@@ -19,27 +20,41 @@ namespace StudentPortfolio.Pages.Goals
             _context = context;
         }
 
-        public IActionResult OnGet()
-        {
-        ViewData["GoalId"] = new SelectList(_context.Goals, "GoalId", "Description");
-            return Page();
-        }
+        [BindProperty(Name = "goalId", SupportsGet = true)]
+        public int Id { get; set; }
 
         [BindProperty]
-        public GoalStep GoalStep { get; set; } = default!;
+        public List<GoalStep> GoalSteps { get; set; } = new List<GoalStep>();
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
+        public void OnGet()
+        {
+            GoalSteps.Add(new GoalStep());
+        }
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            var idExists = await _context.Goals.AnyAsync(g => g.GoalId == Id);
+
+            if (!idExists)
             {
-                return Page();
+                ModelState.AddModelError("GoalSteps.GoalId", "Selected Category does not exist.");
+                
+                return Page(); 
             }
 
-            _context.GoalSteps.Add(GoalStep);
+            if (GoalSteps.Count > 0)
+            {
+                foreach (var step in GoalSteps)
+                {
+                    step.GoalId = Id; 
+                }
+            }
+
+            GoalSteps.RemoveAll(step => string.IsNullOrWhiteSpace(step.Step));
+
+            _context.GoalSteps.AddRange(GoalSteps);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("Goals");
         }
     }
 }
