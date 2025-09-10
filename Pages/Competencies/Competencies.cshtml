@@ -20,11 +20,13 @@
     <input class="input" type="month" id="toInput" name="endMonth">
 </div>
 
+@foreach (var parentComp in Model.ParentCompetencies)
+{   
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>
-                Knowledge and Skill Base Competencies
+                    @Html.DisplayFor(modelItem => parentComp.Description)
             </th>
             <th>
                 Link to Indicators
@@ -48,43 +50,39 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.CompetencyTracker) {
-        <tr>
-            <td>
-                    @foreach (var comp in Model.Competencies.Where(s => s.CompetencyId== item.CompetencyId))
-                    {
-                         @Html.DisplayFor(modelItem => comp.Description)
-                            
+            @foreach (var comp in Model.Competencies.Where(c => c.ParentCompetencyId == parentComp.CompetencyId))
+            {
+                var tracker = Model.CompetencyTracker.Where(t => t.CompetencyId == comp.CompetencyId).First();
 
-                    }
-            </td>
-            <td>
-                    @foreach (var comp in Model.Competencies.Where(s => s.CompetencyId == item.CompetencyId))
-                    {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => comp.Description)
+                    </td>
+                    <td>
                         <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
-
-                    }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Level)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SkillsReview)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Evidence)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => tracker.Level)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => tracker.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => tracker.EndDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => tracker.SkillsReview)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => tracker.Evidence)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+            
     </tbody>
 </table>
+}
