@@ -61,20 +61,5 @@ namespace StudentPortfolio.Pages.Competencies
                     .ToListAsync();
             }
         }
-
-        /*public void OnGet()
-        {
-
-            MyDropdownItems = new List<SelectListItem>
-        {
-            new SelectListItem { Text = "Option A", Value = "A", },
-            new SelectListItem { Text = "Option B", Value = "B", Selected = true }, // Pre-select an item
-            new SelectListItem { Text = "Option C", Value = "C" }
-        };
-            MyDropdown = new List<CompetencyTracker>
-            {
-
-            }
-        }*/
     }
 }

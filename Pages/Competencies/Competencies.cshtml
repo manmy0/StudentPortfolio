@@ -61,7 +61,6 @@
             <tbody class ="master-row">
                 <tr>
                     <td>
-                        @* @parentComp.CompetencyId  *@
                         @Html.DisplayFor(modelItem => parentComp.CompetencyId).@number
                     </td>
                     <td>
@@ -96,13 +95,6 @@
                     </td>
                     <td>
                         <button class="toggle-details">+</button>
-                        @* <select name="DropdownName" class="form-control">
-                            <option value="">Select an option</option>
-                            @foreach (var level in Model.CompetencyTracker.Where(l => l.CompetencyId == comp.CompetencyId))
-                            {
-                                <option value="@item.Value" @(item.Selected ? "selected" : "")>@item.Text</option>
-                            }
-                        </select> *@
                     </td>
                 </tr>
                 </tbody>
@@ -115,31 +107,24 @@
                         <td></td>
                         <td>
                             @level.Level
-                            @* @Html.DisplayFor(modelItem => tracker.Level) *@
                         </td>
                         <td>
                             @level.StartDate
-                            @* @Html.DisplayFor(modelItem => tracker.StartDate) *@
                         </td>
                         <td>
                             @level.EndDate
-                            @* @Html.DisplayFor(modelItem => tracker.EndDate) *@
                         </td>
                         <td>
                             @level.SkillsReview
-                            @* @Html.DisplayFor(modelItem => tracker.SkillsReview) *@
                         </td>
                         <td>
                             @level.Evidence
-                            @* @Html.DisplayFor(modelItem => tracker.Evidence) *@
                         </td>
                     </tr>
                 }                
                 </tbody>
             
             }
-            
-    
 </table>
 }
 
@@ -149,17 +134,10 @@
         $('.collapsible-table').on('click', '.toggle-details', function () {
             var $button = $(this);
             var $masterRow = $button.closest('.master-row');
-            var $detailRow = $masterRow.next('.collapsible-content'); //'.detail-row'
+            var $detailRow = $masterRow.next('.collapsible-content');
 
             $detailRow.toggle(); // Toggles display: none and display: block
             $button.text($detailRow.is(':visible') ? '-' : '+'); // Change button text
-
-            //var collapsibleContent = $(this).closest('tbody').next('.collapsible-content');
-            //collapsibleContent.slideToggle(); // Toggle visibility with a slide effect
-
-            // Toggle the icon
-            //var toggleIcon = $(this).find('.toggle-icon');
-            //toggleIcon.toggleClass('expanded');
         });
     });
 </script>
