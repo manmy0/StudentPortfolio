@@ -5,7 +5,7 @@
     ViewData["Title"] = "EditStep";
 }
 
-<h1>Edit Steps</h1>
+<h3>Edit Steps</h3>
 
 @if (Model.Goal != null)
 {
@@ -42,7 +42,7 @@
 </form>
 
 <div class="mt-3">
-    <a asp-page="Goals">Back to Goals</a>
+    <a class="btn btn-danger" asp-page="Goals">Cancel</a>
 </div>
 
 @section Scripts {
