@@ -58,5 +58,33 @@ namespace StudentPortfolio.Pages.Goals
                     .ToListAsync();
             }
         }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var goalToDelete = await _context.Goals
+                .FirstOrDefaultAsync(g => g.GoalId == id && g.UserId == userId);
+
+            if (goalToDelete == null)
+            {
+                return NotFound();
+            }
+
+            var stepsToDelete = await _context.GoalSteps
+                .Where(s => s.GoalId == id)
+                .ToListAsync();
+
+
+            if (stepsToDelete.Any())
+            {
+                _context.GoalSteps.RemoveRange(stepsToDelete);
+            }
+
+            _context.Goals.Remove(goalToDelete);
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("Goals"); 
+        }
     }
 }
