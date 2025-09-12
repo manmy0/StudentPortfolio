@@ -15,6 +15,7 @@ public partial class GoalStep
 
     public string Step { get; set; } = null!;
 
+    [ValidateNever]
     [ForeignKey("GoalId")]
     public virtual Goal Goal { get; set; } = null!;
 }

@@ -20,12 +20,12 @@
         {
             <div class="item-row">
                 <label for="step">Step</label>
-                <input class="form-control w-auto" style="margin-bottom: 20px" asp-for="GoalSteps[i].Step" name="step"/>
+                <input class="form-control w-auto" style="margin-bottom: 20px" asp-for="GoalSteps[i].Step"/>
             </div>
         }
     </div>
     <div>
-        <button class="btn btn-primary" id="addRowButton">Add Another Step</button>
+        <button class="btn btn-primary" id="addRowButton" type="button">Add Another Step</button>
         <button class="btn btn-success" type="submit">Save All Steps</button>
     </div>
 </form>
@@ -48,7 +48,8 @@
             newRow.classList.add('item-row');
             newRow.innerHTML = `
                 <label for="step">Step</label>
-                <input class="form-control w-auto" style="margin-bottom: 20px" name="GoalSteps[${index}].step" />
+                <input class="form-control w-auto" style="margin-bottom: 20px" name="GoalSteps[${index}].Step" />
+
             `;
             container.appendChild(newRow);
         });
