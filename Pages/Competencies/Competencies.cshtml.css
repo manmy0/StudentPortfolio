@@ -15,3 +15,15 @@
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
+
+.collapsible-content {
+    display: none;
+}
+
+.toggle-details {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 1.2em;
+    font-weight: bold;
+}

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentPortfolio.Data;
 using StudentPortfolio.Models;
@@ -29,6 +30,10 @@ namespace StudentPortfolio.Pages.Competencies
         public IList<CompetencyTracker> CompetencyTracker { get;set; } = default!;
         public IList<Competency> Competencies { get; set; } = default!;
 
+        public IList<Competency> ParentCompetencies { get; set; } = default!;
+
+        public List<SelectListItem> MyDropdownItems { get; set; }
+        public List<CompetencyTracker> MyDropdown { get; set; }
         public async Task OnGetAsync()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -38,6 +43,8 @@ namespace StudentPortfolio.Pages.Competencies
                 CompetencyTracker = await _context.CompetencyTrackers
                      .Where(i => i.UserId == userId)
                      .Include(i => i.User)
+                     .OrderBy(i => i.CompetencyId)
+                     .ThenByDescending(i => i.Created)
                      .ToListAsync();
 
                 var compIds = await _context.CompetencyTrackers
@@ -47,6 +54,10 @@ namespace StudentPortfolio.Pages.Competencies
                 
                 Competencies = await _context.Competencies
                     .Where(i => compIds.Contains(i.CompetencyId))
+                    .ToListAsync();
+
+                ParentCompetencies = await _context.Competencies
+                    .Where(i => i.ParentCompetencyId == null)
                     .ToListAsync();
             }
         }

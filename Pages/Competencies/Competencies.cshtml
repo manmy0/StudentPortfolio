@@ -20,71 +20,131 @@
     <input class="input" type="month" id="toInput" name="endMonth">
 </div>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>
-                Knowledge and Skill Base Competencies
-            </th>
-            <th>
-                Link to Indicators
-            </th>
-            <th>
-                Levels
-            </th>
-            <th>
-                Start Date
-            </th>
-            <th>
-                End Date
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CompetencyTracker[0].SkillsReview)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CompetencyTracker[0].Evidence)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.CompetencyTracker) {
-        <tr>
-            <td>
-                    @foreach (var comp in Model.Competencies.Where(s => s.CompetencyId== item.CompetencyId))
-                    {
-                         @Html.DisplayFor(modelItem => comp.Description)
-                            
+@foreach (var parentComp in Model.ParentCompetencies)
+{
+    var number = 1;
 
-                    }
-            </td>
-            <td>
-                    @foreach (var comp in Model.Competencies.Where(s => s.CompetencyId == item.CompetencyId))
-                    {
+    <table class="table table-bordered table-striped collapsible-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                        @Html.DisplayFor(modelItem => parentComp.Description)
+                </th>
+                <th>
+                    Link to Indicators
+                </th>
+                <th>
+                    Levels
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CompetencyTracker[0].SkillsReview)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CompetencyTracker[0].Evidence)
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        
+            @foreach (var comp in Model.Competencies.Where(c => c.ParentCompetencyId == parentComp.CompetencyId))
+            {
+            number += 1;
+            var tracker = Model.CompetencyTracker.Where(t => t.CompetencyId == comp.CompetencyId);/*.First();*/
+            <tbody class ="master-row">
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => parentComp.CompetencyId).@number
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => comp.Description)
+                    </td>
+                    <td>
                         <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
-
-                    }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Level)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SkillsReview)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Evidence)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
+                    </td>
+                    <td>
+                        @tracker.First().Level
+                        @* @Html.DisplayFor(modelItem => tracker.Level) *@
+                    </td>
+                    <td>
+                        @tracker.First().StartDate
+                        @* @Html.DisplayFor(modelItem => tracker.StartDate) *@
+                    </td>
+                    <td>
+                        @tracker.First().EndDate
+                        @* @Html.DisplayFor(modelItem => tracker.EndDate) *@
+                    </td>
+                    <td>
+                        <a href="@tracker.First().SkillsReview">Skills Review</a>
+                        @* @Html.DisplayFor(modelItem => tracker.SkillsReview) *@
+                    </td>
+                    <td>
+                        <a href="@tracker.First().Evidence">Evidence</a>
+                        @* @Html.DisplayFor(modelItem => tracker.Evidence) *@
+                    </td>
+                    <td>
+                        @Html.ActionLink("New", "New", new { /* id=item.PrimaryKey */ }) | @*Add an entry for the next level*@
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) | @*Update the entry for this level*@
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) @*Delete the entry for this level(can't delete lower levels)*@
+                    </td>
+                    <td>
+                        @if(tracker.Count() > 1)
+                        {
+                            <button class="toggle-details">+</button>
+                        }
+                    </td>
+                </tr>
+                </tbody>
+                <tbody class="collapsible-content" style="display: none;">
+                @foreach(var level in tracker)
+                {
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            @level.Level
+                        </td>
+                        <td>
+                            @level.StartDate
+                        </td>
+                        <td>
+                            @level.EndDate
+                        </td>
+                        <td>
+                            <a href="@level.SkillsReview">Skills Review</a>
+                        </td>
+                        <td>
+                            <a href="@level.Evidence">Evidence</a>
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) @*Update the entry for this level*@
+                        </td>
+                    </tr>
+                }                
+                </tbody>
+            
+            }
 </table>
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.collapsible-table').on('click', '.toggle-details', function () {
+            var $button = $(this);
+            var $masterRow = $button.closest('.master-row');
+            var $detailRow = $masterRow.next('.collapsible-content');
+
+            $detailRow.toggle(); // Toggles display: none and display: block
+            $button.text($detailRow.is(':visible') ? '-' : '+'); // Change button text
+        });
+    });
+</script>
