@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,10 +10,12 @@ public partial class Goal
 {
     public long GoalId { get; set; }
 
+    [ValidateNever]
     public string UserId { get; set; } = null!;
 
     public DateOnly DateSet { get; set; }
 
+    [Required(ErrorMessage = "The description of the goal is required.")]
     public string Description { get; set; } = null!;
 
     public string? Timeline { get; set; }
@@ -30,5 +34,6 @@ public partial class Goal
 
     public virtual ICollection<GoalStep> GoalSteps { get; set; } = [];
 
+    [ValidateNever]
     public virtual ApplicationUser User { get; set; } = null!;
 }

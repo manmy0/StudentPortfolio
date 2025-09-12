@@ -32,7 +32,7 @@ namespace StudentPortfolio.Data
 
         public virtual DbSet<NetworkingQuestion> NetworkingQuestions { get; set; }
 
-        public virtual DbSet<UserLink> UserLinks { get; set; }
+        public virtual DbSet<UserLink> UserLinks { get; set; }  
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
