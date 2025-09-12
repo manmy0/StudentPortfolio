@@ -22,16 +22,16 @@
 
 <div class="info-container">
     <label for="prof" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Professional Interests:</label>
-    <textarea class="form-control" id="prof" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.CDP[0].ProfessionalInterests</textarea>
+    <textarea class="form-control" id="prof" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().ProfessionalInterests)</textarea>
 
     <label for="emp" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Employers of interest:</label>
-    <textarea class="form-control" id="emp" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.CDP[0].EmployersOfInterest</textarea>
+    <textarea class="form-control" id="emp" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().EmployersOfInterest)</textarea>
     <div class="info-container">
         <label for="per" style="display: inline-block; margin-right: 50px; margin-bottom: 20px; vertical-align: middle;">Personal Values:</label>
-        <textarea class="form-control" id="per" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.CDP[0].PersonalValues</textarea>
-
+        <textarea class="form-control" id="per" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().PersonalValues)</textarea>
+    
         <label for="dev" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Development Focus for This Year:</label>
-        <textarea class="form-control" id="dev" rows="3" style="height: 20px; width: 1000px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.CDP[0].DevelopmentFocus</textarea>
+        <textarea class="form-control" id="dev" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().DevelopmentFocus)</textarea>
     </div>
 </div>
 
