@@ -82,19 +82,23 @@
                         @* @Html.DisplayFor(modelItem => tracker.EndDate) *@
                     </td>
                     <td>
-                        @tracker.First().SkillsReview
+                        <a href="@tracker.First().SkillsReview">Skills Review</a>
                         @* @Html.DisplayFor(modelItem => tracker.SkillsReview) *@
                     </td>
                     <td>
-                        @tracker.First().Evidence
+                        <a href="@tracker.First().Evidence">Evidence</a>
                         @* @Html.DisplayFor(modelItem => tracker.Evidence) *@
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        @Html.ActionLink("New", "New", new { /* id=item.PrimaryKey */ }) | @*Add an entry for the next level*@
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) | @*Update the entry for this level*@
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) @*Delete the entry for this level(can't delete lower levels)*@
                     </td>
                     <td>
-                        <button class="toggle-details">+</button>
+                        @if(tracker.Count() > 1)
+                        {
+                            <button class="toggle-details">+</button>
+                        }
                     </td>
                 </tr>
                 </tbody>
@@ -115,10 +119,13 @@
                             @level.EndDate
                         </td>
                         <td>
-                            @level.SkillsReview
+                            <a href="@level.SkillsReview">Skills Review</a>
                         </td>
                         <td>
-                            @level.Evidence
+                            <a href="@level.Evidence">Evidence</a>
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) @*Update the entry for this level*@
                         </td>
                     </tr>
                 }                
