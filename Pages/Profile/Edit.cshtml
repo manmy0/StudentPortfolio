@@ -1,0 +1,84 @@
+﻿@page
+@model StudentPortfolio.Pages.Profile.EditModel
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<!-- wrap everything inside a container and a card so it looks ok -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 col-lg-6 mx-auto">
+            <div class="card shadow-sm border-1 rounded-3">
+                <div class="card-body p-4">
+                    <h2 class="mb-4 text-center">Edit Profile</h2>
+
+                    <form method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <!-- first and last name -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input asp-for="Input.FirstName" class="form-control" />
+                                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input asp-for="Input.LastName" class="form-control" />
+                                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- degree and specialisation -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Input.Degree" class="form-label"></label>
+                                <input asp-for="Input.Degree" class="form-control" />
+                                <span asp-validation-for="Input.Degree" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Input.Specialisation" class="form-label"></label>
+                                <input asp-for="Input.Specialisation" class="form-control" />
+                                <span asp-validation-for="Input.Specialisation" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- personal introduction -->
+                        <div class="mb-3">
+                            <label asp-for="Input.Introduction" class="form-label"></label>
+                            <textarea asp-for="Input.Introduction" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Input.Introduction" class="text-danger"></span>
+                        </div>
+
+                        <!-- linkedin and resume -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Input.LinkedIn" class="form-label"></label>
+                                <input asp-for="Input.LinkedIn" class="form-control" />
+                                <span asp-validation-for="Input.LinkedIn" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Input.Resume" class="form-label"></label>
+                                <input asp-for="Input.Resume" class="form-control" />
+                                <span asp-validation-for="Input.Resume" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- profile pic -->
+                        <div class="mb-3">
+                            <label class="form-label">Profile Picture</label>
+                            <input asp-for="Input.ProfileImage" type="file" class="form-control" accept="image/*" />
+                            <span asp-validation-for="Input.ProfileImage" class="text-danger"></span>
+                        </div>
+
+                        <!-- buttons -->
+                        <div class="d-flex gap-2 justify-content-center">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <a asp-page="/Profile/Profile" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
