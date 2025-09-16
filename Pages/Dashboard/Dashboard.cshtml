@@ -2,6 +2,20 @@
 @model StudentPortfolio.Pages.Dashboard.DashboardModel
 @{
     ViewData["Title"] = "Dashboard";
+
+    // order the levels of competencies
+    var levelOrder = new Dictionary<string, int>
+    {
+        {"Developing", 1},
+        {"Emerging", 2},
+        {"Proficient", 3}
+        // think there's meant to be one more level
+    };
+
+    var groupedTrackers = Model.CompetencyTracker
+    .GroupBy(t => t.CompetencyId)
+    .Select(group => group.OrderByDescending(t => levelOrder.GetValueOrDefault(t.Level, 0)).First())
+    .ToList();
 }
 
 @section DashboardNav {
@@ -21,7 +35,7 @@
 
 <h2>Competency Tracker Test</h2>
 
-@if (Model.CompetencyTracker.Any())
+@if (groupedTrackers.Any())
 {
     <table class="table table-striped table-bordered">
         <thead class="thead-dark">
@@ -34,7 +48,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var tracker in Model.CompetencyTracker)
+            @foreach (var tracker in groupedTrackers)
             {
                 <tr>
                     <td>@tracker.Created.ToShortDateString()</td>
