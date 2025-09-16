@@ -30,6 +30,7 @@
                 <th>Level</th>
                 <th>Competency ID</th>
                 <th>Competency</th>
+                <th>Count</th>
             </tr>
         </thead>
         <tbody>
@@ -40,6 +41,16 @@
                     <td>@tracker.Level</td>
                     <td>@tracker.CompetencyId</td>
                     <td>@tracker.Competency.Description</td>
+                    <td>
+                        @if (Model.CompetencyCounts.ContainsKey(tracker.CompetencyId))
+                        {
+                            <span>@Model.CompetencyCounts[tracker.CompetencyId]</span>
+                        }
+                        else
+                        {
+                            <span>0</span>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>
