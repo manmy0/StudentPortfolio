@@ -2,20 +2,6 @@
 @model StudentPortfolio.Pages.Dashboard.DashboardModel
 @{
     ViewData["Title"] = "Dashboard";
-
-    // order the levels of competencies
-    var levelOrder = new Dictionary<string, int>
-    {
-        {"Developing", 1},
-        {"Emerging", 2},
-        {"Proficient", 3}
-        // think there's meant to be one more level
-    };
-
-    var groupedTrackers = Model.CompetencyTracker
-    .GroupBy(t => t.CompetencyId)
-    .Select(group => group.OrderByDescending(t => levelOrder.GetValueOrDefault(t.Level, 0)).First())
-    .ToList();
 }
 
 @section DashboardNav {
@@ -35,36 +21,29 @@
 
 <h2>Competency Tracker Test</h2>
 
-@if (groupedTrackers.Any())
+<!-- check for any competencies in GroupedTrackers  -->
+@if (Model.GroupedTrackers.Any())
 {
     <table class="table table-striped table-bordered">
         <thead class="thead-dark">
             <tr>
-                <th>Created Date</th>
-                <th>Level</th>
-                <th>Competency ID</th>
                 <th>Competency</th>
-                <th>Count</th>
+                <th>Number of Performance Self Evaluation Examples</th>
+                <th>Highest Attainment Level</th>
+                <th>Date Created</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var tracker in groupedTrackers)
+            @foreach (var tracker in Model.GroupedTrackers)
             {
                 <tr>
-                    <td>@tracker.Created.ToShortDateString()</td>
-                    <td>@tracker.Level</td>
-                    <td>@tracker.CompetencyId</td>
                     <td>@tracker.Competency.Description</td>
                     <td>
-                        @if (Model.CompetencyCounts.ContainsKey(tracker.CompetencyId))
-                        {
-                            <span>@Model.CompetencyCounts[tracker.CompetencyId]</span>
-                        }
-                        else
-                        {
-                            <span>0</span>
-                        }
+                        <!-- check if competencyId exists, if it does, show the count, otherwise show 0 -->
+                        @(Model.CompetencyCounts.TryGetValue(tracker.CompetencyId, out var count) ? count : 0)
                     </td>
+                    <td>@tracker.Level</td>
+                    <td>@tracker.Created.ToShortDateString()</td>
                 </tr>
             }
         </tbody>

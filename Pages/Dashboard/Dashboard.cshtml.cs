@@ -21,11 +21,10 @@ namespace StudentPortfolio.Pages.Dashboard
         }
 
         public ApplicationUser CurrentUser { get; set; }
-        public IList<CompetencyTracker> CompetencyTracker { get; set; } = default!;
-        public IList<Competency> Competencies { get; set; } = default!;
-
-        // dictionary to store the count of how many entries there are for a specific competency
+        public IList<CompetencyTracker> CompetencyTracker { get; set; } = new List<CompetencyTracker>();
+        public IList<Competency> Competencies { get; set; } = new List<Competency>();
         public IDictionary<long, int> CompetencyCounts { get; set; } = new Dictionary<long, int>();
+        public IList<CompetencyTracker> GroupedTrackers { get; set; } = new List<CompetencyTracker>();
 
         public async Task OnGetAsync()
         {
@@ -33,31 +32,46 @@ namespace StudentPortfolio.Pages.Dashboard
 
             if (userId != null)
             {
+                // grab competency trackers for the user logged in
+                // puts it in CompetencyTracker (list) for razor page
                 CompetencyTracker = await _context.CompetencyTrackers
                      .Where(i => i.UserId == userId)
                      .Include(i => i.User)
                      .Include(i => i.Competency)
                      .ToListAsync();
 
-                // find the competencyIds that the user has entries for
-                var compIds = await _context.CompetencyTrackers
-                                      .Where(i => i.UserId == userId)
-                                      .Select(i => i.CompetencyId)
-                                      .ToListAsync();
+                // grabs all the competencyIds that the user has entries for
+                var compIds = CompetencyTracker
+                    .Select(i => i.CompetencyId)
+                    .Distinct()
+                    .ToList();
 
-                // get all competencies that the user has a competency tracker for
+                // grab the actual competencies that the user has trackers for from the db
                 Competencies = await _context.Competencies
                     .Where(i => compIds.Contains(i.CompetencyId))
                     .ToListAsync();
 
-                // populate the dictionary that has the id of the competency as the key
-                // and the number of times it occurs as the value
+                // count how many times each competency has been tracked
                 CompetencyCounts = await _context.CompetencyTrackers
                     .Where(i => i.UserId == userId)
                     .GroupBy(i => i.CompetencyId)
                     .ToDictionaryAsync(g => g.Key, g => g.Count());
+
+                var levelOrder = new Dictionary<string, int>
+                {
+                    {"Developing", 1},
+                    {"Emerging", 2},
+                    {"Proficient", 3}
+                    // probs should be another level
+                };
+
+                // pick the highest level for each competency
+                // store in list
+                GroupedTrackers = CompetencyTracker
+                    .GroupBy(t => t.CompetencyId)
+                    .Select(group => group.OrderByDescending(t => levelOrder.GetValueOrDefault(t.Level, 0)).First())
+                    .ToList();
             }
         }
     }
 }
-
