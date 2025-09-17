@@ -26,6 +26,7 @@ namespace StudentPortfolio.Pages.Dashboard
         public IDictionary<long, int> CompetencyCounts { get; set; } = new Dictionary<long, int>();
         public IList<CompetencyTracker> GroupedTrackers { get; set; } = new List<CompetencyTracker>();
         public IList<CompetencyTracker> LowestCompetencies { get; set; } = new List<CompetencyTracker>();
+        public IList<CompetencyTrackerDto> GroupedTrackersDto { get; set; } = new List<CompetencyTrackerDto>();
 
         public async Task OnGetAsync()
         {
@@ -77,7 +78,16 @@ namespace StudentPortfolio.Pages.Dashboard
                     .OrderBy(t => levelOrder.GetValueOrDefault(t.Level, 5))
                     .Take(5)
                     .ToList();
+
+                GroupedTrackersDto = GroupedTrackers
+                    .Select(t => new CompetencyTrackerDto { Level = t.Level })
+                    .ToList();
             }
+        }
+
+        public class CompetencyTrackerDto
+        {
+            public string Level { get; set; }
         }
     }
 }

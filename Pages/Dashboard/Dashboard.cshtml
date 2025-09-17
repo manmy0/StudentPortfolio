@@ -10,6 +10,70 @@
     </li>
 }
 
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var groupedTrackersData = @Html.Raw(Json.Serialize(Model.GroupedTrackersDto));
+
+        var levelCounts = {};
+        groupedTrackersData.forEach(tracker => {
+            var level = tracker.level;
+            if (levelCounts[level]) {
+                levelCounts[level]++;
+            } else {
+                levelCounts[level] = 1;
+            }
+        });
+
+        var labels = Object.keys(levelCounts);
+        var data = Object.values(levelCounts);
+
+        var backgroundColors = labels.map(level => {
+            switch (level) {
+                case 'Developing':
+                    return 'rgba(255, 99, 132, 0.7)';
+                case 'Emerging':
+                    return 'rgba(255, 159, 64, 0.7)';
+                case 'Proficient':
+                    return 'rgba(54, 162, 235, 0.7)';
+                case 'Confident':
+                    return 'rgba(75, 192, 192, 0.7)';
+                default:
+                    return 'rgba(201, 203, 207, 0.7)';
+            }
+        });
+
+        const ctx = document.getElementById('competencyPieChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Competencies',
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Percentage of Competencies at Each Level'
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}
+
 <div class="input-container">
     <h3>Date Range</h3>
     <label for="fromInput">From:</label>
@@ -80,5 +144,15 @@ else
 {
     <p>No competency data to display.</p>
 }
+
+<h2>Competency Attainment Levels</h2>
+@foreach (var thing in Model.GroupedTrackersDto)
+{
+    <p>@thing.Level</p>
+}
+
+<div style="width: 400px; margin: auto">
+    <canvas id="competencyPieChart"></canvas>
+</div>
 
 <a class="btn btn-primary" asp-page="/Summary/Summary">View Summary</a>
