@@ -63,8 +63,8 @@ namespace StudentPortfolio.Pages.Dashboard
                 {
                     {"Developing", 1},
                     {"Emerging", 2},
-                    {"Proficient", 3}
-                    // probs should be another level
+                    {"Capable", 3},
+                    {"Competent", 4}
                 };
 
                 // pick the highest level for each competency

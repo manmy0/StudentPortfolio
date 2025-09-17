@@ -14,19 +14,30 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+        // make the dto into json so it is easier to deal with
+        // was getting a circular dependency error so had to do this
         var groupedTrackersData = @Html.Raw(Json.Serialize(Model.GroupedTrackersDto));
 
+        // go through trackers and group them by their level
         var levelCounts = {};
         groupedTrackersData.forEach(tracker => {
+
+            // pull out level
             var level = tracker.level;
             if (levelCounts[level]) {
+
+                // increment by one if there is a match
                 levelCounts[level]++;
             } else {
+
+                // create key with value 1 
                 levelCounts[level] = 1;
             }
         });
 
         var labels = Object.keys(levelCounts);
+
+        // num of each level
         var data = Object.values(levelCounts);
 
         var backgroundColors = labels.map(level => {
@@ -35,9 +46,9 @@
                     return 'rgba(255, 99, 132, 0.7)';
                 case 'Emerging':
                     return 'rgba(255, 159, 64, 0.7)';
-                case 'Proficient':
+                case 'Capable':
                     return 'rgba(54, 162, 235, 0.7)';
-                case 'Confident':
+                case 'Competent':
                     return 'rgba(75, 192, 192, 0.7)';
                 default:
                     return 'rgba(201, 203, 207, 0.7)';
@@ -49,19 +60,19 @@
             new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: labels,
+                    labels: labels, // array of names of the levels
                     datasets: [{
                         label: 'Competencies',
-                        data: data,
+                        data: data, // values
                         backgroundColor: backgroundColors,
                         borderWidth: 1
                     }]
                 },
                 options: {
-                    responsive: true,
+                    responsive: true, // resize with window
                     plugins: {
                         legend: {
-                            position: 'top',
+                            position: 'top', // legend up the top
                         },
                         title: {
                             display: true,
@@ -74,85 +85,86 @@
     </script>
 }
 
-<div class="input-container">
-    <h3>Date Range</h3>
-    <label for="fromInput">From:</label>
-    <input class="input" type="month" id="fromInput" name="from">
+<div class="container mt-4">
+    <div class="row gy-5">
 
-    <label for="toInput">To:</label>
-    <input class="input" type="month" id="toInput" name="to">
+        <!-- left column -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3 mb-4">
+                <h2 class="mb-4">Competency Performance Summary</h2>
+                @if (Model.GroupedTrackers.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Competency</th>
+                                    <th>Number of Performance Self Evaluation Examples</th>
+                                    <th>Highest Attainment Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tracker in Model.GroupedTrackers)
+                                {
+                                    <tr>
+                                        <td>@tracker.Competency.Description</td>
+                                        <td>@(Model.CompetencyCounts.TryGetValue(tracker.CompetencyId, out var count) ? count : 0)</td>
+                                        <td>@tracker.Level</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No competency tracking data found for your account.</p>
+                }
+            </div>
+        </div>
+
+        <!-- right column -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3 mb-4">
+                <h2 class="mb-4">Competency Attainment Levels</h2>
+                <div class="card-body">
+                    <canvas id="competencyPieChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card shadow-sm p-3">
+                <h2 class="mb-4">Needs More Focus</h2>
+                @if (Model.LowestCompetencies.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Competency</th>
+                                    <th>Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tracker in Model.LowestCompetencies)
+                                {
+                                    <tr>
+                                        <td>@tracker.Competency.Description</td>
+                                        <td>@tracker.Level</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No competency data to display.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a class="btn btn-primary btn-lg" asp-page="/Summary/Summary">View Summary</a>
+    </div>
 </div>
-
-<h2>Competency Performance Summary</h2>
-
-<!-- check for any competencies in GroupedTrackers  -->
-@if (Model.GroupedTrackers.Any())
-{
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th>Competency</th>
-                <th>Number of Performance Self Evaluation Examples</th>
-                <th>Highest Attainment Level</th>
-                <th>Date Created</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var tracker in Model.GroupedTrackers)
-            {
-                <tr>
-                    <td>@tracker.Competency.Description</td>
-                    <td>
-                        <!-- check if competencyId exists, if it does, show the count, otherwise show 0 -->
-                        @(Model.CompetencyCounts.TryGetValue(tracker.CompetencyId, out var count) ? count : 0)
-                    </td>
-                    <td>@tracker.Level</td>
-                    <td>@tracker.Created.ToShortDateString()</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No competency tracking data found for your account.</p>
-}
-
-<h2>Needs More Focus</h2>
-
-@if (Model.LowestCompetencies.Any())
-{
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th>Competency</th>
-                <th>Level</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var tracker in Model.LowestCompetencies)
-            {
-                <tr>
-                    <td>@tracker.Competency.Description</td>
-                    <td>@tracker.Level</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No competency data to display.</p>
-}
-
-<h2>Competency Attainment Levels</h2>
-@foreach (var thing in Model.GroupedTrackersDto)
-{
-    <p>@thing.Level</p>
-}
-
-<div style="width: 400px; margin: auto">
-    <canvas id="competencyPieChart"></canvas>
-</div>
-
-<a class="btn btn-primary" asp-page="/Summary/Summary">View Summary</a>
