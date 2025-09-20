@@ -1,36 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using StudentPortfolio.Data;
 using StudentPortfolio.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace StudentPortfolio.Pages.Networking
 {
+    [Authorize]
     public class CreateEventModel : PageModel
     {
         private readonly StudentPortfolio.Data.ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CreateEventModel(StudentPortfolio.Data.ApplicationDbContext context)
+        public CreateEventModel(StudentPortfolio.Data.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        public IActionResult OnGet()
-        {
-        ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            return Page();
-        }
-
-        [BindProperty]
         public NetworkingEvent NetworkingEvent { get; set; } = default!;
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+       
+        public async Task<IActionResult> OnPostAsync([Bind("Name, Date, Location, Details")] NetworkingEvent NetworkingEvent)
         {
+            NetworkingEvent.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -39,7 +40,7 @@ namespace StudentPortfolio.Pages.Networking
             _context.NetworkingEvents.Add(NetworkingEvent);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("Networking");
         }
     }
 }
