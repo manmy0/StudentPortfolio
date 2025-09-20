@@ -118,5 +118,34 @@ namespace StudentPortfolio.Pages.Networking
             return RedirectToPage();
 
         }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var eventToDelete = await _context.NetworkingEvents
+                .FirstOrDefaultAsync(g => g.EventId == id && g.UserId == userId);
+
+            if (eventToDelete == null)
+            {
+                return NotFound();
+            }
+
+            var questionsToDelete = await _context.NetworkingQuestions
+                .Where(s => s.EventId == id)
+                .ToListAsync();
+
+
+            if (questionsToDelete.Any())
+            {
+                _context.NetworkingQuestions.RemoveRange(questionsToDelete);
+            }
+
+            _context.NetworkingEvents.Remove(eventToDelete);
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("Networking");
+        }
     }
 }
+
