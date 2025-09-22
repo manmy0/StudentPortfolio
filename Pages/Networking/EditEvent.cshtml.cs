@@ -1,23 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentPortfolio.Data;
 using StudentPortfolio.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace StudentPortfolio.Pages.Networking
 {
     public class EditEventModel : PageModel
     {
         private readonly StudentPortfolio.Data.ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public EditEventModel(StudentPortfolio.Data.ApplicationDbContext context)
+        public EditEventModel(StudentPortfolio.Data.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -31,19 +35,21 @@ namespace StudentPortfolio.Pages.Networking
             }
 
             var networkingevent =  await _context.NetworkingEvents.FirstOrDefaultAsync(m => m.EventId == id);
+           
             if (networkingevent == null)
             {
                 return NotFound();
             }
+
             NetworkingEvent = networkingevent;
-           ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            NetworkingEvent.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -67,7 +73,7 @@ namespace StudentPortfolio.Pages.Networking
                 }
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("Networking");
         }
 
         private bool NetworkingEventExists(long id)

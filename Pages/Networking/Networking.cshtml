@@ -78,7 +78,7 @@
                     }
                 </td>
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@item.EventId">Edit</a> |
+                    <a class="btn btn-success" style="margin-bottom: 10px;" asp-page="EditEvent" asp-route-id="@item.EventId">Edit</a>
                      <form asp-page-handler="Delete" method="post" asp-route-id="@item.EventId" onsubmit="return confirm('Are you sure you want to delete this event?');">
                          <button class="btn btn-danger" type="submit">Delete</button>
                     </form>
