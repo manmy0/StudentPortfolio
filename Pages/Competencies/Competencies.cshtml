@@ -90,9 +90,12 @@
                         @* @Html.DisplayFor(modelItem => tracker.Evidence) *@
                     </td>
                     <td>
+
                         @Html.ActionLink("New", "New", new { /* id=item.PrimaryKey */ }) | @*Add an entry for the next level*@
                         @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) | @*Update the entry for this level*@
                         @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) @*Delete the entry for this level(can't delete lower levels)*@
+                        <a class="btn btn-success" style="margin-bottom: 10px;" asp-page="EditCompetency" asp-route-id="@tracker.First()">Edit</a>
+
                     </td>
                     <td>
                         @if(tracker.Count() > 1)
