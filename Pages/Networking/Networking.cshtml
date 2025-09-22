@@ -67,14 +67,23 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Details)
                 </td>
-                <td>
+                <td style="text-align: center;">
                     @foreach (var question in Model.NetworkingQuestion.Where(s => s.EventId == item.EventId))
                     {
-                        <ul>
+                        <ul style="text-align: left;">
                             <li>
                                 @Html.DisplayFor(modelItem => question.Question)
                             </li>
                         </ul>
+                    }
+
+                    @if (!Model.NetworkingQuestion.Any(s => s.EventId == item.EventId))
+                    {
+                        <a class="btn btn-primary" asp-page="CreateQuestions" asp-route-goalId="@item.EventId">Add Questions</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-success" asp-page="EditQuestions" asp-route-goalId="@item.EventId">Edit Questions</a>
                     }
                 </td>
                 <td>
