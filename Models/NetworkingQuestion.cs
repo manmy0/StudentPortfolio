@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -12,5 +13,6 @@ public partial class NetworkingQuestion
 
     public string? Question { get; set; }
 
+    [ValidateNever]
     public virtual NetworkingEvent Event { get; set; } = null!;
 }

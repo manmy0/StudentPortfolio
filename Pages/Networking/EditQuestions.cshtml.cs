@@ -24,58 +24,71 @@ namespace StudentPortfolio.Pages.Networking
         public int Id { get; set; }
 
         [BindProperty]
-        public NetworkingQuestion NetworkingQuestion { get; set; } = default!;
+        public List<NetworkingQuestion> NetworkingQuestions { get; set; } = new List<NetworkingQuestion>();
+
+        public NetworkingEvent NetworkingEvent { get; set; }
 
         public async Task<IActionResult> OnGetAsync(long? id)
         {
-            if (id == null)
+            NetworkingEvent = await _context.NetworkingEvents.FindAsync((long)Id);
+
+            if (NetworkingEvent == null)
             {
                 return NotFound();
             }
 
-            var networkingquestion =  await _context.NetworkingQuestions.FirstOrDefaultAsync(m => m.NetworkingQuestionsId == id);
-            if (networkingquestion == null)
-            {
-                return NotFound();
-            }
-            NetworkingQuestion = networkingquestion;
-           ViewData["EventId"] = new SelectList(_context.NetworkingEvents, "EventId", "EventId");
+            NetworkingQuestions = await _context.NetworkingQuestions
+                .Where(s => s.EventId == Id)
+                .OrderBy(s => s.NetworkingQuestionsId)
+                .ToListAsync();
+
             return Page();
+
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
+                NetworkingEvent = await _context.NetworkingEvents.FindAsync((long)Id);
                 return Page();
             }
 
-            _context.Attach(NetworkingQuestion).State = EntityState.Modified;
+            var originalQuestions = await _context.NetworkingQuestions
+               .Where(s => s.EventId == Id)
+               .AsNoTracking()
+               .ToListAsync();
 
-            try
+            var NetworkingQuestionsToDelete = originalQuestions
+                .Where(dbStep => !NetworkingQuestions.Any(formQuestion => formQuestion.NetworkingQuestionsId == dbStep.NetworkingQuestionsId))
+                .ToList();
+
+            _context.NetworkingQuestions.RemoveRange(NetworkingQuestionsToDelete);
+
+            foreach (var submittedQuestion in NetworkingQuestions)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!NetworkingQuestionExists(NetworkingQuestion.NetworkingQuestionsId))
+
+                if (string.IsNullOrWhiteSpace(submittedQuestion.Question))
                 {
-                    return NotFound();
+                    continue;
                 }
+
+                submittedQuestion.EventId = Id;
+
+                if (submittedQuestion.NetworkingQuestionsId == 0)
+                {
+                    _context.NetworkingQuestions.Add(submittedQuestion);
+                }
+
                 else
                 {
-                    throw;
+                    _context.NetworkingQuestions.Update(submittedQuestion);
                 }
             }
 
-            return RedirectToPage("./Index");
-        }
+            await _context.SaveChangesAsync();
 
-        private bool NetworkingQuestionExists(long id)
-        {
-            return _context.NetworkingQuestions.Any(e => e.NetworkingQuestionsId == id);
+            return RedirectToPage("Networking");
         }
     }
 }
