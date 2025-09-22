@@ -79,11 +79,11 @@
 
                     @if (!Model.NetworkingQuestion.Any(s => s.EventId == item.EventId))
                     {
-                        <a class="btn btn-primary" asp-page="CreateQuestions" asp-route-goalId="@item.EventId">Add Questions</a>
+                        <a class="btn btn-primary" asp-page="CreateQuestions" asp-route-eventId="@item.EventId">Add Questions</a>
                     }
                     else
                     {
-                        <a class="btn btn-success" asp-page="EditQuestions" asp-route-goalId="@item.EventId">Edit Questions</a>
+                        <a class="btn btn-success" asp-page="EditQuestions" asp-route-eventId="@item.EventId">Edit Questions</a>
                     }
                 </td>
                 <td>
