@@ -1,0 +1,55 @@
+﻿@page
+@model StudentPortfolio.Pages.Networking.EditContactModel
+
+@{
+    ViewData["Title"] = "EditContact";
+}
+
+<h1>EditContact</h1>
+
+<h4>IndustryContactLog</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IndustryContactLog.ContactId" />
+            <div class="form-group">
+                <label asp-for="IndustryContactLog.UserId" class="control-label"></label>
+                <select asp-for="IndustryContactLog.UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <span asp-validation-for="IndustryContactLog.UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IndustryContactLog.Name" class="control-label"></label>
+                <input asp-for="IndustryContactLog.Name" class="form-control" />
+                <span asp-validation-for="IndustryContactLog.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IndustryContactLog.Company" class="control-label"></label>
+                <input asp-for="IndustryContactLog.Company" class="form-control" />
+                <span asp-validation-for="IndustryContactLog.Company" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IndustryContactLog.Notes" class="control-label"></label>
+                <input asp-for="IndustryContactLog.Notes" class="form-control" />
+                <span asp-validation-for="IndustryContactLog.Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IndustryContactLog.DateMet" class="control-label"></label>
+                <input asp-for="IndustryContactLog.DateMet" class="form-control" />
+                <span asp-validation-for="IndustryContactLog.DateMet" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
