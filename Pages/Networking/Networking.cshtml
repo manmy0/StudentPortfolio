@@ -89,7 +89,7 @@
                 <td>
                     <a class="btn btn-success" style="margin-bottom: 10px;" asp-page="EditEvent" asp-route-id="@item.EventId">Edit</a>
                      <form asp-page-handler="Delete" method="post" asp-route-id="@item.EventId" onsubmit="return confirm('Are you sure you want to delete this event?');">
-                         <button class="btn btn-danger" type="submit">Delete</button>
+                        <button class="btn btn-danger" name="action" value="deleteEvent" type="submit">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -150,7 +150,9 @@
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ContactId">Edit</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ContactId">Delete</a>
+                 <form asp-page-handler="Delete" method="post" asp-route-id="@item.ContactId" onsubmit="return confirm('Are you sure you want to delete this contact?');">
+                      <button class="btn btn-danger" name="action" value="deleteContact" type="submit">Delete</button>
+                 </form>
             </td>
         </tr>
 }

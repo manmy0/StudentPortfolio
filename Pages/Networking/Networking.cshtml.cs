@@ -119,30 +119,56 @@ namespace StudentPortfolio.Pages.Networking
 
         }
 
-        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        public async Task<IActionResult> OnPostDeleteAsync(string action, int id)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var eventToDelete = await _context.NetworkingEvents
-                .FirstOrDefaultAsync(g => g.EventId == id && g.UserId == userId);
-
-            if (eventToDelete == null)
+            if (action == "deleteEvent")
             {
-                return NotFound();
+                var eventToDelete = await _context.NetworkingEvents
+               .FirstOrDefaultAsync(g => g.EventId == id && g.UserId == userId);
+
+                if (eventToDelete == null)
+                {
+                    return NotFound();
+                }
+
+                var questionsToDelete = await _context.NetworkingQuestions
+                    .Where(s => s.EventId == id)
+                    .ToListAsync();
+
+
+                if (questionsToDelete.Any())
+                {
+                    _context.NetworkingQuestions.RemoveRange(questionsToDelete);
+                }
+
+                _context.NetworkingEvents.Remove(eventToDelete);
+                await _context.SaveChangesAsync();
             }
-
-            var questionsToDelete = await _context.NetworkingQuestions
-                .Where(s => s.EventId == id)
-                .ToListAsync();
-
-
-            if (questionsToDelete.Any())
+            else if (action == "deleteContact")
             {
-                _context.NetworkingQuestions.RemoveRange(questionsToDelete);
-            }
+                var contactToDelete = await _context.IndustryContactLogs
+               .FirstOrDefaultAsync(g => g.ContactId == id && g.UserId == userId);
 
-            _context.NetworkingEvents.Remove(eventToDelete);
-            await _context.SaveChangesAsync();
+                if (contactToDelete == null)
+                {
+                    return NotFound();
+                }
+
+                var detailsToDelete = await _context.IndustryContactInfos
+                    .Where(s => s.ContactId == id)
+                    .ToListAsync();
+
+
+                if (detailsToDelete.Any())
+                {
+                    _context.IndustryContactInfos.RemoveRange(detailsToDelete);
+                }
+
+                _context.IndustryContactLogs.Remove(contactToDelete);
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToPage("Networking");
         }
