@@ -14,13 +14,44 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="IndustryContactLog.UserId" class="control-label"></label>
-                <select asp-for="IndustryContactLog.UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
-            <div class="form-group">
                 <label asp-for="IndustryContactLog.Name" class="control-label"></label>
                 <input asp-for="IndustryContactLog.Name" class="form-control" />
                 <span asp-validation-for="IndustryContactLog.Name" class="text-danger"></span>
+            </div>
+            <p>Contact Information</p>
+            <div>
+                <label class="checkbox-inline"><input type="checkbox" id="phoneCheck">Phone Number</label>
+                <div id="phoneInputContainer" style="display:none;">
+                    <label class="control-label">Phone Number</label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div>
+                <label class="checkbox-inline"><input type="checkbox" id="emailCheck">Email</label>
+                <div id="emailInputContainer" style="display:none;">
+                    <label class="control-label">Email</label>
+                    <input asp-for="EmailAddress" class="form-control" />
+                    <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                </div>
+            </div>
+            <div>
+                <label class="checkbox-inline"><input type="checkbox" id="linkedInCheck">LinkedIn</label>
+                <div id="linkedInInputContainer" style="display:none;">
+                    <label class="control-label">LinkedIn</label>
+                    <input asp-for="LinkedInUrl" class="form-control" />
+                    <span asp-validation-for="LinkedInUrl" class="text-danger"></span>
+                </div> 
+            </div>
+            <div>
+                <label class="checkbox-inline"><input type="checkbox" id="otherCheck">Other</label>
+                <div id="otherInputContainer" style="display:none;">
+                    <label class="control-label">Name</label>
+                    <input asp-for="OtherContactType" class="form-control" />
+                    <label class="control-label">Infomation</label>
+                    <input asp-for="OtherContactDetails" class="form-control" />
+                    <span asp-validation-for="OtherContactDetails" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="IndustryContactLog.Company" class="control-label"></label>
@@ -45,9 +76,37 @@
 </div>
 
 <div>
-    <a asp-page="Index">Back to List</a>
+    <a asp-page="Networking">Cancel</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const phoneCheck = document.getElementById('phoneCheck');
+            const emailCheck = document.getElementById('emailCheck');
+            const linkedInCheck = document.getElementById('linkedInCheck');
+
+            const phoneInputContainer = document.getElementById('phoneInputContainer');
+            const emailInputContainer = document.getElementById('emailInputContainer');
+            const linkedInInputContainer = document.getElementById('linkedInInputContainer');
+
+            phoneCheck.addEventListener('change', function () {
+                phoneInputContainer.style.display = this.checked ? 'block' : 'none';
+            });
+
+            emailCheck.addEventListener('change', function () {
+                emailInputContainer.style.display = this.checked ? 'block' : 'none';
+            });
+
+            linkedInCheck.addEventListener('change', function () {
+                linkedInInputContainer.style.display = this.checked ? 'block' : 'none';
+            });
+
+            otherCheck.addEventListener('change', function () {
+                otherInputContainer.style.display = this.checked ? 'block' : 'none';
+            });
+        });
+    </script>
 }
