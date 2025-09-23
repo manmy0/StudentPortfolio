@@ -94,7 +94,8 @@
                         @Html.ActionLink("New", "New", new { /* id=item.PrimaryKey */ }) | @*Add an entry for the next level*@
                         @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) | @*Update the entry for this level*@
                         @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) @*Delete the entry for this level(can't delete lower levels)*@
-                        <a class="btn btn-success" style="margin-bottom: 10px;" asp-page="EditCompetency" asp-route-id="@tracker.First()">Edit</a>
+                        <a class="btn btn-primary" asp-page="CreateCompetency" asp-route-CompetencyId="@tracker.First().CompetencyId" asp-route-UserId="@tracker.First().UserId" asp-route-level="@tracker.First().Level">Add next level</a>
+                        <a class="btn btn-success" style="margin-bottom: 10px;" asp-page="EditCompetency" asp-route-competencyId="@tracker.First().CompetencyId" asp-route-UserId="@tracker.First().UserId" asp-route-level="@tracker.First().Level">Edit</a>
 
                     </td>
                     <td>
