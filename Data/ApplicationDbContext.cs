@@ -28,6 +28,8 @@ namespace StudentPortfolio.Data
 
         public virtual DbSet<IndustryContactLog> IndustryContactLogs { get; set; }
 
+        public virtual DbSet<Level> Levels { get; set; }
+
         public virtual DbSet<NetworkingEvent> NetworkingEvents { get; set; }
 
         public virtual DbSet<NetworkingQuestion> NetworkingQuestions { get; set; }
@@ -106,7 +108,12 @@ namespace StudentPortfolio.Data
             {
                 entity.ToTable("Competency");
 
+                entity.HasIndex(e => e.CompetencyId, "UQ_Competency_Id").IsUnique();
+
                 entity.Property(e => e.CompetencyId).HasColumnName("competencyId");
+                entity.Property(e => e.CompetencyDisplayId)
+                    .HasMaxLength(50)
+                    .HasColumnName("competencyDisplayId");
                 entity.Property(e => e.Description)
                     .HasMaxLength(255)
                     .IsUnicode(false)
@@ -123,17 +130,16 @@ namespace StudentPortfolio.Data
 
             modelBuilder.Entity<CompetencyTracker>(entity =>
             {
-                entity.HasKey(e => new { e.UserId, e.CompetencyId, e.Level });
+                entity.HasKey(e => e.CompetencyTrackerId);
 
                 entity.ToTable("CompetencyTracker");
 
+                entity.HasIndex(e => e.CompetencyTrackerId, "UQ_CompetencyTracker_Id").IsUnique();
+
+                entity.Property(e => e.CompetencyTrackerId).HasColumnName("competencyTrackerId");
                 entity.Property(e => e.UserId).HasColumnName("userId");
                 entity.Property(e => e.CompetencyId).HasColumnName("competencyId");
-                entity.Property(e => e.Level)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasDefaultValue("Emerging")
-                    .HasColumnName("level");
+                entity.Property(e => e.LevelId).HasColumnName("levelId");
                 entity.Property(e => e.Created)
                     .HasDefaultValueSql("(sysdatetimeoffset())")
                     .HasColumnName("created");
@@ -164,6 +170,11 @@ namespace StudentPortfolio.Data
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CompetencyTracker_AspNetUsers");
+
+                //entity.HasOne(d => d.Level).WithMany(p => p.CompetencyTrackers)
+                //    .HasForeignKey(d => d.LevelId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_CompetencyTracker_Level");
             });
 
             modelBuilder.Entity<ContactsOfInterest>(entity =>
@@ -296,6 +307,23 @@ namespace StudentPortfolio.Data
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_IndustryContactLog_AspNetUsers");
+            });
+
+            modelBuilder.Entity<Level>(entity =>
+            {
+                entity.HasKey(e => e.LevelId);
+
+                entity.ToTable("Level");
+
+                entity.HasIndex(e => e.LevelId, "UQ_Level_levelId").IsUnique();
+
+                entity.Property(e => e.LevelId).HasColumnName("levelId");
+                entity.Property(e => e.Name)
+                    .HasMaxLength(50)
+                    .HasColumnName("name");
+                entity.Property(e => e.Rank)
+                    .HasMaxLength(50)
+                    .HasColumnName("rank");
             });
 
             modelBuilder.Entity<NetworkingEvent>(entity =>

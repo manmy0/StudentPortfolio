@@ -8,6 +8,8 @@ public partial class Competency
 {
     public long CompetencyId { get; set; }
 
+    public String? CompetencyDisplayId { get; set; }
+
     public long? ParentCompetencyId { get; set; }
 
     public string Description { get; set; } = null!;
