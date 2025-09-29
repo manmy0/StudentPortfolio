@@ -20,3 +20,22 @@ h3 {
     flex-direction: column;
     align-items: center;
 }
+
+p {
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.checkbox-inline {
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.form-button-group {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}

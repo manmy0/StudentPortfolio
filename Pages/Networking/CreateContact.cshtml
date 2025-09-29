@@ -17,11 +17,20 @@
                 <input asp-for="IndustryContactLog.Name" class="form-control" />
                 <span asp-validation-for="IndustryContactLog.Name" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="IndustryContactLog.Company" class="control-label"></label>
+                <input asp-for="IndustryContactLog.Company" class="form-control" />
+                <span asp-validation-for="IndustryContactLog.Company" class="text-danger"></span>
+            </div>
+
+            <hr />
+
             <p>Contact Information</p>
+
             <div>
                 <label class="checkbox-inline"><input type="checkbox" id="phoneCheck">Phone Number</label>
                 <div id="phoneInputContainer" style="display:none;">
-                    <label class="control-label">Phone Number</label>
                     <input asp-for="PhoneNumber" class="form-control" />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
@@ -29,7 +38,6 @@
             <div>
                 <label class="checkbox-inline"><input type="checkbox" id="emailCheck">Email</label>
                 <div id="emailInputContainer" style="display:none;">
-                    <label class="control-label">Email</label>
                     <input asp-for="EmailAddress" class="form-control" />
                     <span asp-validation-for="EmailAddress" class="text-danger"></span>
                 </div>
@@ -37,7 +45,6 @@
             <div>
                 <label class="checkbox-inline"><input type="checkbox" id="linkedInCheck">LinkedIn</label>
                 <div id="linkedInInputContainer" style="display:none;">
-                    <label class="control-label">LinkedIn</label>
                     <input asp-for="LinkedInUrl" class="form-control" />
                     <span asp-validation-for="LinkedInUrl" class="text-danger"></span>
                 </div> 
@@ -45,29 +52,26 @@
             <div>
                 <label class="checkbox-inline"><input type="checkbox" id="otherCheck">Other</label>
                 <div id="otherInputContainer" style="display:none;">
-                    <label class="control-label">Name</label>
                     <input asp-for="OtherContactType" class="form-control" />
-                    <label class="control-label">Infomation</label>
+                    <label class="control-label" style="margin-top: 10px;">Details</label>
                     <input asp-for="OtherContactDetails" class="form-control" />
                     <span asp-validation-for="OtherContactDetails" class="text-danger"></span>
                 </div>
             </div>
-            <div class="form-group">
-                <label asp-for="IndustryContactLog.Company" class="control-label"></label>
-                <input asp-for="IndustryContactLog.Company" class="form-control" />
-                <span asp-validation-for="IndustryContactLog.Company" class="text-danger"></span>
-            </div>
+
+            <hr />
+
             <div class="form-group">
                 <label asp-for="IndustryContactLog.Notes" class="control-label"></label>
                 <input asp-for="IndustryContactLog.Notes" class="form-control" />
                 <span asp-validation-for="IndustryContactLog.Notes" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IndustryContactLog.DateMet" class="control-label"></label>
+                <label asp-for="IndustryContactLog.DateMet" class="control-label">Date Met</label>
                 <input asp-for="IndustryContactLog.DateMet" class="form-control" />
                 <span asp-validation-for="IndustryContactLog.DateMet" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-button-group">
                 <input type="submit" value="Create" class="btn btn-success" />
                 <a class="btn btn-danger" asp-page="Networking">Cancel</a>
             </div>
