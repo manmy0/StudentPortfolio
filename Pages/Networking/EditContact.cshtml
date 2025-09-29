@@ -5,10 +5,12 @@
     ViewData["Title"] = "EditContact";
 }
 
-<h1>EditContact</h1>
+<h3>Edit Contact</h3>
 
-<h4>IndustryContactLog</h4>
 <hr />
+
+<h3> Contact: @Model.IndustryContactLog.Name</h3>
+
 <div class="row">
     <div class="col-md-4">
         <form method="post">
@@ -72,15 +74,12 @@
                 <input asp-for="IndustryContactLog.DateMet" class="form-control" />
                 <span asp-validation-for="IndustryContactLog.DateMet" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="form-button-group">
+                <input type="submit" value="Save" class="btn btn-success" />
+                <a class="btn btn-danger" asp-page="Networking">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="Networking">Back to List</a>
 </div>
 
 @section Scripts {

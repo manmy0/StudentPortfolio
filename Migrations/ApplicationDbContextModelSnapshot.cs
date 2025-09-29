@@ -889,8 +889,8 @@ namespace StudentPortfolio.Migrations
                     b.HasOne("StudentPortfolio.Models.Level", "Level")
                         .WithMany("CompetencyTrackers")
                         .HasForeignKey("LevelId")
-                        .IsRequired()
-                        .HasConstraintName("FK_CompetencyTracker_Level");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StudentPortfolio.Models.ApplicationUser", "User")
                         .WithMany("CompetencyTrackers")

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StudentPortfolio.Migrations
 {
     /// <inheritdoc />
-    public partial class model : Migration
+    public partial class createDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -84,6 +84,7 @@ namespace StudentPortfolio.Migrations
                 {
                     competencyId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    competencyDisplayId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     parentCompetencyId = table.Column<long>(type: "bigint", nullable: true),
                     description = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     linkToIndicators = table.Column<string>(type: "varchar(2048)", unicode: false, maxLength: 2048, nullable: true),
@@ -92,6 +93,20 @@ namespace StudentPortfolio.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Competency", x => x.competencyId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Level",
+                columns: table => new
+                {
+                    levelId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    rank = table.Column<short>(type: "smallint", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Level", x => x.levelId);
                 });
 
             migrationBuilder.CreateTable(
@@ -339,11 +354,13 @@ namespace StudentPortfolio.Migrations
                 name: "CompetencyTracker",
                 columns: table => new
                 {
+                    competencyTrackerId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     userId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     competencyId = table.Column<long>(type: "bigint", nullable: false),
-                    level = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false, defaultValue: "Emerging"),
                     startDate = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "(getdate())"),
                     endDate = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "(getdate())"),
+                    levelId = table.Column<long>(type: "bigint", nullable: false),
                     skillsReview = table.Column<string>(type: "varchar(2048)", unicode: false, maxLength: 2048, nullable: true),
                     evidence = table.Column<string>(type: "varchar(2048)", unicode: false, maxLength: 2048, nullable: true),
                     created = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(sysdatetimeoffset())"),
@@ -351,7 +368,7 @@ namespace StudentPortfolio.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CompetencyTracker", x => new { x.userId, x.competencyId, x.level });
+                    table.PrimaryKey("PK_CompetencyTracker", x => x.competencyTrackerId);
                     table.ForeignKey(
                         name: "FK_CompetencyTracker_AspNetUsers",
                         column: x => x.userId,
@@ -362,6 +379,12 @@ namespace StudentPortfolio.Migrations
                         column: x => x.competencyId,
                         principalTable: "Competency",
                         principalColumn: "competencyId");
+                    table.ForeignKey(
+                        name: "FK_CompetencyTracker_Level_levelId",
+                        column: x => x.levelId,
+                        principalTable: "Level",
+                        principalColumn: "levelId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -468,9 +491,31 @@ namespace StudentPortfolio.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "UQ_Competency_Id",
+                table: "Competency",
+                column: "competencyId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CompetencyTracker_competencyId",
                 table: "CompetencyTracker",
                 column: "competencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompetencyTracker_levelId",
+                table: "CompetencyTracker",
+                column: "levelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompetencyTracker_userId",
+                table: "CompetencyTracker",
+                column: "userId");
+
+            migrationBuilder.CreateIndex(
+                name: "UQ_CompetencyTracker_Id",
+                table: "CompetencyTracker",
+                column: "competencyTrackerId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactsOfInterest_userId",
@@ -525,6 +570,12 @@ namespace StudentPortfolio.Migrations
                 name: "UQ_IndustryContactLog_contactId",
                 table: "IndustryContactLog",
                 column: "contactId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "UQ_Level_levelId",
+                table: "Level",
+                column: "levelId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -608,6 +659,9 @@ namespace StudentPortfolio.Migrations
 
             migrationBuilder.DropTable(
                 name: "Competency");
+
+            migrationBuilder.DropTable(
+                name: "Level");
 
             migrationBuilder.DropTable(
                 name: "Goal");
