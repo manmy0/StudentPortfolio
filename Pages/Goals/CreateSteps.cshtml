@@ -13,45 +13,94 @@
     <h3> Goal: @Model.Goal[0].Description</h3>
 </div>
 
-<div class="test">
 <form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
     <div id="stepContainer">
+
         @for (int i = 0; i < Model.GoalSteps.Count; i++)
         {
-            <div class="item-row">
-                <label for="step">Step</label>
-                <input class="form-control w-auto" style="margin-bottom: 20px" asp-for="GoalSteps[i].Step"/>
+            <div class="item-row d-flex align-items-center mb-2">
+
+                <input type="hidden" asp-for="GoalSteps[i].StepId" />
+                <input type="hidden" asp-for="GoalSteps[i].GoalId" />
+
+                <div class="form-group flex-grow-1 me-2">
+                    <label class="control-label">Step</label>
+                    <input asp-for="GoalSteps[i].Step" class="form-control" />
+                    <span asp-validation-for="GoalSteps[i].Step" class="text-danger"></span>
+                </div>
+                <button type="button" class="btn btn-danger remove-row-btn">Remove</button>
             </div>
         }
     </div>
-    <div>
-        <button class="btn btn-primary" id="addRowButton" type="button">Add Another Step</button>
-        <button class="btn btn-success" type="submit">Save All Steps</button>
+
+    <div class="form-button-group">
+        <button type="button" id="addRowButton" class="btn btn-primary">Add Another Step</button>
+        <input type="submit" value="Save All Changes" class="btn btn-success" />
     </div>
 </form>
 
-<div style="margin-top: 20px;">
-    <a class="btn btn-secondary" asp-page="Goals">Back to Goals</a>
+<div class="form-button-group">
+    <a class="btn btn-danger" asp-page="Goals">Cancel</a>
 </div>
 
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
    
     <script>
-        document.getElementById('addRowButton').addEventListener('click', function () {
-            const container = document.getElementById('stepContainer');
-            const index = container.children.length; // Get the next index
+        document.addEventListener('DOMContentLoaded', function () {
+             const container = document.getElementById('stepContainer');
 
-            const newRow = document.createElement('div');
-            newRow.classList.add('item-row');
-            newRow.innerHTML = `
-                <label for="step">Step</label>
-                <input class="form-control w-auto" style="margin-bottom: 20px" name="GoalSteps[${index}].Step" />
 
-            `;
-            container.appendChild(newRow);
-        });
+             document.getElementById('addRowButton').addEventListener('click', function () {
+                 const index = container.querySelectorAll('.item-row').length;
+
+                 const newRow = document.createElement('div');
+                 newRow.classList.add('item-row', 'd-flex', 'align-items-center', 'mb-2');
+
+                 newRow.innerHTML = `
+                     <input type="hidden" name="GoalSteps[${index}].StepId" value="0" />
+                     <input type="hidden" name="GoalSteps[${index}].GoalId" value="@Model.Id" />
+                     <div class="form-group flex-grow-1 me-2">
+                         <label class="control-label">Step</label>
+                         <input name="GoalSteps[${index}].Step" class="form-control" placeholder="Enter new step description" />
+                     </div>
+                     <button type="button" class="btn btn-danger remove-row-btn">Remove</button>
+                 `;
+                 container.appendChild(newRow);
+             });
+
+             container.addEventListener('click', function (e) {
+                 if (e.target && e.target.classList.contains('remove-row-btn')) {
+
+                     e.target.closest('.item-row').remove();
+                     reindexRows();
+                 }
+             });
+
+                function reindexRows() {
+
+                 const allRows = container.querySelectorAll('.item-row');
+
+                 allRows.forEach((row, newIndex) => {
+                 // Finds all input and validation span elements within the row
+                 row.querySelectorAll('input, span[data-valmsg-for]').forEach(el => {
+
+                     // Updates the 'name' attribute for input fields
+                     if (el.name) {
+                         el.name = el.name.replace(/\[\d+\]/, `[${newIndex}]`);
+                     }
+
+                     // Updates the 'data-valmsg-for' attribute for validation spans
+                     if (el.dataset.valmsgFor) {
+                         el.dataset.valmsgFor = el.dataset.valmsgFor.replace(/\[\d+\]/, `[${newIndex}]`);
+                     }
+                 });
+             });
+         }
+
+         });
     </script>
 }
