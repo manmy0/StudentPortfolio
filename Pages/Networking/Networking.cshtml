@@ -65,7 +65,7 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Date)
+                    @String.Format("{0:dd/MM/yyyy h:mm tt}", item.Date)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Location)

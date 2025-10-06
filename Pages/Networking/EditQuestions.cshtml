@@ -4,72 +4,101 @@
 @{
     ViewData["Title"] = "EditQuestions";
 }
-<h3>Edit Questions</h3>
 
-<hr />
+<div class="container mt-5">
 
-@if (Model.NetworkingEvent != null)
-{
-    <h3>For Goal: @Model.NetworkingEvent.Name</h3>
-}
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm border-1 rounded-4">
 
-<form method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-    <div id="questionsContainer">
-
-        @for (int i = 0; i < Model.NetworkingQuestions.Count; i++)
-        {
-            <div class="item-row d-flex align-items-center mb-2">
-
-                <input type="hidden" asp-for="NetworkingQuestions[i].NetworkingQuestionsId" />
-                <input type="hidden" asp-for="NetworkingQuestions[i].EventId" />
-
-                <div class="form-group flex-grow-1 me-3">
-                    <label class="control-label">Question</label>
-                    <input asp-for="NetworkingQuestions[i].Question" class="form-control" />
-                    <span asp-validation-for="NetworkingQuestions[i].Question" class="text-danger"></span>
+                <div class="card-header bg-light text-black rounded-top-4">
+                    <h4 class="mb-0">Edit Questions</h4>
                 </div>
-                <button type="button" class="btn btn-danger remove-row-btn">Remove</button>
+
+                <div class="card-body p-4">
+
+                    <p class="lead text-muted mb-4">Questions for Event: <strong>@Model.NetworkingEvent.Name</strong></p>
+
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <h5 class="mb-3 text-black">Your Question List</h5>
+
+                        <div id="questionsContainer">
+
+                            @for (int i = 0; i < Model.NetworkingQuestions.Count; i++)
+                            {
+                                <div class="item-row d-flex align-items-center p-3 mb-3 border rounded-3 bg-light">
+
+                                    <input type="hidden" asp-for="NetworkingQuestions[i].NetworkingQuestionsId" />
+                                    <input type="hidden" asp-for="NetworkingQuestions[i].EventId" />
+
+                                    <div class="form-group flex-grow-1 me-3">
+                                        <label asp-for="NetworkingQuestions[i].Question" class="visually-hidden">Question</label>
+                                        <input asp-for="NetworkingQuestions[i].Question" class="form-control" placeholder="Networking Question" />
+                                        <span asp-validation-for="NetworkingQuestions[i].Question" class="text-danger"></span>
+                                    </div>
+
+                                    <button type="button" class="btn btn-sm btn-danger remove-row-btn" title="Remove Question">
+                                        <i class="bi bi-x-lg"></i> Remove
+                                    </button>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                            <button type="button" id="addRowButton" class="btn btn-primary">
+                                <i class="bi bi-plus-lg"></i> Add Another Question
+                            </button>
+
+                            <input type="submit" value="Save All Questions" class="btn btn-success" />
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer d-flex justify-content-end">
+                    <a class="btn btn-outline-secondary" asp-page="Networking">Cancel</a>
+                </div>
+
             </div>
-        }
+        </div>
     </div>
-
-    <div class="form-button-group">
-        <button type="button" id="addRowButton" class="btn btn-primary">Add Another Question</button>
-        <input type="submit" value="Save All Changes" class="btn btn-success" />
-    </div>
-</form>
-
-<div class="form-button-group">
-    <a class="btn btn-danger" asp-page="Networking">Cancel</a>
 </div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const container = document.getElementById('questionsContainer');
 
+             function createNewRowHtml(index) {
+                return `
+                   <div class="item-row d-flex align-items-center p-3 mb-3 border rounded-3 bg-light">
+                        <input type="hidden" name="NetworkingQuestions[${index}].NetworkingQuestionsId" value="0" />
+                        <input type="hidden" name="NetworkingQuestions[${index}].EventId" value="@Model.Id" />
+
+                        <div class="form-group flex-grow-1 me-3">
+                            <label class="visually-hidden">Question</label>
+                            <input name="NetworkingQuestions[${index}].Question" class="form-control" placeholder="Enter new question" />
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-danger remove-row-btn" title="Remove Question">
+                            <i class="bi bi-x-lg"></i> Remove
+                        </button>
+                    </div>
+                `;
+            }
+
 
             document.getElementById('addRowButton').addEventListener('click', function () {
-                const index = container.querySelectorAll('.item-row').length; // selects all item rows
+               const index = container.querySelectorAll('.item-row').length;
 
-                const newRow = document.createElement('div'); 
-                newRow.classList.add('item-row', 'd-flex', 'align-items-center', 'mb-2');
+                const newRow = document.createElement('div');
+                newRow.innerHTML = createNewRowHtml(index).trim();
+                container.appendChild(newRow.firstChild);
 
-                newRow.innerHTML = `
-                    <input type="hidden" name="NetworkingQuestions[${index}].NetworkingQuestionsId" value="0" />
-                    <input type="hidden" name="NetworkingQuestions[${index}].EventId" value="@Model.Id" />
-                    <div class="form-group flex-grow-1 me-2">
-                        <label class="control-label">Question</label>
-                        <input name="NetworkingQuestions[${index}].Question" class="form-control" placeholder="Enter new question" />
-                    </div>
-                    <button type="button" class="btn btn-danger remove-row-btn">Remove</button>
-                `;
-                container.appendChild(newRow);
             });
 
             container.addEventListener('click', function (e) {
@@ -84,11 +113,11 @@
             function reindexRows() {
 
                 const allRows = container.querySelectorAll('.item-row');
-                
+
                 allRows.forEach((row, newIndex) => {
                 // Finds all input and validation span elements within the row
                 row.querySelectorAll('input, span[data-valmsg-for]').forEach(el => {
-                    
+
                     // Updates the 'name' attribute for input fields
                     if (el.name) {
                         el.name = el.name.replace(/\[\d+\]/, `[${newIndex}]`);
@@ -103,7 +132,7 @@
         }
 
         });
-
     </script>
 }
+
 
