@@ -18,14 +18,24 @@
 
             <form method="post">
                 <div class="info-box">
-                    <textarea asp-for="Pitch" class="form-control" rows="7">@Model.CurrentUser.Pitch</textarea>
+                    <textarea asp-for="Pitch" class="form-control" rows="7" placeholder="Create a pitch!">@Model.CurrentUser.Pitch</textarea>
                 </div>
 
                 <div style="text-align: center; margin-top: 10px;">
-                    <button class="btn btn-success" type="button" id="editBtn">Edit</button>
 
                     <button class="btn btn-success" type="submit" id="submitBtn" style="display: none;">Submit</button>
                     <button class="btn btn-danger" type="button" id="cancelBtn" style="display: none;">Cancel</button>
+
+
+                    @if (Model.CurrentUser.Pitch != null)
+                    {
+                        <button class="btn btn-success" type="button" id="editBtn">Edit</button>
+
+                    }
+                    else
+                    {
+                        <button class="btn btn-success" type="button" id="createBtn">Create</button>
+                    }
                 </div>
             </form>
         </div>
@@ -181,6 +191,7 @@
               const editBtn = document.getElementById('editBtn');
               const submitBtn = document.getElementById('submitBtn');
               const cancelBtn = document.getElementById('cancelBtn');
+              const createBtn = document.getElementById('createBtn');
 
               if (pitchTextarea) {
                   let originalPitchText = pitchTextarea.value;
@@ -193,7 +204,9 @@
                       pitchTextarea.style.border = 'none';
                       pitchTextarea.style.resize = 'none';
 
-                      editBtn.style.display = 'none';
+                      if (editBtn) editBtn.style.display = 'none';
+                      if (createBtn) createBtn.style.display = 'none';
+
                       submitBtn.style.display = 'inline-block';
                       cancelBtn.style.display = 'inline-block';
                   };
@@ -206,12 +219,20 @@
                       pitchTextarea.style.resize = 'none';
                       pitchTextarea.style.background = 'transparent';
 
-                      editBtn.style.display = 'inline-block';
+                      if (editBtn) editBtn.style.display = 'inline-block';
+                      if (createBtn) createBtn.style.display = 'inline-block';
+
                       submitBtn.style.display = 'none';
                       cancelBtn.style.display = 'none';
                   };
 
-                  editBtn.addEventListener('click', switchToEditMode);
+                  if (editBtn) {
+                       editBtn.addEventListener('click', switchToEditMode);
+                  }
+
+                  if (createBtn) {
+                       createBtn.addEventListener('click', switchToEditMode);
+                  }
 
                   cancelBtn.addEventListener('click', () => {
                       pitchTextarea.value = originalPitchText;

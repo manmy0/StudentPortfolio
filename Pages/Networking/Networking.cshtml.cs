@@ -26,7 +26,7 @@ namespace StudentPortfolio.Pages.Networking
         }
 
         [BindProperty]
-        public string? Pitch { get; set; } 
+        public string? Pitch { get; set; } = "Edit me!";
         public ApplicationUser CurrentUser { get; set; }
         public IList<IndustryContactLog> IndustryContactLog { get;set; } = default!;
         public IList<IndustryContactInfo> IndustryContactInfo { get; set; } = default!;
