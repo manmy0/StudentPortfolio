@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentPortfolio.Data;
 
@@ -11,9 +12,11 @@ using StudentPortfolio.Data;
 namespace StudentPortfolio.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250927054718_updateCompetency")]
+    partial class updateCompetency
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -437,7 +440,9 @@ namespace StudentPortfolio.Migrations
                         .HasDefaultValueSql("(sysdatetimeoffset())");
 
                     b.Property<long>("LevelId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
+                        .HasDefaultValue(1L)
                         .HasColumnName("levelId");
 
                     b.Property<string>("SkillsReview")
