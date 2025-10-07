@@ -31,6 +31,7 @@ namespace StudentPortfolio.Pages.Dashboard
 
         public ApplicationUser CurrentUser { get; set; }
         public List<CompetencyPerformanceSummaryModel> CompetencyPerformanceSummary { get; set; } = new List<CompetencyPerformanceSummaryModel>();
+        public List<CompetencyPerformanceSummaryModel> LowestFiveCompetencies { get; set; } = new List<CompetencyPerformanceSummaryModel>(5);
 
         public async Task OnGetAsync()
         {
@@ -38,7 +39,7 @@ namespace StudentPortfolio.Pages.Dashboard
 
             if (userId != null)
             {
-                CompetencyPerformanceSummary = await _context.CompetencyTrackers
+                var allCompetencyData = await _context.CompetencyTrackers
                     .Where(i => i.UserId == userId)
                     .Include(i => i.Competency) // need the competency table for the display id
 
@@ -52,6 +53,15 @@ namespace StudentPortfolio.Pages.Dashboard
                         HighestLevelId = g.Max(i => i.LevelId)
                     })
                     .ToListAsync();
+
+                CompetencyPerformanceSummary = allCompetencyData;
+
+                // apparently its good to reuse code so just grabbing the same query
+                // from before and taking the lowest 5 levels from it
+                LowestFiveCompetencies = allCompetencyData
+                    .OrderBy(c => c.HighestLevelId)
+                    .Take(5)
+                    .ToList();
             }
         }
     }
