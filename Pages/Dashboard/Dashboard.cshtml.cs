@@ -20,13 +20,17 @@ namespace StudentPortfolio.Pages.Dashboard
             _userManager = userManager;
         }
 
+        // model for the competency performance summary table
+        public class CompetencyPerformanceSummaryModel
+        {
+            public string CompetencyDisplayId { get; set; }
+            public int TrackerCount { get; set; }
+            public long HighestLevelId { get; set; }
+
+        }
+
         public ApplicationUser CurrentUser { get; set; }
-        public IList<CompetencyTracker> CompetencyTracker { get; set; } = new List<CompetencyTracker>();
-        public IList<Competency> Competencies { get; set; } = new List<Competency>();
-        public IDictionary<long, int> CompetencyCounts { get; set; } = new Dictionary<long, int>();
-        public IList<CompetencyTracker> GroupedTrackers { get; set; } = new List<CompetencyTracker>();
-        public IList<CompetencyTracker> LowestCompetencies { get; set; } = new List<CompetencyTracker>();
-        public IList<CompetencyTrackerDto> GroupedTrackersDto { get; set; } = new List<CompetencyTrackerDto>();
+        public List<CompetencyPerformanceSummaryModel> CompetencyPerformanceSummary { get; set; } = new List<CompetencyPerformanceSummaryModel>();
 
         public async Task OnGetAsync()
         {
@@ -34,60 +38,21 @@ namespace StudentPortfolio.Pages.Dashboard
 
             if (userId != null)
             {
-                // grab competency trackers for the user logged in
-                // puts it in CompetencyTracker (list) for razor page
-                CompetencyTracker = await _context.CompetencyTrackers
-                     .Where(i => i.UserId == userId)
-                     .Include(i => i.User)
-                     .Include(i => i.Competency)
-                     .ToListAsync();
-
-                // grabs all the competencyIds that the user has entries for
-                var compIds = CompetencyTracker
-                    .Select(i => i.CompetencyId)
-                    .Distinct()
-                    .ToList();
-
-                // grab the actual competencies that the user has trackers for from the db
-                Competencies = await _context.Competencies
-                    .Where(i => compIds.Contains(i.CompetencyId))
-                    .ToListAsync();
-
-                // count how many times each competency has been tracked
-                CompetencyCounts = await _context.CompetencyTrackers
+                CompetencyPerformanceSummary = await _context.CompetencyTrackers
                     .Where(i => i.UserId == userId)
-                    .GroupBy(i => i.CompetencyId)
-                    .ToDictionaryAsync(g => g.Key, g => g.Count());
+                    .Include(i => i.Competency) // need the competency table for the display id
 
-                var levelOrder = new Dictionary<string, int>
-                {
-                    {"Developing", 1},
-                    {"Emerging", 2},
-                    {"Capable", 3},
-                    {"Competent", 4}
-                };
-
-                // pick the highest level for each competency
-                // store in list
-                GroupedTrackers = CompetencyTracker
-                    .GroupBy(t => t.CompetencyId)
-                    .Select(group => group.OrderByDescending(t => levelOrder.GetValueOrDefault(t.Level, 0)).First())
-                    .ToList();
-
-                LowestCompetencies = GroupedTrackers
-                    .OrderBy(t => levelOrder.GetValueOrDefault(t.Level, 5))
-                    .Take(5)
-                    .ToList();
-
-                GroupedTrackersDto = GroupedTrackers
-                    .Select(t => new CompetencyTrackerDto { Level = t.Level })
-                    .ToList();
+                     // groups by the competencyId and displayId
+                     // the group will have a key of the competencyId/displayId and values of many competency trackers with the same IDs
+                    .GroupBy(i => new { i.CompetencyId, i.Competency.CompetencyDisplayId })
+                    .Select(g => new CompetencyPerformanceSummaryModel
+                    {
+                        CompetencyDisplayId = g.Key.CompetencyDisplayId,
+                        TrackerCount = g.Count(),
+                        HighestLevelId = g.Max(i => i.LevelId)
+                    })
+                    .ToListAsync();
             }
-        }
-
-        public class CompetencyTrackerDto
-        {
-            public string Level { get; set; }
         }
     }
 }
