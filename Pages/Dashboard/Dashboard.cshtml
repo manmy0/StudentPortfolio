@@ -12,6 +12,71 @@
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        // make it json so its easier to deal with in js
+        const summaryData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CompetencyPerformanceSummary));
+
+        const levelCounts = {};
+        const chartLabels = ['Emerging', 'Developing', 'Proficient', 'Confident'];
+
+        // go through each tracker and count how many competencies are at each level
+        summaryData.forEach(item => {
+            const level = item.HighestLevelId;
+            levelCounts[level] = (levelCounts[level] || 0) + 1;
+        });
+
+        // add the count of the levels to an array
+        const chartDataValues = [];
+        for (let i = 1; i <= 4; i++) {
+            chartDataValues.push(levelCounts[i] || 0);
+        }
+
+        const ctx = document.getElementById('competencyChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    label: 'Competencies',
+                    data: chartDataValues,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)'
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'right',
+                    },
+                    tooltip: {
+                        // show the number of competencies when mouse is hovering
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 }
 
 @*
@@ -155,3 +220,9 @@ else
         No competency tracking data found for your account yet
     </div>
 }
+
+<h1>Competency Attainment Levels</h1>
+
+<div style="width: 75%; margin: auto;">
+    <canvas id="competencyChart"></canvas>
+</div>
