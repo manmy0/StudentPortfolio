@@ -12,6 +12,8 @@
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- chart script -->
     <script>
 
         // make it json so its easier to deal with in js
@@ -77,6 +79,16 @@
             }
         });
     </script>
+
+    <!-- hover to display information functionality -->
+    <script>
+
+        // im being honest here i dont fully understand what is going on but it works
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
 }
 
 
@@ -102,7 +114,10 @@
                                 @foreach (var tracker in Model.CompetencyPerformanceSummary)
                                 {
                                     <tr>
-                                        <td>@tracker.CompetencyDisplayId</td>
+                                        <!-- display description on hover -->
+                                        <td data-bs-toggle="tooltip" title="@tracker.Description">
+                                            @tracker.CompetencyDisplayId
+                                        </td>
                                         <td>@tracker.TrackerCount</td>
                                         <td>@tracker.HighestLevelId</td>
                                     </tr>
@@ -136,6 +151,7 @@
                             <thead class="table-dark">
                                 <tr>
                                     <th>Competency</th>
+                                    <th>Description</th>
                                     <th>Level</th>
                                 </tr>
                             </thead>
@@ -144,6 +160,7 @@
                                 {
                                     <tr>
                                         <td>@tracker.CompetencyDisplayId</td>
+                                        <td>@tracker.Description</td>
                                         <td>@tracker.HighestLevelId</td>
                                     </tr>
                                 }

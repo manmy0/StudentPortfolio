@@ -26,6 +26,7 @@ namespace StudentPortfolio.Pages.Dashboard
             public string CompetencyDisplayId { get; set; }
             public int TrackerCount { get; set; }
             public long HighestLevelId { get; set; }
+            public string Description { get; set; }
 
         }
 
@@ -43,14 +44,16 @@ namespace StudentPortfolio.Pages.Dashboard
                     .Where(i => i.UserId == userId)
                     .Include(i => i.Competency) // need the competency table for the display id
 
-                     // groups by the competencyId and displayId
-                     // the group will have a key of the competencyId/displayId and values of many competency trackers with the same IDs
-                    .GroupBy(i => new { i.CompetencyId, i.Competency.CompetencyDisplayId })
+                    // groups by the competencyId and displayId
+                    // the group will have a key of the competencyId/displayId and values of many competency trackers with the same IDs
+                    // now also grouping by description because it is one to one so it works
+                    .GroupBy(i => new { i.CompetencyId, i.Competency.CompetencyDisplayId, i.Competency.Description })
                     .Select(g => new CompetencyPerformanceSummaryModel
                     {
                         CompetencyDisplayId = g.Key.CompetencyDisplayId,
                         TrackerCount = g.Count(),
-                        HighestLevelId = g.Max(i => i.LevelId)
+                        HighestLevelId = g.Max(i => i.LevelId),
+                        Description = g.Key.Description
                     })
                     .ToListAsync();
 
