@@ -12,8 +12,8 @@ using StudentPortfolio.Data;
 namespace StudentPortfolio.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250927054718_updateCompetency")]
-    partial class updateCompetency
+    [Migration("20251002003041_add")]
+    partial class add
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -440,9 +440,7 @@ namespace StudentPortfolio.Migrations
                         .HasDefaultValueSql("(sysdatetimeoffset())");
 
                     b.Property<long>("LevelId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasDefaultValue(1L)
                         .HasColumnName("levelId");
 
                     b.Property<string>("SkillsReview")
@@ -894,8 +892,8 @@ namespace StudentPortfolio.Migrations
                     b.HasOne("StudentPortfolio.Models.Level", "Level")
                         .WithMany("CompetencyTrackers")
                         .HasForeignKey("LevelId")
-                        .IsRequired()
-                        .HasConstraintName("FK_CompetencyTracker_Level");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StudentPortfolio.Models.ApplicationUser", "User")
                         .WithMany("CompetencyTrackers")

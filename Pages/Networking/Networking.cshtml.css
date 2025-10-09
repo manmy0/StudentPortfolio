@@ -12,8 +12,8 @@
 }
 
 .info-box {
-    width: 500px; 
-    height: 200px; 
+    width: 1000px; 
+    height: 230px; 
     background-color: white; 
     border: 2px solid black; 
     padding: 20px; 
@@ -41,4 +41,18 @@
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
+}
+
+.info-box .form-control.display-mode {
+    height: 100%;
+    border: none;
+    background-color: transparent;
+    resize: none;
+    box-shadow: none;
+    cursor: default;
+}
+
+.info-box.form-control.display-mode:focus {
+     outline: none;
+     box-shadow: none;
 }
