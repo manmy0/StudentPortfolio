@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StudentPortfolio.Models;
 using System.Security.Claims;
 
@@ -20,44 +21,21 @@ namespace StudentPortfolio.Pages.Competencies
             _userManager = userManager;
         }
 
-        public CompetencyTracker CompetencyTracker { get; set; }
-        public Competency Competency { get; set; }
+        public CompetencyTracker CompetencyTracker { get; set; } = default!;
+        public Competency Competency { get; set; } = default!;
         public Competency ParentCompetency { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(long? id)
+        public IList<Level> PossibleLevels { get; set; } = default!;
+
+        public async Task<IActionResult> OnGetAsync(long? competencyId)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (userId == null)
-            {
-                return NotFound();
-            }
-
-            var competencyTracker = await _context.CompetencyTrackers
-                .Where(m => m.CompetencyTrackerId == id)
-                .Where(m => m.UserId == userId)
-                .Include(m => m.Level)
-                .FirstOrDefaultAsync();
-
-            if (competencyTracker == null)
-            {
-                return NotFound();
-            }
-
-            CompetencyTracker = competencyTracker;
-
-            var competency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == CompetencyTracker.CompetencyId);
+            var competency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == competencyId);
 
             if (competency == null)
             {
                 return NotFound();
             }
-
             Competency = competency;
 
             var parentCompetency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == Competency.ParentCompetencyId);
@@ -66,21 +44,47 @@ namespace StudentPortfolio.Pages.Competencies
             {
                 return NotFound();
             }
-
             ParentCompetency = parentCompetency;
+
+
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var competencyTracker = await _context.CompetencyTrackers
+                .Include(m => m.Level)
+                .Where(m => m.CompetencyId == competencyId && m.UserId == userId)
+                .ToListAsync();
+
+            if (!competencyTracker.Any())
+            {
+                PossibleLevels = await _context.Levels
+                    .OrderBy(l => l.Rank)
+                    .Take(1)
+                    .ToListAsync();
+            }
+            else
+            {
+                PossibleLevels = await _context.Levels
+                    .OrderBy(l => l.Rank)
+                    .ToListAsync();
+            }
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync([Bind("StartDate, EndDate, Level, SkillsReview, Evidence")] CompetencyTracker CompetencyTracker)
+        public async Task<IActionResult> OnPostAsync([Bind("CompetencyId, UserId, LevelId, StartDate, EndDate, SkillsReview, Evidence")] CompetencyTracker CompetencyTracker)
         {
-            CompetencyTracker.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
+            
             if (!ModelState.IsValid)
             {
                 return Page();
 
             }
+
+            PossibleLevels = await _context.Levels
+                    .OrderBy(l => l.Rank)
+                    .ToListAsync();
+
+            CompetencyTracker.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             _context.CompetencyTrackers.Add(CompetencyTracker);
             await _context.SaveChangesAsync();

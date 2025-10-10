@@ -39,9 +39,9 @@ namespace StudentPortfolio.Pages.Competencies
             }
 
             var competencyTracker = await _context.CompetencyTrackers
+                .Include(m => m.Level)
                 .Where(m => m.CompetencyTrackerId == competencyTrackerId)
                 .Where(m => m.UserId == userId)
-                .Include(m => m.Level)
                 .FirstOrDefaultAsync();
 
             if (competencyTracker == null)
@@ -53,11 +53,18 @@ namespace StudentPortfolio.Pages.Competencies
 
             var competency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == CompetencyTracker.CompetencyId);
 
+            if (competency == null)
+            {
+                return NotFound();
+            }
             Competency = competency;
 
             var parentCompetency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == Competency.ParentCompetencyId);
 
-            
+            if (parentCompetency == null)
+            {
+                return NotFound();
+            }
             ParentCompetency = parentCompetency;
 
             return Page();
