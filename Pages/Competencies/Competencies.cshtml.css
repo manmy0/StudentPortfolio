@@ -27,3 +27,16 @@
     font-size: 1.2em;
     font-weight: bold;
 }
+
+.icon-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.delete-button {
+    border: none;
+    outline: none;
+    background-color: transparent
+}
