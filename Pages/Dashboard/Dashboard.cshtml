@@ -10,92 +10,173 @@
     </li>
 }
 
-<div class="input-container">
-    <h3>Date Range</h3>
-    <label for="fromInput">From:</label>
-    <input class="input" type="month" id="fromInput" name="from">
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <label for="toInput">To:</label>
-    <input class="input" type="month" id="toInput" name="to">
+    <!-- chart script -->
+    <script>
+
+        // make it json so its easier to deal with in js
+        const summaryData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CompetencyPerformanceSummary));
+
+        const levelCounts = {};
+        const chartLabels = ['Emerging', 'Developing', 'Proficient', 'Confident'];
+
+        // go through each tracker and count how many competencies are at each level
+        summaryData.forEach(item => {
+            const level = item.HighestLevelId;
+            levelCounts[level] = (levelCounts[level] || 0) + 1;
+        });
+
+        // add the count of the levels to an array
+        const chartDataValues = [];
+        for (let i = 1; i <= 4; i++) {
+            chartDataValues.push(levelCounts[i] || 0);
+        }
+
+        const ctx = document.getElementById('competencyChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    label: 'Competencies',
+                    data: chartDataValues,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)'
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                    tooltip: {
+                        // show the number of competencies when mouse is hovering
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- hover to display information functionality -->
+    <script>
+
+        // im being honest here i dont fully understand what is going on but it works
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+}
+
+
+<div class="container mt-4">
+    <div class="row gy-5">
+
+        <!-- left column -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3 mb-4">
+                <h2 class="mb-4">Competency Performance Summary</h2>
+                @if (Model.CompetencyPerformanceSummary.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Competency</th>
+                                    <th>Number of Performance Self Evaluation Examples</th>
+                                    <th>Highest Attainment Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tracker in Model.CompetencyPerformanceSummary)
+                                {
+                                    <tr>
+                                        <!-- display description on hover -->
+                                        <td data-bs-toggle="tooltip" title="@tracker.Description">
+                                            @tracker.CompetencyDisplayId
+                                        </td>
+                                        <td>@tracker.TrackerCount</td>
+                                        <td>@tracker.HighestLevelId</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No competency tracking data found for your account.</p>
+                }
+            </div>
+        </div>
+
+        <!-- right column -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3 mb-4">
+                <h2 class="mb-4">Competency Attainment Levels</h2>
+                <div class="card-body">
+                    <canvas id="competencyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card shadow-sm p-3">
+                <h2 class="mb-4">Needs More Focus</h2>
+                @if (Model.LowestFiveCompetencies.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Competency</th>
+                                    <th>Description</th>
+                                    <th>Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tracker in Model.LowestFiveCompetencies)
+                                {
+                                    <tr>
+                                        <td>@tracker.CompetencyDisplayId</td>
+                                        <td>@tracker.Description</td>
+                                        <td>@tracker.HighestLevelId</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No competency data to display.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a class="btn btn-primary btn-lg" asp-page="/Summary/Summary">View Summary</a>
+    </div>
 </div>
-
-<h3>Competency Performance Summary</h3>
-
-<table class="table w-auto table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>
-                Competency
-            </th>
-            <th>
-                Number of Performance Self Evaluation Examples
-            </th>
-            <th>
-                Highest Attainment Level
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-            <tr>
-                <td>
-                   1.1
-                </td>
-                <td>
-                    1
-                </td>
-                <td>
-                    Emerging
-                </td>
-            </tr>
-    </tbody>
-</table>
-
-<div>
-    <h3 style="position: absolute; margin-left: 800px; top: 140px; clear: both;">Competency Attainment Levels</h3>
-</div>
-
-<div class="chart">
-    <canvas id="myChart"></canvas>
-</div>
-
-<table class="table w-auto table-bordered table-striped" style="position:absolute; margin-left: 900px; bottom: 170px;">
-    <thead>
-        <tr>
-            <th scope="col">Competency</th>
-            <th scope="col">Level</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>EA 1.1</td>
-            <td>Emerging</td>
-        </tr>
-        <tr>
-            <td>EA 1.2</td>
-            <td>Developing</td>
-        </tr>
-    </tbody>
-</table>
-
-<a class="btn btn-primary" asp-page="/Summary/Summary">View Summary</a>
-
-<script>
-        var ctx = document.getElementById('myChart').getContext('2d');
-    var chart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Emerging', 'Competent', 'Developing', 'Capable'],
-            datasets: [{
-                label: 'My First dataset',
-                backgroundColor: [ 'rgb(255, 99, 132)',
-      'rgb(54, 162, 235)',
-      'rgb(255, 205, 86)'],
-                borderColor: [ 'rgb(255, 99, 132)',
-      'rgb(54, 162, 235)',
-      'rgb(255, 205, 86)'],
-                data: [0, 10, 5, 2]
-            }]
-        },
-        options: {}
-    });
-</script>

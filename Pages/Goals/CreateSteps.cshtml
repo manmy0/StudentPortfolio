@@ -5,53 +5,130 @@
     ViewData["Title"] = "CreateSteps";
 }
 
-<h3>Create Steps</h3>
+<div class="container mt-5">
 
-<hr />
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm border-1 rounded-4">
 
-<div>
-    <h3> Goal: @Model.Goal[0].Description</h3>
-</div>
+                <div class="card-header bg-light text-black rounded-top-4">
+                    <h4 class="mb-0">Create Steps</h4>
+                </div>
 
-<div class="test">
-<form method="post">
-    <div id="stepContainer">
-        @for (int i = 0; i < Model.GoalSteps.Count; i++)
-        {
-            <div class="item-row">
-                <label for="step">Step</label>
-                <input class="form-control w-auto" style="margin-bottom: 20px" asp-for="GoalSteps[i].Step"/>
+                <div class="card-body p-4">
+
+                    @if (Model.Goal != null)
+                    {
+                        <p class="lead text-black mb-4">Steps for: <strong>@Model.Goal[0].Description</strong></p>
+                    }
+
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <h5 class="mb-3 text-black">Current Steps</h5>
+
+                        <div id="stepContainer">
+
+                            @for (int i = 0; i < Model.GoalSteps.Count; i++)
+                            {
+                                <div class="item-row d-flex align-items-center p-3 mb-3 border rounded-3 bg-light">
+
+                                    <input type="hidden" asp-for="GoalSteps[i].StepId" />
+                                    <input type="hidden" asp-for="GoalSteps[i].GoalId" />
+
+                                    <div class="form-group flex-grow-1 me-3">
+                                        <label asp-for="GoalSteps[i].Step" class="visually-hidden">Step Description</label>
+                                        <input asp-for="GoalSteps[i].Step" class="form-control" placeholder="Step Description" />
+                                        <span asp-validation-for="GoalSteps[i].Step" class="text-danger"></span>
+                                    </div>
+
+                                    <button type="button" class="btn btn-sm btn-danger remove-row-btn" title="Remove Step">
+                                        <i class="bi bi-x-lg"></i> Remove
+                                    </button>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                            <button type="button" id="addRowButton" class="btn btn-primary">
+                                <i class="bi bi-plus-lg"></i> Add Another Step
+                            </button>
+
+                            <div class="d-flex gap-2">
+                                <a class="btn btn-outline-secondary" asp-page="Goals">Cancel</a>
+                                <input type="submit" value="Save All Changes" class="btn btn-success" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-        }
+        </div>
     </div>
-    <div>
-        <button class="btn btn-primary" id="addRowButton" type="button">Add Another Step</button>
-        <button class="btn btn-success" type="submit">Save All Steps</button>
-    </div>
-</form>
-
-<div style="margin-top: 20px;">
-    <a class="btn btn-secondary" asp-page="Goals">Back to Goals</a>
-</div>
-
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-   
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
     <script>
-        document.getElementById('addRowButton').addEventListener('click', function () {
+        document.addEventListener('DOMContentLoaded', function () {
             const container = document.getElementById('stepContainer');
-            const index = container.children.length; // Get the next index
 
-            const newRow = document.createElement('div');
-            newRow.classList.add('item-row');
-            newRow.innerHTML = `
-                <label for="step">Step</label>
-                <input class="form-control w-auto" style="margin-bottom: 20px" name="GoalSteps[${index}].Step" />
+            function createNewRowHtml(index) {
+                return `
+                    <div class="item-row d-flex align-items-center p-3 mb-3 border rounded-3 bg-light">
+                        <input type="hidden" name="GoalSteps[${index}].StepId" value="0" />
+                        <input type="hidden" name="GoalSteps[${index}].GoalId" value="@Model.Id" />
+                        <div class="form-group flex-grow-1 me-3">
+                            <label class="visually-hidden">Step Description</label>
+                            <input name="GoalSteps[${index}].Step" class="form-control" placeholder="Enter new step description" />
+                        </div>
+                        <button type="button" class="btn btn-sm btn-danger remove-row-btn" title="Remove Step">
+                            <i class="bi bi-x-lg"></i> Remove
+                        </button>
+                    </div>
+                `;
+            }
 
-            `;
-            container.appendChild(newRow);
+            document.getElementById('addRowButton').addEventListener('click', function () {
+                const index = container.querySelectorAll('.item-row').length;
+
+                const newRow = document.createElement('div');
+                newRow.innerHTML = createNewRowHtml(index).trim();
+                container.appendChild(newRow.firstChild);
+            });
+
+
+            container.addEventListener('click', function (e) {
+                if (e.target && e.target.classList.contains('remove-row-btn')) {
+
+                    e.target.closest('.item-row').remove();
+                    reindexRows();
+                }
+            });
+
+             function reindexRows() {
+
+                 const allRows = container.querySelectorAll('.item-row');
+
+                 allRows.forEach((row, newIndex) => {
+                 // Finds all input and validation span elements within the row
+                 row.querySelectorAll('input, span[data-valmsg-for]').forEach(el => {
+
+                     // Updates the 'name' attribute for input fields
+                     if (el.name) {
+                         el.name = el.name.replace(/\[\d+\]/, `[${newIndex}]`);
+                     }
+
+                     // Updates the 'data-valmsg-for' attribute for validation spans
+                     if (el.dataset.valmsgFor) {
+                         el.dataset.valmsgFor = el.dataset.valmsgFor.replace(/\[\d+\]/, `[${newIndex}]`);
+                     }
+                 });
+             });
+         }
+
         });
     </script>
 }
