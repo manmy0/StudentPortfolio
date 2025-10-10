@@ -9,7 +9,7 @@
 
 <h2> @Html.DisplayFor(model => model.ParentCompetency.CompetencyId). @Model.ParentCompetency.Description</h2>
 
-<h3>@Model.GetDisplayCompId(Model.Competency.CompetencyId) @Model.Competency.Description</h3>
+<h3>@Model.Competency.CompetencyDisplayId @Model.Competency.Description</h3>
 <a href="@Model.Competency.LinkToIndicators">Indicators</a>
 
 @* "StartDate, EndDate, Level, SkillsReview, Evidence")] CompetencyTracker CompetencyTracker *@
@@ -23,9 +23,9 @@
             <input type="hidden" asp-for="CompetencyTracker.UserId" />
 
             <div class="form-group">
-                <label asp-for="CompetencyTracker.Level" class="control-label"></label>
-                <input asp-for="CompetencyTracker.Level" class="form-control" />
-                <span asp-validation-for="CompetencyTracker.Level" class="text-danger"></span>
+                <label asp-for="CompetencyTracker.Level.Rank" class="control-label"></label>
+                <input asp-for="CompetencyTracker.Level.Rank" class="form-control" />
+                <span asp-validation-for="CompetencyTracker.Level.Rank" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CompetencyTracker.SkillsReview" class="control-label"></label>
@@ -48,8 +48,18 @@
                 <span asp-validation-for="CompetencyTracker.EndDate" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="CompetencyTracker.SkillsReview" class="control-label"></label>
+                <input asp-for="CompetencyTracker.SkillsReview" class="form-control" />
+                <span asp-validation-for="CompetencyTracker.SkillsReview" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompetencyTracker.Evidence" class="control-label"></label>
+                <input asp-for="CompetencyTracker.Evidence" class="form-control" />
+                <span asp-validation-for="CompetencyTracker.Evidence" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-success" />
-                <a class="btn btn-danger" asp-page="Goals">Cancel</a>
+                <a class="btn btn-danger" asp-page="Competencies">Cancel</a>
             </div>
         </form>
     </div>

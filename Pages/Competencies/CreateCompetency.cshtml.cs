@@ -24,17 +24,24 @@ namespace StudentPortfolio.Pages.Competencies
         public Competency Competency { get; set; }
         public Competency ParentCompetency { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(CompetencyTracker? compTracker)
+        public async Task<IActionResult> OnGetAsync(long? id)
         {
-            if (compTracker == null)
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
             {
                 return NotFound();
             }
 
             var competencyTracker = await _context.CompetencyTrackers
-                .Where(m => m.CompetencyId == compTracker.CompetencyId)
-                .Where(m => m.UserId == compTracker.UserId)
-                .Where(m => m.Level == compTracker.Level)
+                .Where(m => m.CompetencyTrackerId == id)
+                .Where(m => m.UserId == userId)
+                .Include(m => m.Level)
                 .FirstOrDefaultAsync();
 
             if (competencyTracker == null)
@@ -81,21 +88,5 @@ namespace StudentPortfolio.Pages.Competencies
 
         }
 
-        public String GetDisplayCompId(long compId)
-        {
-            var competency = _context.Competencies.FirstOrDefault(m => m.CompetencyId == compId);
-
-            if (competency == null)
-            {
-                return null;
-            }
-
-            if (competency.ParentCompetencyId == null)
-            {
-                return competency.CompetencyId.ToString();
-            }
-
-            return competency.ParentCompetencyId.ToString() + ". " + competency.CompetencyId.ToString() + ".";
-        }
     }
 }

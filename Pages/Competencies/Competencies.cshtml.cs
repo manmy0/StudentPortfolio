@@ -38,11 +38,13 @@ namespace StudentPortfolio.Pages.Competencies
 
             if (userId != null)
             {
+                
                 CompetencyTracker = await _context.CompetencyTrackers
                      .Where(i => i.UserId == userId)
                      .Include(i => i.User)
+                     .Include(i => i.Level)
                      .OrderBy(i => i.CompetencyId)
-                     .ThenByDescending(i => i.Created)
+                     .ThenByDescending(i => i.Level.Rank)
                      .ToListAsync();
 
                 var compIds = await _context.CompetencyTrackers
@@ -51,7 +53,6 @@ namespace StudentPortfolio.Pages.Competencies
                                       .ToListAsync();
                 
                 Competencies = await _context.Competencies
-                    .Where(i => compIds.Contains(i.CompetencyId))
                     .ToListAsync();
 
                 ParentCompetencies = await _context.Competencies
@@ -59,5 +60,25 @@ namespace StudentPortfolio.Pages.Competencies
                     .ToListAsync();
             }
         }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var goalToDelete = await _context.CompetencyTrackers
+                .FirstOrDefaultAsync(g => g.CompetencyTrackerId == id && g.UserId == userId);
+
+            if (goalToDelete == null)
+            {
+                return NotFound();
+            }
+
+            _context.CompetencyTrackers.Remove(goalToDelete);
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("Goals");
+        }
+
+
     }
 }
