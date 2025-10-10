@@ -73,6 +73,13 @@ namespace StudentPortfolio.Pages.Competencies
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            // StartDate must be before EndDate
+            if (CompetencyTracker.StartDate >= CompetencyTracker.EndDate)
+                {
+                    ModelState.AddModelError("CompetencyTracker.EndDate", "End Date must be after Start Date.");
+                    return Page();
+                }
+
             var compTracker = await _context.CompetencyTrackers
                 .Include(c => c.Level)
                 .FirstOrDefaultAsync(m => m.CompetencyTrackerId == CompetencyTracker.CompetencyTrackerId
@@ -85,19 +92,26 @@ namespace StudentPortfolio.Pages.Competencies
             compTracker.EndDate = CompetencyTracker.EndDate;
             compTracker.SkillsReview = CompetencyTracker.SkillsReview;
             compTracker.Evidence = CompetencyTracker.Evidence;
+            compTracker.LastUpdated = DateTime.Now;
 
-            //_context.Attach(CompetencyTracker).State = EntityState.Modified;
+            //await _context.SaveChangesAsync();
 
-            //_context.Update(compTracker);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CompetencyTrackerExists(CompetencyTracker.CompetencyTrackerId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-
-            //Competency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == CompetencyTracker.CompetencyId);
-            //ParentCompetency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == Competency.ParentCompetencyId);
-
-            //await _context.Update(compTracker);
-
-            await _context.SaveChangesAsync();
-            
             return RedirectToPage("./Competencies");
         }
 

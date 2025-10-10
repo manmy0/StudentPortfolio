@@ -79,6 +79,5 @@ namespace StudentPortfolio.Pages.Competencies
             return RedirectToPage("Goals");
         }
 
-
     }
 }

@@ -91,14 +91,10 @@
                         @* @Html.DisplayFor(modelItem => tracker.Evidence) *@
                     </td>
                     <td>
-
-                        @Html.ActionLink("New", "New", new { /* id=item.PrimaryKey */ }) | @*Add an entry for the next level*@
-                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) | @*Update the entry for this level*@
-                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) @*Delete the entry for this level(can't delete lower levels)*@
-                            <a class="btn btn-primary" asp-page="CreateCompetency" asp-route-id="@tracker.First().CompetencyTrackerId">Add next level</a>
+                            <a class="btn btn-primary" asp-page="CreateCompetency" asp-route-id="@comp.CompetencyId">New Entry</a>
                             <a class="btn btn-success" asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">Edit</a>
                             <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.First().CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger">Delete</button> @*Delete the entry for this level(can't delete lower levels)*@
                             </form>
                     </td>
                     <td>
@@ -153,16 +149,15 @@
                     </td>
                     <td>
                         <p>Emerging</p>
-                        @* @tracker.First().Level *@
                     </td>
                     <td> </td>
                     <td> </td>
                     <td> </td>
                     <td> </td>
                     <td>
-
-                        
-                    </td>
+                            <a class="btn btn-primary" asp-page="CreateCompetency" asp-route-id="@comp.CompetencyId">New Entry</a>
+                            <a class="btn btn-success" asp-page="EditCompetency" asp-route-competencyTrackerId="@comp.CompetencyId">Edit</a>
+                        </td>
                     <td>
                         
                     </td>
