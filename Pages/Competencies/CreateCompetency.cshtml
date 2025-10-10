@@ -12,11 +12,12 @@
     <h2>@Model.ParentCompetency.CompetencyId. @Model.ParentCompetency.Description</h2>
 }
 
-@if (Model.ParentCompetency != null)
+@if (Model.Competency != null)
 {
     <h3>@Model.Competency.CompetencyDisplayId @Model.Competency.Description</h3>
+    <a href="@Model.Competency.LinkToIndicators">Indicators</a>
+
 }
-<a href="@Model.Competency.LinkToIndicators">Indicators</a>
 
 @* "StartDate, EndDate, Level, SkillsReview, Evidence")] CompetencyTracker CompetencyTracker *@
 
@@ -31,9 +32,11 @@
             <div class="form-group">
                 <label asp-for="CompetencyTracker.LevelId" class="control-label"></label>
                 <select asp-for="CompetencyTracker.LevelId" class="form-control">
+                    @if(Model.PossibleLevels != null){
                     @foreach (var level in Model.PossibleLevels)
                     {
                         <option value="@level.LevelId">@level.Name</option>
+                    }
                     }
                 </select>
                 <span asp-validation-for="CompetencyTracker.LevelId" class="text-danger"></span>
