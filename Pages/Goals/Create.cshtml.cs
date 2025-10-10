@@ -31,6 +31,7 @@ namespace StudentPortfolio.Pages.Goals
         public async Task<IActionResult> OnPostAsync([Bind("Description, Timeline, StartDate, EndDate")] Goal Goal)
         {
             Goal.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Goal.DateSet = DateOnly.FromDateTime(DateTime.Now);
 
             if (!ModelState.IsValid)   
             {
