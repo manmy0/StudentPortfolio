@@ -91,16 +91,25 @@
                         @* @Html.DisplayFor(modelItem => tracker.Evidence) *@
                     </td>
                     <td>
-                            <a class="btn btn-primary" asp-page="CreateCompetency" asp-route-competencyId="@comp.CompetencyId">New Entry</a>
-                            <a class="btn btn-success" asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">Edit</a>
+                        <div class="icon-display">
+                            <a asp-page="CreateCompetency" asp-route-id="@comp.CompetencyId">
+                                  <img src="~/img/plus-black-symbol.png" style="height: 30px; width: 30px; margin-right: 13px;" alt="Edit Competency" title="Add Entry">
+                            </a>
+
+                            <a asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">
+                                <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Entry">
+                            </a>
                             <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.First().CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
-                                <button type="submit" class="btn btn-danger">Delete</button> @*Delete the entry for this level(can't delete lower levels)*@
+                                <button class="delete-button" type="submit" title="Delete Entry">
+                                     <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Entry">
+                                </button> @*Delete the entry for this level(can't delete lower levels)*@
                             </form>
+                        </div>
                     </td>
                     <td>
                         @if(tracker.Count() > 1)
                         {
-                            <button class="toggle-details">+</button>
+                           <button class="toggle-details">↓</button>
                         }
                     </td>
                 </tr>
@@ -128,11 +137,17 @@
                             <a href="@level.Evidence">Evidence</a>
                         </td>
                         <td>
-                                <a class="btn btn-primary" asp-page="CreateCompetency" asp-route-id="@comp.CompetencyId">New Entry</a>
-                                <a class="btn btn-success" asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">Edit</a>
+                            <div class="icon-display">
+                                <a asp-page="CreateCompetency" asp-route-id="@comp.CompetencyId">
+                                     <img src="~/img/plus-black-symbol.png" style="height: 30px; width: 30px; margin-right: 13px;" alt="Edit Competency" title="Add Entry">
+                                </a>
+                                <a asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">
+                                      <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Entry">
+                                </a>
                                 @* <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.First().CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
                                     <button type="submit" class="btn btn-danger">Delete</button> @*Delete the entry for this level(can't delete lower levels)
                                 </form> *@
+                            </div>
                         </td>
                     </tr>
                 }                
@@ -181,7 +196,7 @@
             var $detailRow = $masterRow.next('.collapsible-content');
 
             $detailRow.toggle(); // Toggles display: none and display: block
-            $button.text($detailRow.is(':visible') ? '-' : '+'); // Change button text
+            $button.text($detailRow.is(':visible') ? '↑' : '↓'); // Change button text
         });
     });
 </script>

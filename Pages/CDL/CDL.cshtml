@@ -20,13 +20,10 @@
                 @Html.DisplayNameFor(model => model.Cdl[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Cdl[0].Description)
+                @Html.DisplayNameFor(model => model.Cdl[0].Description) 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Cdl[0].Link)
-            </th>
-            <th>
-                Date Uploaded
+                Uploaded
             </th>
         </tr>
     </thead>
@@ -38,10 +35,7 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    <a href="@Html.DisplayFor(modelItem => item.Link)">Link</a>
+                    @Html.DisplayFor(modelItem => item.Description) <a href="@Html.DisplayFor(modelItem => item.Link)">Link</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.LastUpdated)
