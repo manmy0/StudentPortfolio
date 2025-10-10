@@ -92,7 +92,7 @@
                     </td>
                     <td>
                         <div class="icon-display">
-                            <a asp-page="CreateCompetency" asp-route-id="@comp.CompetencyId">
+                            <a asp-page="CreateCompetency" asp-route-competencyId="@comp.CompetencyId">
                                   <img src="~/img/plus-black-symbol.png" style="height: 30px; width: 30px; margin-right: 13px;" alt="Edit Competency" title="Add Entry">
                             </a>
 
@@ -138,9 +138,6 @@
                         </td>
                         <td>
                             <div class="icon-display">
-                                <a asp-page="CreateCompetency" asp-route-id="@comp.CompetencyId">
-                                     <img src="~/img/plus-black-symbol.png" style="height: 30px; width: 30px; margin-right: 13px;" alt="Edit Competency" title="Add Entry">
-                                </a>
                                 <a asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">
                                       <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Entry">
                                 </a>

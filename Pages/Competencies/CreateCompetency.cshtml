@@ -5,12 +5,19 @@
     ViewData["Title"] = "CreateCompetency";
 }
 
-<h2>Add Competency entry for the next level</h2>
+<h2>Add Competency Tracker Entry</h2>
 
-<h2> @Html.DisplayFor(model => model.ParentCompetency.CompetencyId). @Model.ParentCompetency.Description</h2>
+@if (Model.ParentCompetency != null)
+{
+    <h2>@Model.ParentCompetency.CompetencyId. @Model.ParentCompetency.Description</h2>
+}
 
-<h3>@Model.Competency.CompetencyDisplayId @Model.Competency.Description</h3>
-<a href="@Model.Competency.LinkToIndicators">Indicators</a>
+@if (Model.Competency != null)
+{
+    <h3>@Model.Competency.CompetencyDisplayId @Model.Competency.Description</h3>
+    <a href="@Model.Competency.LinkToIndicators">Indicators</a>
+
+}
 
 @* "StartDate, EndDate, Level, SkillsReview, Evidence")] CompetencyTracker CompetencyTracker *@
 
@@ -23,20 +30,18 @@
             <input type="hidden" asp-for="CompetencyTracker.UserId" />
 
             <div class="form-group">
-                <label asp-for="CompetencyTracker.Level.Rank" class="control-label"></label>
-                <input asp-for="CompetencyTracker.Level.Rank" class="form-control" />
-                <span asp-validation-for="CompetencyTracker.Level.Rank" class="text-danger"></span>
+                <label asp-for="CompetencyTracker.LevelId" class="control-label"></label>
+                <select asp-for="CompetencyTracker.LevelId" class="form-control">
+                    @if(Model.PossibleLevels != null){
+                    @foreach (var level in Model.PossibleLevels)
+                    {
+                        <option value="@level.LevelId">@level.Name</option>
+                    }
+                    }
+                </select>
+                <span asp-validation-for="CompetencyTracker.LevelId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CompetencyTracker.SkillsReview" class="control-label"></label>
-                <input asp-for="CompetencyTracker.SkillsReview" class="form-control" />
-                <span asp-validation-for="CompetencyTracker.SkillsReview" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompetencyTracker.Evidence" class="control-label"></label>
-                <input asp-for="CompetencyTracker.SkillsReview" class="form-control" />
-                <span asp-validation-for="CompetencyTracker.SkillsReview" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="CompetencyTracker.StartDate" class="control-label">Start Date</label>
                 <input asp-for="CompetencyTracker.StartDate" class="form-control" />
