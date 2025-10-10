@@ -1,0 +1,72 @@
+﻿@page
+@model StudentPortfolio.Pages.Competencies.CreateCompetencyModel
+
+@{
+    ViewData["Title"] = "CreateCompetency";
+}
+
+<h2>Add Competency entry for the next level</h2>
+
+<h2> @Html.DisplayFor(model => model.ParentCompetency.CompetencyId). @Model.ParentCompetency.Description</h2>
+
+<h3>@Model.Competency.CompetencyDisplayId @Model.Competency.Description</h3>
+<a href="@Model.Competency.LinkToIndicators">Indicators</a>
+
+@* "StartDate, EndDate, Level, SkillsReview, Evidence")] CompetencyTracker CompetencyTracker *@
+
+<hr />
+<div class="row">
+    <div class="input-group">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CompetencyTracker.CompetencyId" />
+            <input type="hidden" asp-for="CompetencyTracker.UserId" />
+
+            <div class="form-group">
+                <label asp-for="CompetencyTracker.Level.Rank" class="control-label"></label>
+                <input asp-for="CompetencyTracker.Level.Rank" class="form-control" />
+                <span asp-validation-for="CompetencyTracker.Level.Rank" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompetencyTracker.SkillsReview" class="control-label"></label>
+                <input asp-for="CompetencyTracker.SkillsReview" class="form-control" />
+                <span asp-validation-for="CompetencyTracker.SkillsReview" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompetencyTracker.Evidence" class="control-label"></label>
+                <input asp-for="CompetencyTracker.SkillsReview" class="form-control" />
+                <span asp-validation-for="CompetencyTracker.SkillsReview" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompetencyTracker.StartDate" class="control-label">Start Date</label>
+                <input asp-for="CompetencyTracker.StartDate" class="form-control" />
+                <span asp-validation-for="CompetencyTracker.StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompetencyTracker.EndDate" class="control-label">End Date</label>
+                <input asp-for="CompetencyTracker.EndDate" class="form-control" />
+                <span asp-validation-for="CompetencyTracker.EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompetencyTracker.SkillsReview" class="control-label"></label>
+                <input asp-for="CompetencyTracker.SkillsReview" class="form-control" />
+                <span asp-validation-for="CompetencyTracker.SkillsReview" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompetencyTracker.Evidence" class="control-label"></label>
+                <input asp-for="CompetencyTracker.Evidence" class="form-control" />
+                <span asp-validation-for="CompetencyTracker.Evidence" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+                <a class="btn btn-danger" asp-page="Competencies">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -20,9 +20,19 @@ namespace StudentPortfolio.Pages.Dashboard
             _userManager = userManager;
         }
 
+        // model for the competency performance summary table
+        public class CompetencyPerformanceSummaryModel
+        {
+            public string CompetencyDisplayId { get; set; }
+            public int TrackerCount { get; set; }
+            public long HighestLevelId { get; set; }
+            public string Description { get; set; }
+
+        }
+
         public ApplicationUser CurrentUser { get; set; }
-        public IList<CompetencyTracker> CompetencyTracker { get; set; } = default!;
-        public IList<Competency> Competencies { get; set; } = default!;
+        public List<CompetencyPerformanceSummaryModel> CompetencyPerformanceSummary { get; set; } = new List<CompetencyPerformanceSummaryModel>();
+        public List<CompetencyPerformanceSummaryModel> LowestFiveCompetencies { get; set; } = new List<CompetencyPerformanceSummaryModel>(5);
 
         public async Task OnGetAsync()
         {
@@ -30,21 +40,32 @@ namespace StudentPortfolio.Pages.Dashboard
 
             if (userId != null)
             {
-                CompetencyTracker = await _context.CompetencyTrackers
-                     .Where(i => i.UserId == userId)
-                     .Include(i => i.User)
-                     .ToListAsync();
+                var allCompetencyData = await _context.CompetencyTrackers
+                    .Where(i => i.UserId == userId)
+                    .Include(i => i.Competency) // need the competency table for the display id
 
-                var compIds = await _context.CompetencyTrackers
-                                      .Where(i => i.UserId == userId)
-                                      .Select(i => i.CompetencyId)
-                                      .ToListAsync();
-
-                Competencies = await _context.Competencies
-                    .Where(i => compIds.Contains(i.CompetencyId))
+                    // groups by the competencyId and displayId
+                    // the group will have a key of the competencyId/displayId and values of many competency trackers with the same IDs
+                    // now also grouping by description because it is one to one so it works
+                    .GroupBy(i => new { i.CompetencyId, i.Competency.CompetencyDisplayId, i.Competency.Description })
+                    .Select(g => new CompetencyPerformanceSummaryModel
+                    {
+                        CompetencyDisplayId = g.Key.CompetencyDisplayId,
+                        TrackerCount = g.Count(),
+                        HighestLevelId = g.Max(i => i.LevelId),
+                        Description = g.Key.Description
+                    })
                     .ToListAsync();
+
+                CompetencyPerformanceSummary = allCompetencyData;
+
+                // apparently its good to reuse code so just grabbing the same query
+                // from before and taking the lowest 5 levels from it
+                LowestFiveCompetencies = allCompetencyData
+                    .OrderBy(c => c.HighestLevelId)
+                    .Take(5)
+                    .ToList();
             }
         }
     }
 }
-
