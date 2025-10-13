@@ -73,17 +73,14 @@
                         position: 'top',
                     },
                     tooltip: {
-                        // show the number of competencies when mouse is hovering
+                        // show the percentage and number of competencies when mouse is hovering
                         callbacks: {
                             label: function(context) {
-                                let label = context.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed !== null) {
-                                    label += context.parsed;
-                                }
-                                return label;
+                                const total = context.chart._metasets[0].total; // count total number of data points in graph
+                                const value = context.parsed; // number of competencies at particular level
+                                const percentage = ((value / total) * 100).toFixed(1); // calculate percentage
+
+                                return `${percentage}% (${value})`;
                             }
                         }
                     }
