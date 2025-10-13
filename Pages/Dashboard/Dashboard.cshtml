@@ -2,6 +2,14 @@
 @model StudentPortfolio.Pages.Dashboard.DashboardModel
 @{
     ViewData["Title"] = "Dashboard";
+
+    Dictionary<long, string> levelDict = new Dictionary<long, string>
+    {
+        { 1, "Emerging" },
+        { 2, "Developing" },
+        { 3, "Proficient"},
+        { 4, "Confident" }
+    };
 }
 
 @section DashboardNav {
@@ -109,7 +117,8 @@
                         <table class="table table-striped table-bordered mb-0">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>Competency</th>
+                                    <th>Competency ID</th>
+                                    <th>Description</th>
                                     <th>Number of Performance Self Evaluation Examples</th>
                                     <th>Highest Attainment Level</th>
                                 </tr>
@@ -122,8 +131,9 @@
                                         <td data-bs-toggle="tooltip" title="@tracker.Description">
                                             @tracker.CompetencyDisplayId
                                         </td>
+                                        <td>@tracker.Description</td>
                                         <td>@tracker.TrackerCount</td>
-                                        <td>@tracker.HighestLevelId</td>
+                                        <td>@levelDict[tracker.HighestLevelId]</td>
                                     </tr>
                                 }
                             </tbody>
@@ -165,7 +175,7 @@
                                     <tr>
                                         <td>@tracker.CompetencyDisplayId</td>
                                         <td>@tracker.Description</td>
-                                        <td>@tracker.HighestLevelId</td>
+                                        <td>@levelDict[tracker.HighestLevelId]</td>
                                     </tr>
                                 }
                             </tbody>
