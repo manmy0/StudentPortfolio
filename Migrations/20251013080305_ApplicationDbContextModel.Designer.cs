@@ -12,8 +12,8 @@ using StudentPortfolio.Data;
 namespace StudentPortfolio.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251002003041_add")]
-    partial class add
+    [Migration("20251013080305_ApplicationDbContextModel")]
+    partial class ApplicationDbContextModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

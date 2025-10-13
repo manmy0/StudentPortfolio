@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StudentPortfolio.Migrations
 {
     /// <inheritdoc />
-    public partial class add : Migration
+    public partial class ApplicationDbContextModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
