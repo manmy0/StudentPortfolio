@@ -123,12 +123,13 @@ namespace StudentPortfolio.Areas.Identity.Pages.Account
 
                     if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
                     {
-                        // If the user is an Admin, redirect them to the Admin Dashboard.
+                        // If the user is an Admin, redirect them to the Admin Dashboard
                         return LocalRedirect("/Admin/Index");
                     }
 
                     else if (user != null && await _userManager.IsInRoleAsync(user, "Student"))
                     {
+                        //If the user is a student, redirect them to the Student Dashboard
                         return LocalRedirect("/Dashboard/Dashboard");
                     }
 
