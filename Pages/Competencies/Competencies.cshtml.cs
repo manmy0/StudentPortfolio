@@ -65,18 +65,18 @@ namespace StudentPortfolio.Pages.Competencies
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var goalToDelete = await _context.CompetencyTrackers
+            var competencyToDelete = await _context.CompetencyTrackers
                 .FirstOrDefaultAsync(g => g.CompetencyTrackerId == id && g.UserId == userId);
 
-            if (goalToDelete == null)
+            if (competencyToDelete == null)
             {
                 return NotFound();
             }
 
-            _context.CompetencyTrackers.Remove(goalToDelete);
+            _context.CompetencyTrackers.Remove(competencyToDelete);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("Goals");
+            return RedirectToPage("Competencies");
         }
 
     }
