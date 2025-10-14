@@ -18,11 +18,15 @@
 
     <!-- dropdown -->
     <div class="d-flex justify-content-center mb-4">
-        <select class="form-select w-auto" name="yearSelect">
-            <option value="">-- Select Year --</option>
-            <option value="2024">2024</option>
-            <option value="2025">2025</option>
-        </select>
+
+        <!-- get puts selectedYear=xxxx in the url for the controller to use -->
+        <form method="get">
+            <label for="select-year" class="form-label fw-bold">Filter by year</label>
+            <select id="select-year" class="form-select w-auto" name="selectedYear" onchange="this.form.submit()">
+                <option value="2024" selected="@(Model.selectedYear == 2024)">2024</option>
+                <option value="2025" selected="@(Model.selectedYear == 2025)">2025</option>
+            </select>
+        </form>
     </div>
 
     <div class="row g-4 justify-content-center">
@@ -46,10 +50,11 @@
                 <div class="card-body">
                     <h3 class="card-title text-center mb-3">Stats</h3>
                     <ul class="list-group list-group-flush text-center">
-                        <li class="list-group-item">Goals Completed This Year: 10</li>
-                        <li class="list-group-item">Competencies Confident: 6</li>
-                        <li class="list-group-item">Competencies Emerging: 4</li>
-                        <li class="list-group-item">Logbook Completed</li>
+                        <li class="list-group-item">Goals Completed This Year: @Model.SummaryData.GoalsCompleted</li>
+                        <li class="list-group-item">Competencies Emerging: @Model.SummaryData.Emerging</li>
+                        <li class="list-group-item">Competencies Developing: @Model.SummaryData.Developing</li>
+                        <li class="list-group-item">Competencies Proficient: @Model.SummaryData.Proficient</li>
+                        <li class="list-group-item">Competencies Confident: @Model.SummaryData.Confident</li>
                     </ul>
                 </div>
             </div>
