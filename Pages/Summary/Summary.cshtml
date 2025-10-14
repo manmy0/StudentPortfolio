@@ -6,7 +6,7 @@
 
 <h1 style="text-align: center;">Summary</h1>
 
-<img src="@Model.CurrentUser.ProfileImage" alt="Cage">
+<img src="@Model.ProfileImageBase64" alt="Profile image">
 
 <h3 style="text-align: center;">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h3>
 <p style="text-align: center;">@Model.CurrentUser.Degree</p>
@@ -17,12 +17,8 @@
     <a class="btn btn-primary" asp-page="/Dashboard/Dashboard">Back to Dashboard</a>
 </div>
 
-<select class="form-select w-auto" name="select-year">
+<select class="form-select w-auto" name="yearSelect">
     <option value="">-- Select Year --</option>
-    <option value="2020">2020</option>
-    <option value="2021">2021</option>
-    <option value="2022">2022</option>
-    <option value="2023">2023</option>
     <option value="2024">2024</option>
     <option value="2025">2025</option>
 </select>

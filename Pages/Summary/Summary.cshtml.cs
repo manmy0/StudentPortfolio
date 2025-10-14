@@ -21,6 +21,18 @@ namespace StudentPortfolio.Pages.Summary
             _userManager = userManager;
         }
 
+        /* 
+         Things i want to get:
+            Image, name, degree, specialisation of user
+            Goals completed in year
+            Number of competencies at each level
+            
+         */
+
+        public string? ProfileImageBase64 =>
+            CurrentUser?.ProfileImage != null
+                ? $"data:image/jpeg;base64,{Convert.ToBase64String(CurrentUser.ProfileImage)}"
+                : null;
 
         public async Task OnGetAsync()
         {
