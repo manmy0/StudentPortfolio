@@ -4,39 +4,62 @@
     ViewData["Title"] = "Summary";
 }
 
-<h1 style="text-align: center;">Summary</h1>
+<div class="container my-5">
 
-<img src="@Model.ProfileImageBase64" alt="Profile image">
+    <!-- heading and back button -->
+    <div class="row align-items-center mb-3">
+        <div class="col text-center position-relative">
+            <h1 class="m-0">Summary</h1>
+            <a class="btn btn-primary position-absolute top-0 end-0" asp-page="/Dashboard/Dashboard">Back to Dashboard</a>
+        </div>
+    </div>
 
-<h3 style="text-align: center;">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h3>
-<p style="text-align: center;">@Model.CurrentUser.Degree</p>
+    <hr class="mb-4" />
 
-<hr />
+    <!-- dropdown -->
+    <div class="d-flex justify-content-center mb-4">
+        <select class="form-select w-auto" name="yearSelect">
+            <option value="">-- Select Year --</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+        </select>
+    </div>
 
-<div style="display: flex; justify-content: flex-end;">
-    <a class="btn btn-primary" asp-page="/Dashboard/Dashboard">Back to Dashboard</a>
-</div>
+    <div class="row g-4 justify-content-center">
 
-<select class="form-select w-auto" name="yearSelect">
-    <option value="">-- Select Year --</option>
-    <option value="2024">2024</option>
-    <option value="2025">2025</option>
-</select>
+        <!-- profile stuff -->
+        <div class="col-12 col-md-5">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <img src="@Model.ProfileImageBase64" alt="Profile image"
+                         class="img-fluid rounded-circle mb-3"
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                    <h3 class="card-title">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h3>
+                    <p class="card-text text-muted">@Model.CurrentUser.Degree</p>
+                </div>
+            </div>
+        </div>
 
+        <!-- stats stuff -->
+        <div class="col-12 col-md-5">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-3">Stats</h3>
+                    <ul class="list-group list-group-flush text-center">
+                        <li class="list-group-item">Goals Completed This Year: 10</li>
+                        <li class="list-group-item">Competencies Confident: 6</li>
+                        <li class="list-group-item">Competencies Emerging: 4</li>
+                        <li class="list-group-item">Logbook Completed</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-<div class="my-box3">
-    <h3 style="text-align: center;">Stats</h3>
-    <div class="col">
-        <p>Goals Completed This Year: 10 </p>
-        <p>Competencies Confident: 6</p>
-        <p>Competencies Emerging: 4 </p>
-        <p>Logbook Completed</p>
+    </div>
+
+    <!-- export button -->
+    <div class="text-center mt-4">
+        <a class="btn btn-secondary" asp-page="/Export/Export">Export</a>
     </div>
 
 </div>
-
-<div class="text-center">
-    <a class="btn btn-secondary" style="text-align: center;" asp-page="/Export/Export">Export</a>
-</div>
-
-
