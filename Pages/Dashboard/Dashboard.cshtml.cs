@@ -34,14 +34,21 @@ namespace StudentPortfolio.Pages.Dashboard
         public List<CompetencyPerformanceSummaryModel> CompetencyPerformanceSummary { get; set; } = new List<CompetencyPerformanceSummaryModel>();
         public List<CompetencyPerformanceSummaryModel> LowestFiveCompetencies { get; set; } = new List<CompetencyPerformanceSummaryModel>(5);
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int selectedYear)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId != null)
             {
+                if (selectedYear == 0)
+                {
+                    // default to current year if no year is selected
+                    selectedYear = DateTime.Now.Year; 
+                }
+
                 var allCompetencyData = await _context.CompetencyTrackers
                     .Where(i => i.UserId == userId)
+                    .Where(i => i.Created.Year <= selectedYear)
                     .Include(i => i.Competency) // need the competency table for the display id
 
                     // groups by the competencyId and displayId
