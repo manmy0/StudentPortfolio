@@ -43,11 +43,7 @@ namespace StudentPortfolio.Pages.Goals
             {
                 short thisYear = (short)DateTime.Now.Year;
 
-                if (selectedYear == 0)
-                {
-                    // default to current year if no year is selected
-                    selectedYear = thisYear;
-                }
+                
 
                 Goal = await _context.Goals
                     .Where(i => i.UserId == userId)
@@ -68,14 +64,37 @@ namespace StudentPortfolio.Pages.Goals
                     .Include(i => i.User)
                     .ToListAsync();
 
-                CDP = AllCDP
-                    .Where(i => i.Year == selectedYear)
-                    .ToList();
-
                 PossibleYears = AllCDP
                     .Select(i => i.Year)
                     .ToList();
 
+                // Show the CDP entry for a specific year if a year has been selected
+                if (selectedYear != 0)
+                {
+                    CDP = AllCDP
+                        .Where(i => i.Year == selectedYear)
+                        .ToList();
+                }
+                // Show the most recent CDP entry if the user has any and a year hasn't been selected
+                else if (PossibleYears.Count() != 0)
+                {
+                    CDP = AllCDP
+                        .Where(i => i.Year == PossibleYears.Last())
+                        .ToList();
+
+                    selectedYear = PossibleYears.Last();
+                }
+                // Default to showing this years CDP entry even if it's blank
+                else
+                {
+                    CDP = AllCDP
+                        .Where(i => i.Year == thisYear)
+                        .ToList();
+
+                    selectedYear = thisYear;
+                }
+
+                // Even if the user doesn't have an entry for this year, list it as an option
                 if (!PossibleYears.Contains(thisYear))
                 {
                     PossibleYears.Add(thisYear);
