@@ -28,7 +28,8 @@ namespace StudentPortfolio.Pages.Goals
         }
 
         [BindProperty(SupportsGet = true)]
-        public int selectedYear { get; set; }
+        public short selectedYear { get; set; }
+        public IList<short> PossibleYears { get; set; } = default!;
         public ApplicationUser CurrentUser { get; set; }
         public IList<Goal> Goal { get;set; } = default!;
         public IList<CareerDevelopmentPlan> CDP { get; set; } = default!;
@@ -40,10 +41,12 @@ namespace StudentPortfolio.Pages.Goals
 
             if (userId != null)
             {
+                short thisYear = (short)DateTime.Now.Year;
+
                 if (selectedYear == 0)
                 {
                     // default to current year if no year is selected
-                    selectedYear = DateTime.Now.Year;
+                    selectedYear = thisYear;
                 }
 
                 Goal = await _context.Goals
@@ -58,12 +61,25 @@ namespace StudentPortfolio.Pages.Goals
 
                 GoalSteps = await _context.GoalSteps
                     .Where(i => goalIds.Contains(i.GoalId))
-                    .ToListAsync(); 
-                
-                CDP = await _context.CareerDevelopmentPlans
-                    .Where(i => i.UserId == userId && i.Year == selectedYear)
+                    .ToListAsync();
+
+                var AllCDP = await _context.CareerDevelopmentPlans
+                    .Where(i => i.UserId == userId)
                     .Include(i => i.User)
                     .ToListAsync();
+
+                CDP = AllCDP
+                    .Where(i => i.Year == selectedYear)
+                    .ToList();
+
+                PossibleYears = AllCDP
+                    .Select(i => i.Year)
+                    .ToList();
+
+                if (!PossibleYears.Contains(thisYear))
+                {
+                    PossibleYears.Add(thisYear);
+                }
             }
         }
 
