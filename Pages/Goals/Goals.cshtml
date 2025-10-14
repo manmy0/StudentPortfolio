@@ -11,13 +11,19 @@
     </li>
 }
 
-<div class="input-container">
-    <h3>Date Range</h3>
-    <label for="fromInput">From:</label>
-    <input class="input" type="month" id="fromInput" name="from">
-
-    <label for="toInput">To:</label>
-    <input class="input" type="month" id="toInput" name="to">
+<div>
+    <!-- get puts selectedYear=xxxx in the url for the controller to use -->
+    <form method="get">
+        <label for="select-year" class="form-label fw-bold">Filter by year</label>
+        <select id="select-year" class="form-select w-auto" name="selectedYear" onchange="this.form.submit()">
+            <option value="2020" selected="@(Model.selectedYear == 2020)">2020</option>
+            <option value="2021" selected="@(Model.selectedYear == 2021)">2021</option>
+            <option value="2022" selected="@(Model.selectedYear == 2022)">2022</option>
+            <option value="2023" selected="@(Model.selectedYear == 2023)">2023</option>
+            <option value="2024" selected="@(Model.selectedYear == 2024)">2024</option>
+            <option value="2025" selected="@(Model.selectedYear == 2025)">2025</option>
+        </select>
+    </form>
 </div>
 
 <div class="info-container">
@@ -33,9 +39,23 @@
         <label for="dev" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Development Focus for This Year:</label>
         <textarea class="form-control" id="dev" style="height: 100px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" rows="5" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().DevelopmentFocus)</textarea>
     </div>
+    <label for="net" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Networking Plan:</label>
+    <textarea class="form-control" id="net" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().NetworkingPlan)</textarea>
+
+    <label for="extra" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Extracurricular:</label>
+    <textarea class="form-control" id="extra" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().Extracurricular)</textarea>
 </div>
 
 <a class="btn btn-primary" asp-page="Create">New Goal</a>
+
+<div class="input-container">
+    <h3>Date Range</h3>
+    <label for="fromInput">From:</label>
+    <input class="input" type="month" id="fromInput" name="from">
+
+    <label for="toInput">To:</label>
+    <input class="input" type="month" id="toInput" name="to">
+</div>
 
 <table class="table table-bordered table-striped">
     <thead>

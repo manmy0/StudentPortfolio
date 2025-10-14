@@ -27,6 +27,8 @@ namespace StudentPortfolio.Pages.Goals
 
         }
 
+        [BindProperty(SupportsGet = true)]
+        public int selectedYear { get; set; }
         public ApplicationUser CurrentUser { get; set; }
         public IList<Goal> Goal { get;set; } = default!;
         public IList<CareerDevelopmentPlan> CDP { get; set; } = default!;
@@ -38,6 +40,12 @@ namespace StudentPortfolio.Pages.Goals
 
             if (userId != null)
             {
+                if (selectedYear == 0)
+                {
+                    // default to current year if no year is selected
+                    selectedYear = DateTime.Now.Year;
+                }
+
                 Goal = await _context.Goals
                     .Where(i => i.UserId == userId)
                     .Include(i => i.User)
@@ -53,7 +61,7 @@ namespace StudentPortfolio.Pages.Goals
                     .ToListAsync(); 
                 
                 CDP = await _context.CareerDevelopmentPlans
-                    .Where(i => i.UserId == userId)
+                    .Where(i => i.UserId == userId && i.Year == selectedYear)
                     .Include(i => i.User)
                     .ToListAsync();
             }
