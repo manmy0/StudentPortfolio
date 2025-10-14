@@ -19,8 +19,6 @@
 
 }
 
-@* "StartDate, EndDate, Level, SkillsReview, Evidence")] CompetencyTracker CompetencyTracker *@
-
 <hr />
 <div class="row">
     <div class="input-group">
@@ -31,11 +29,12 @@
             <div class="form-group">
                 <label asp-for="CompetencyTracker.LevelId" class="control-label"></label>
                 <select asp-for="CompetencyTracker.LevelId" class="form-control">
-                    @if(Model.PossibleLevels != null){
-                    @foreach (var level in Model.PossibleLevels)
+                    @if (Model.PossibleLevels != null)
                     {
-                        <option value="@level.LevelId">@level.Name</option>
-                    }
+                        @foreach (var level in Model.PossibleLevels)
+                        {
+                            <option value="@level.LevelId">@level.Rank. @level.Name</option>
+                        }
                     }
                 </select>
                 <span asp-validation-for="CompetencyTracker.LevelId" class="text-danger"></span>

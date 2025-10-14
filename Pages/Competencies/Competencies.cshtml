@@ -27,7 +27,7 @@
             <tr>
                 <th></th>
                 <th>
-                        @Html.DisplayFor(modelItem => parentComp.Description)
+                    @Html.DisplayFor(modelItem => parentComp.Description)
                 </th>
                 <th>
                     Link to Indicators
@@ -51,137 +51,131 @@
                 <th></th>
             </tr>
         </thead>
-        
-            @foreach (var comp in Model.Competencies.Where(c => c.ParentCompetencyId == parentComp.CompetencyId))
-            {
-            if (Model.CompetencyTracker.Count != 0)
-            {
-            var tracker = Model.CompetencyTracker.Where(t => t.CompetencyId == comp.CompetencyId);/*.First();*/
-            
-            <tbody class ="master-row">
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => comp.CompetencyDisplayId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => comp.Description)
-                    </td>
-                    <td>
-                        <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
-                    </td>
-                    <td>
 
-                        @tracker.First().Level.Name
-                        @* @Html.DisplayFor(modelItem => tracker.Level) *@
-                    </td>
-                    <td>
-                        @tracker.First().StartDate
-                        @* @Html.DisplayFor(modelItem => tracker.StartDate) *@
-                    </td>
-                    <td>
-                        @tracker.First().EndDate
-                        @* @Html.DisplayFor(modelItem => tracker.EndDate) *@
-                    </td>
-                    <td>
-                        @tracker.First().SkillsReview
-                        @* @Html.DisplayFor(modelItem => tracker.SkillsReview) *@
-                    </td>
-                    <td>
-                        <a href="@tracker.First().Evidence">Evidence</a>
-                        @* @Html.DisplayFor(modelItem => tracker.Evidence) *@
-                    </td>
-                    <td>
-                        <div class="icon-display">
-                            <a asp-page="CreateCompetency" asp-route-competencyId="@comp.CompetencyId">
-                                  <img src="~/img/plus-black-symbol.png" style="height: 30px; width: 30px; margin-right: 13px;" alt="Edit Competency" title="Add Entry">
-                            </a>
+        @foreach (var comp in Model.Competencies.Where(c => c.ParentCompetencyId == parentComp.CompetencyId))
+        {
+            if (Model.CompetencyTracker.Where(t => t.CompetencyId == comp.CompetencyId).Count() != 0)
+            {
+                var tracker = Model.CompetencyTracker.Where(t => t.CompetencyId == comp.CompetencyId);/*.First();*/
 
-                            <a asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">
-                                <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Entry">
-                            </a>
-                            <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.First().CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
-                                <button class="delete-button" type="submit" title="Delete Entry">
-                                     <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Entry">
-                                </button> @*Delete the entry for this level(can't delete lower levels)*@
-                            </form>
-                        </div>
-                    </td>
-                    <td>
-                        @if(tracker.Count() > 1)
-                        {
-                           <button class="toggle-details">↓</button>
-                        }
-                    </td>
-                </tr>
-                </tbody>
-                <tbody class="collapsible-content" style="display: none;">
-                @foreach(var level in tracker)
-                {
+                <tbody class="master-row">
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
                         <td>
-                            @level.Level.Name
+                            @Html.DisplayFor(modelItem => comp.CompetencyDisplayId)
                         </td>
                         <td>
-                            @level.StartDate
+                            @Html.DisplayFor(modelItem => comp.Description)
                         </td>
                         <td>
-                            @level.EndDate
+                            <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
                         </td>
                         <td>
-                            @level.SkillsReview
+                            @tracker.First().Level.Name
                         </td>
                         <td>
-                            <a href="@level.Evidence">Evidence</a>
+                            @tracker.First().StartDate
+                        </td>
+                        <td>
+                            @tracker.First().EndDate
+                        </td>
+                        <td>
+                            @tracker.First().SkillsReview
+                        </td>
+                        <td>
+                            <a href="@tracker.First().Evidence">Evidence</a>
                         </td>
                         <td>
                             <div class="icon-display">
-                                <a asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">
-                                      <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Entry">
+                                <a asp-page="CreateCompetency" asp-route-competencyId="@comp.CompetencyId">
+                                    <img src="~/img/plus-black-symbol.png" style="height: 30px; width: 30px; margin-right: 13px;" alt="Edit Competency" title="Add Entry">
                                 </a>
-                                @* <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.First().CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
-                                    <button type="submit" class="btn btn-danger">Delete</button> @*Delete the entry for this level(can't delete lower levels)
-                                </form> *@
+
+                                <a asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">
+                                    <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Entry">
+                                </a>
+                                <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.First().CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
+                                    <button class="delete-button" type="submit" title="Delete Entry">
+                                        <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Entry">
+                                    </button> @*Delete the entry for this level(can't delete lower levels)*@
+                                </form>
                             </div>
                         </td>
+                        <td>
+                            @if (tracker.Count() > 1)
+                            {
+                                <button class="toggle-details">↓</button>
+                            }
+                        </td>
                     </tr>
-                }                
+                </tbody>
+                <tbody class="collapsible-content" style="display: none;">
+                    @foreach (var level in tracker)
+                    {
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @level.Level.Name
+                            </td>
+                            <td>
+                                @level.StartDate
+                            </td>
+                            <td>
+                                @level.EndDate
+                            </td>
+                            <td>
+                                @level.SkillsReview
+                            </td>
+                            <td>
+                                <a href="@level.Evidence">Evidence</a>
+                            </td>
+                            <td>
+                                <div class="icon-display">
+                                    <a asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">
+                                        <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Entry">
+                                    </a>
+                                    @* <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.First().CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
+                                    <button type="submit" class="btn btn-danger">Delete</button> @*Delete the entry for this level(can't delete lower levels)
+                                </form> *@
+                                </div>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             }
             else
             {
-                <tbody class ="master-row">
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => comp.CompetencyDisplayId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => comp.Description)
-                    </td>
-                    <td>
-                        <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
-                    </td>
-                    <td>
-                        <p>Emerging</p>
-                    </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td>
-                            <a class="btn btn-primary" asp-page="CreateCompetency" asp-route-id="@comp.CompetencyId">New Entry</a>
-                            <a class="btn btn-success" asp-page="EditCompetency" asp-route-competencyTrackerId="@comp.CompetencyId">Edit</a>
+                <tbody class="master-row">
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => comp.CompetencyDisplayId)
                         </td>
-                    <td>
-                        
-                    </td>
-                </tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => comp.Description)
+                        </td>
+                        <td>
+                            <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
+                        </td>
+                        <td>
+                            <p>Emerging</p>
+                        </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td>
+                            <a asp-page="CreateCompetency" asp-route-competencyId="@comp.CompetencyId">
+                                <img src="~/img/plus-black-symbol.png" style="height: 30px; width: 30px; margin-right: 13px;" alt="Edit Competency" title="Add Entry">
+                            </a>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
                 </tbody>
             }
         }
-</table>
+    </table>
 }
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

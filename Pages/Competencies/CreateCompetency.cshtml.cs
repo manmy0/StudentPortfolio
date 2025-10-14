@@ -30,6 +30,7 @@ namespace StudentPortfolio.Pages.Competencies
 
         public IList<Level> PossibleLevels { get; set; } = default!;
 
+        
         public async Task<IActionResult> OnGetAsync(long? competencyId)
         {
 
@@ -74,13 +75,13 @@ namespace StudentPortfolio.Pages.Competencies
 
                 var highestCurrentLevel = competencyTracker
                     .Select(m => m.Level.Rank)
-                    .Order()
-                    .Take(1);
+                    .LastOrDefault();
 
-                var highestPossibleLevel = highestCurrentLevel.First() + 1;
+                int highestPossibleLevel = highestCurrentLevel + 1;
                 
                 PossibleLevels = allLevels
-                    .Where(l => l.Rank == highestPossibleLevel)
+                    .Where(l => l.Rank <= highestPossibleLevel)
+                    .OrderByDescending(l => l.Rank)
                     .ToList();
 
             }
@@ -103,7 +104,13 @@ namespace StudentPortfolio.Pages.Competencies
                 return NotFound();
             }
             Competency = competency;
-            
+
+            // StartDate must be before EndDate
+            if (CompetencyTracker.StartDate >= CompetencyTracker.EndDate)
+            {
+                ModelState.AddModelError("CompetencyTracker.EndDate", "End Date must be after Start Date.");
+                return Page();
+            }
 
             CompetencyTracker compTracker = new CompetencyTracker();
 
