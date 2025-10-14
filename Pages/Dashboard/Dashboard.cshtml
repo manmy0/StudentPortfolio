@@ -98,15 +98,16 @@
 
 <div class="d-flex justify-content-between align-items-center mt-5">
     <div>
+        <!-- get puts selectedYear=xxxx in the url for the controller to use -->
         <form method="get">
             <label for="select-year" class="form-label fw-bold">Filter by year</label>
-            <select id="select-year" class="form-select w-auto" name="selectedYear" onchange="this.form.submit()"> <!-- name and id for later hehe -->
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-                <option value="2025" selected>2025</option>
+            <select id="select-year" class="form-select w-auto" name="selectedYear" onchange="this.form.submit()">
+                <option value="2020" selected="@(Model.selectedYear == 2020)">2020</option>
+                <option value="2021" selected="@(Model.selectedYear == 2021)">2021</option>
+                <option value="2022" selected="@(Model.selectedYear == 2022)">2022</option>
+                <option value="2023" selected="@(Model.selectedYear == 2023)">2023</option>
+                <option value="2024" selected="@(Model.selectedYear == 2024)">2024</option>
+                <option value="2025" selected="@(Model.selectedYear == 2025)">2025</option>
             </select>
         </form>
     </div>
@@ -153,7 +154,7 @@
                 }
                 else
                 {
-                    <p class="text-muted">No competency tracking data found for your account.</p>
+                    <p class="text-muted">No competency tracking data found in @(Model.selectedYear)</p>
                 }
             </div>
         </div>
@@ -163,7 +164,14 @@
             <div class="card shadow-sm p-3 mb-4">
                 <h2 class="mb-4">Competency Attainment Levels</h2>
                 <div class="card-body">
-                    <canvas id="competencyChart"></canvas>
+                    @if (Model.CompetencyPerformanceSummary.Any())
+                    {
+                        <canvas id="competencyChart"></canvas>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No competency tracking data found in @(Model.selectedYear)</p>
+                    }
                 </div>
             </div>
 
@@ -195,7 +203,7 @@
                 }
                 else
                 {
-                    <p class="text-muted">No competency data to display.</p>
+                    <p class="text-muted">No competency tracking data found in @(Model.selectedYear)</p>
                 }
             </div>
         </div>

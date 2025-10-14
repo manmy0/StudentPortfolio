@@ -30,11 +30,14 @@ namespace StudentPortfolio.Pages.Dashboard
 
         }
 
+        // grab the selectedYear=202x from the url and assign it to selectedYear in this controller
+        [BindProperty(SupportsGet = true)]
+        public int selectedYear { get; set; }
         public ApplicationUser CurrentUser { get; set; }
         public List<CompetencyPerformanceSummaryModel> CompetencyPerformanceSummary { get; set; } = new List<CompetencyPerformanceSummaryModel>();
         public List<CompetencyPerformanceSummaryModel> LowestFiveCompetencies { get; set; } = new List<CompetencyPerformanceSummaryModel>(5);
 
-        public async Task OnGetAsync(int selectedYear)
+        public async Task OnGetAsync()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -43,7 +46,7 @@ namespace StudentPortfolio.Pages.Dashboard
                 if (selectedYear == 0)
                 {
                     // default to current year if no year is selected
-                    selectedYear = DateTime.Now.Year; 
+                    selectedYear = DateTime.Now.Year;
                 }
 
                 var allCompetencyData = await _context.CompetencyTrackers
