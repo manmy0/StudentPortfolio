@@ -22,42 +22,41 @@
                         <input type="hidden" asp-for="CDP.Year" />
 
                         <div class="form-group mb-3">
-                            <label asp-for="CDP.ProfessionalInterests" class="form-label fw-bold"></label>
+                            <label asp-for="CDP.ProfessionalInterests" class="form-label fw-bold">Professional Interests</label>
                             <textarea asp-for="CDP.ProfessionalInterests" class="form-control" rows="4"></textarea>
                             <span asp-validation-for="CDP.ProfessionalInterests" class="text-danger"></span>
                         </div>
 
                         <div class="form-group mb-3">
-                            <label asp-for="CDP.EmployersOfInterest" class="form-label fw-bold"></label>
+                            <label asp-for="CDP.EmployersOfInterest" class="form-label fw-bold">Employers Of Interest</label>
                             <textarea asp-for="CDP.EmployersOfInterest" class="form-control" rows="4"></textarea>
                             <span asp-validation-for="CDP.EmployersOfInterest" class="text-danger"></span>
                         </div>
+                        
+                        <div class="form-group mb-4">
+                            <label asp-for="CDP.NetworkingPlan" class="form-label fw-bold">Networking Plan</label>
+                            <textarea asp-for="CDP.NetworkingPlan" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="CDP.NetworkingPlan" class="text-danger"></span>
+                        </div>
 
                         <div class="form-group mb-3">
-                            <label asp-for="CDP.PersonalValues" class="form-label fw-bold"></label>
+                            <label asp-for="CDP.PersonalValues" class="form-label fw-bold">Personal Values</label>
                             <textarea asp-for="CDP.PersonalValues" class="form-control" rows="4"></textarea>
                             <span asp-validation-for="CDP.PersonalValues" class="text-danger"></span>
                         </div>
 
                         <div class="form-group mb-4">
-                            <label asp-for="CDP.DevelopmentFocus" class="form-label fw-bold"></label>
-                            <textarea asp-for="CDP.DevelopmentFocus" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="CDP.DevelopmentFocus" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group mb-4">
-                            <label asp-for="CDP.Extracurricular" class="form-label fw-bold"></label>
+                            <label asp-for="CDP.Extracurricular" class="form-label fw-bold">Extracurricular</label>
                             <textarea asp-for="CDP.Extracurricular" class="form-control" rows="4"></textarea>
                             <span asp-validation-for="CDP.Extracurricular" class="text-danger"></span>
                         </div>
 
                         <div class="form-group mb-4">
-                            <label asp-for="CDP.NetworkingPlan" class="form-label fw-bold"></label>
-                            <textarea asp-for="CDP.NetworkingPlan" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="CDP.NetworkingPlan" class="text-danger"></span>
+                            <label asp-for="CDP.DevelopmentFocus" class="form-label fw-bold">Development Focus</label>
+                            <textarea asp-for="CDP.DevelopmentFocus" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="CDP.DevelopmentFocus" class="text-danger"></span>
                         </div>
 
-                        
                         <div class="d-flex justify-content-end gap-2 pt-3">
                             <a class="btn btn-danger" asp-page="Goals">Cancel</a>
                             <input type="submit" value="Save Changes" class="btn btn-success" />

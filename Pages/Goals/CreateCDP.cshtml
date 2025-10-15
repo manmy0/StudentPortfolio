@@ -5,76 +5,126 @@
 }
 
 <div class="container mt-5">
-
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
+        <div class="col-md-10">
             <div class="card shadow-sm border-1 rounded-3">
-
                 <div class="card-header bg-light text-black rounded-top-4">
-                    <h4 class="mb-0">Update Career Development Plan</h4>
+                    <h4 class="mb-0">New Career Development Plan</h4>
                 </div>
 
                 <div class="card-body p-4">
-
                     <form method="post">
-
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                         <input type="hidden" asp-for="NewCDP.Year" />
 
-                        <label for="prof" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Professional Interests:</label>
-                        <textarea class="form-control" id="prof" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.LatestCDP.ProfessionalInterests</textarea>
-                        <div class="form-group mb-3">
-                            <label asp-for="NewCDP.ProfessionalInterests" class="form-label fw-bold">Professional Interests</label>
-                            <textarea asp-for="NewCDP.ProfessionalInterests" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="NewCDP.ProfessionalInterests" class="text-danger"></span>
+                        <div class="cdp-grid">
+                            <!-- Professional Interests -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.ProfessionalInterests" class="form-label fw-bold">Professional Interests</label>
+                                    <textarea asp-for="NewCDP.ProfessionalInterests" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.ProfessionalInterests" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;">@Model.LatestCDP.Year</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.ProfessionalInterests</textarea>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Employers of Interest -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.EmployersOfInterest" class="form-label fw-bold">Employers of Interest</label>
+                                    <textarea asp-for="NewCDP.EmployersOfInterest" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.EmployersOfInterest" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;"><br />@*@Model.LatestCDP.Year*@</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.EmployersOfInterest</textarea>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Networking Plan -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.NetworkingPlan" class="form-label fw-bold">Networking Plan</label>
+                                    <textarea asp-for="NewCDP.NetworkingPlan" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.NetworkingPlan" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;"><br />@*@Model.LatestCDP.Year*@</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.NetworkingPlan</textarea>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Personal Values -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.PersonalValues" class="form-label fw-bold">Personal Values</label>
+                                    <textarea asp-for="NewCDP.PersonalValues" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.PersonalValues" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;"><br />@*@Model.LatestCDP.Year*@</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.PersonalValues</textarea>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Extracurricular -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.Extracurricular" class="form-label fw-bold">Extracurricular</label>
+                                    <textarea asp-for="NewCDP.Extracurricular" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.Extracurricular" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;"><br />@*@Model.LatestCDP.Year*@</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.Extracurricular</textarea>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Development Focus -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.DevelopmentFocus" class="form-label fw-bold">Development Focus for This Year</label>
+                                    <textarea asp-for="NewCDP.DevelopmentFocus" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.DevelopmentFocus" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;"><br />@*@Model.LatestCDP.Year*@</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.DevelopmentFocus</textarea>
+                                    </div>
+                                }
+                            </div>
                         </div>
 
-                        <label for="emp" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Employers of Interest:</label>
-                        <textarea class="form-control" id="emp" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.LatestCDP.EmployersOfInterest</textarea>
-                        <div class="form-group mb-3">
-                            <label asp-for="NewCDP.EmployersOfInterest" class="form-label fw-bold">Employers of Interest</label>
-                            <textarea asp-for="NewCDP.EmployersOfInterest" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="NewCDP.EmployersOfInterest" class="text-danger"></span>
-                        </div>
-
-                        <label for="per" style="display: inline-block; margin-right: 50px; margin-bottom: 20px; vertical-align: middle;">Personal Values:</label>
-                        <textarea class="form-control" id="per" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.LatestCDP.PersonalValues</textarea>
-                        <div class="form-group mb-3">
-                            <label asp-for="NewCDP.PersonalValues" class="form-label fw-bold">Personal Values</label>
-                            <textarea asp-for="NewCDP.PersonalValues" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="NewCDP.PersonalValues" class="text-danger"></span>
-                        </div>
-
-                        <label for="dev" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Development Focus for This Year:</label>
-                        <textarea class="form-control" id="dev" style="height: 100px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" rows="5" readonly>@Model.LatestCDP.DevelopmentFocus</textarea>
-                        <div class="form-group mb-4">
-                            <label asp-for="NewCDP.DevelopmentFocus" class="form-label fw-bold">Development Focus for This Year</label>
-                            <textarea asp-for="NewCDP.DevelopmentFocus" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="NewCDP.DevelopmentFocus" class="text-danger"></span>
-                        </div>
-                        
-                        <label for="extra" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Extracurricular:</label>
-                        <textarea class="form-control" id="extra" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.LatestCDP.Extracurricular</textarea>
-                        <div class="form-group mb-4">
-                            <label asp-for="NewCDP.Extracurricular" class="form-label fw-bold">Extracurricular</label>
-                            <textarea asp-for="NewCDP.Extracurricular" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="NewCDP.Extracurricular" class="text-danger"></span>
-                        </div>
-                        
-                        <label for="net" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Networking Plan:</label>
-                        <textarea class="form-control" id="net" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Model.LatestCDP.NetworkingPlan</textarea>
-                        <div class="form-group mb-4">
-                            <label asp-for="NewCDP.NetworkingPlan" class="form-label fw-bold">Networking Plan</label>
-                            <textarea asp-for="NewCDP.NetworkingPlan" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="NewCDP.NetworkingPlan" class="text-danger"></span>
-                        </div>
-
-                        
-                        <div class="d-flex justify-content-end gap-2 pt-3">
+                        <div class="d-flex justify-content-end gap-2 pt-4">
                             <a class="btn btn-danger" asp-page="Goals">Cancel</a>
                             <input type="submit" value="Save Changes" class="btn btn-success" />
                         </div>
-
                     </form>
                 </div>
             </div>
