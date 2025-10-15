@@ -31,7 +31,7 @@
     }
     else
     {
-        <a class="btn btn-primary" @*asp-page="CreateCDP"*@>New Career Plan</a>
+        <a class="btn btn-primary" asp-page="CreateCDP">New Career Plan</a>
     }
 </div>
 
@@ -39,7 +39,7 @@
     <label for="prof" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Professional Interests:</label>
     <textarea class="form-control" id="prof" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().ProfessionalInterests)</textarea>
 
-    <label for="emp" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Employers of interest:</label>
+    <label for="emp" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Employers of Interest:</label>
     <textarea class="form-control" id="emp" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().EmployersOfInterest)</textarea>
     <div class="info-container">
         <label for="per" style="display: inline-block; margin-right: 50px; margin-bottom: 20px; vertical-align: middle;">Personal Values:</label>
