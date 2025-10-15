@@ -25,8 +25,14 @@
             }
         </select>
     </form>
-    <a class="btn btn-primary" @*asp-page="EditCDP" asp-route-CDPYear="@Model.CDP.FirstOrDefault().Year"*@>Update Career Plan</a>
-    <a class="btn btn-primary" @*asp-page="CreateCDP"*@>New Career Plan</a>
+    @if (Model.CDP.FirstOrDefault().Year == Model.thisYear)
+    {
+        <a class="btn btn-primary" asp-page="EditCDP">Update Career Plan</a>
+    }
+    else
+    {
+        <a class="btn btn-primary" @*asp-page="CreateCDP"*@>New Career Plan</a>
+    }
 </div>
 
 <div class="info-container">

@@ -29,6 +29,8 @@ namespace StudentPortfolio.Pages.Goals
 
         [BindProperty(SupportsGet = true)]
         public short selectedYear { get; set; }
+
+        public short thisYear = (short)DateTime.Now.Year;
         public IList<short> PossibleYears { get; set; } = default!;
         public ApplicationUser CurrentUser { get; set; }
         public IList<Goal> Goal { get;set; } = default!;
@@ -41,10 +43,7 @@ namespace StudentPortfolio.Pages.Goals
 
             if (userId != null)
             {
-                short thisYear = (short)DateTime.Now.Year;
-
                 
-
                 Goal = await _context.Goals
                     .Where(i => i.UserId == userId)
                     .Include(i => i.User)
