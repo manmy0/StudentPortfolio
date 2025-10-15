@@ -3,7 +3,7 @@
     {
           Layout = "_Layout";
     }
-    else if (User.IsInRole("Student"))
+    else if (User.IsInRole("Student") || this.User.Identity.IsAuthenticated)
     {
         Layout = "_LayoutUser";
     }
