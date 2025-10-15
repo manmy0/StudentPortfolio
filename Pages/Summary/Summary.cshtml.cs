@@ -33,6 +33,7 @@ namespace StudentPortfolio.Pages.Summary
         public class SummaryViewModel
         {
             public int GoalsCompleted { get; set; }
+            public int NumCompetencies { get; set; }
             public int Emerging { get; set; }
             public int Developing { get; set; }
             public int Proficient { get; set; }
@@ -68,13 +69,18 @@ namespace StudentPortfolio.Pages.Summary
                     .ToListAsync();
 
                 var distinctCompetencyLevels = competencies
-                    .Select(c => new { c.CompetencyId, c.LevelId })
-                    .Distinct()
+                    .GroupBy(c => c.CompetencyId)
+                    .Select(g => new
+                    {
+                        CompetencyId = g.Key,
+                        LevelId = g.Max(c => c.LevelId)
+                    })
                     .ToList();
 
                 SummaryData = new SummaryViewModel
                 {
                     GoalsCompleted = goalsCompletedCount,
+                    NumCompetencies = competencies.Count(),
                     Emerging = distinctCompetencyLevels.Count(d => d.LevelId == 1),
                     Developing = distinctCompetencyLevels.Count(d => d.LevelId == 2),
                     Proficient = distinctCompetencyLevels.Count(d => d.LevelId == 3),
