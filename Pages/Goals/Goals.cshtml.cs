@@ -27,6 +27,9 @@ namespace StudentPortfolio.Pages.Goals
 
         }
 
+        [BindProperty(SupportsGet = true)]
+        public short selectedYear { get; set; }
+        public IList<short> PossibleYears { get; set; } = default!;
         public ApplicationUser CurrentUser { get; set; }
         public IList<Goal> Goal { get;set; } = default!;
         public IList<CareerDevelopmentPlan> CDP { get; set; } = default!;
@@ -38,6 +41,10 @@ namespace StudentPortfolio.Pages.Goals
 
             if (userId != null)
             {
+                short thisYear = (short)DateTime.Now.Year;
+
+                
+
                 Goal = await _context.Goals
                     .Where(i => i.UserId == userId)
                     .Include(i => i.User)
@@ -50,12 +57,48 @@ namespace StudentPortfolio.Pages.Goals
 
                 GoalSteps = await _context.GoalSteps
                     .Where(i => goalIds.Contains(i.GoalId))
-                    .ToListAsync(); 
-                
-                CDP = await _context.CareerDevelopmentPlans
+                    .ToListAsync();
+
+                var AllCDP = await _context.CareerDevelopmentPlans
                     .Where(i => i.UserId == userId)
                     .Include(i => i.User)
                     .ToListAsync();
+
+                PossibleYears = AllCDP
+                    .Select(i => i.Year)
+                    .ToList();
+
+                // Show the CDP entry for a specific year if a year has been selected
+                if (selectedYear != 0)
+                {
+                    CDP = AllCDP
+                        .Where(i => i.Year == selectedYear)
+                        .ToList();
+                }
+                // Show the most recent CDP entry if the user has any and a year hasn't been selected
+                else if (PossibleYears.Count() != 0)
+                {
+                    CDP = AllCDP
+                        .Where(i => i.Year == PossibleYears.Last())
+                        .ToList();
+
+                    selectedYear = PossibleYears.Last();
+                }
+                // Default to showing this years CDP entry even if it's blank
+                else
+                {
+                    CDP = AllCDP
+                        .Where(i => i.Year == thisYear)
+                        .ToList();
+
+                    selectedYear = thisYear;
+                }
+
+                // Even if the user doesn't have an entry for this year, list it as an option
+                if (!PossibleYears.Contains(thisYear))
+                {
+                    PossibleYears.Add(thisYear);
+                }
             }
         }
 
