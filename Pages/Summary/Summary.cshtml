@@ -34,7 +34,7 @@
         <!-- profile stuff -->
         <div class="col-12 col-md-5">
             <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
                     <img src="@Model.ProfileImageBase64" alt="Profile image"
                          class="img-fluid rounded-circle mb-3"
                          style="width: 150px; height: 150px; object-fit: cover;">
@@ -49,14 +49,42 @@
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h3 class="card-title text-center mb-3">Statistics for @Model.selectedYear</h3>
-                    <ul class="list-group list-group-flush text-center">
-                        <li class="list-group-item">Goals Completed This Year: @Model.SummaryData.GoalsCompleted</li>
-                        <li class="list-group-item">Number Of Times Evidence Was Uploaded For Competencies: @Model.SummaryData.NumCompetencies</li>
-                        <li class="list-group-item">Competencies At Emerging Level: @Model.SummaryData.Emerging</li>
-                        <li class="list-group-item">Competencies At Developing Level: @Model.SummaryData.Developing</li>
-                        <li class="list-group-item">Competencies At Proficient Level: @Model.SummaryData.Proficient</li>
-                        <li class="list-group-item">Competencies At Confident Level: @Model.SummaryData.Confident</li>
-                    </ul>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="text-start">Metric</th>
+                                    <th scope="col" class="text-end">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-start">Goals Completed</td>
+                                    <td class="text-end">@Model.SummaryData.GoalsCompleted</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Evidence Uploaded for Competencies</td>
+                                    <td class="text-end">@Model.SummaryData.NumCompetencies</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Competencies at Emerging Level</td>
+                                    <td class="text-end">@Model.SummaryData.Emerging</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Competencies at Developing Level</td>
+                                    <td class="text-end">@Model.SummaryData.Developing</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Competencies at Proficient Level</td>
+                                    <td class="text-end">@Model.SummaryData.Proficient</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Competencies at Confident Level</td>
+                                    <td class="text-end">@Model.SummaryData.Confident</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
