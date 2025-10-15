@@ -51,6 +51,24 @@ namespace StudentPortfolio.Pages.Export
 
         }
 
+        // method to clean up the data from the database so it can be exported
+        public static string CleanCSV(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return "";
+
+            // double any quote
+            value = value.Replace("\"", "\"\"");
+
+            // wrap a comma, quote or new line in quotes
+            if (value.Contains(',') || value.Contains('"') || value.Contains('\n') || value.Contains('\r'))
+            {
+                value = $"\"{value}\"";
+            }
+
+            return value;
+        }
+
         public async Task<IActionResult> OnPostExportPortfolio()
         {
             // have to grab the user again to get the right information
@@ -67,19 +85,19 @@ namespace StudentPortfolio.Pages.Export
 
             if (ExportSummary)
             {
-                var summary = CurrentUser.Introduction;
+                var summary = CurrentUser.Introduction ?? "No personal summary found.";
 
                 sb.AppendLine("Personal Summary");
-                sb.AppendLine(summary ?? "No personal summary found.");
+                sb.AppendLine(CleanCSV(summary));
                 sb.AppendLine();
             }
 
             if (ExportPitch)
             {
-                var pitch = CurrentUser.Pitch;
+                var pitch = CurrentUser.Pitch ?? "No elevator pitch found.";
 
                 sb.AppendLine("Elevator Pitch");
-                sb.AppendLine(pitch ?? "No elevator pitch found.");
+                sb.AppendLine(CleanCSV(pitch));
                 sb.AppendLine();
             }
 
@@ -97,7 +115,5 @@ namespace StudentPortfolio.Pages.Export
 
             return File(bytes, "text/csv", "Portfolio_Export.csv");
         }
-
-        
     }
 }
