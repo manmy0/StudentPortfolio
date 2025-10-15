@@ -11,21 +11,24 @@
     </li>
 }
 
-<div>
+<div class="d-flex align-items-end gap-3">
     <!-- get puts selectedYear=xxxx in the url for the controller to use -->
-    <form method="get">
-        <label for="select-year" class="form-label fw-bold">Filter by year</label>
-        <select id="select-year" class="form-select w-auto" name="selectedYear" onchange="this.form.submit()">
-            @if (Model.PossibleYears != null)
-            {
-                @foreach (var year in Model.PossibleYears)
+    <form method="get" class="d-flex align-items-end">
+        <div class="me-2">
+            <label for="select-year" class="form-label fw-bold mb-0 me-2">Filter by year</label>
+            <select id="select-year" class="form-select w-auto d-inline-block" name="selectedYear" onchange="this.form.submit()">
+                @if (Model.PossibleYears != null)
                 {
-                    <option value="@year" selected="@(Model.selectedYear == year)">@year</option>
+                    @foreach (var year in Model.PossibleYears)
+                    {
+                        <option value="@year" selected="@(Model.selectedYear == year)">@year</option>
+                    }
                 }
-            }
-        </select>
+            </select>
+        </div>
     </form>
-    @if (Model.CDP.FirstOrDefault().Year == Model.thisYear)
+
+    @if (Model.CDP.FirstOrDefault() != null && Model.CDP.FirstOrDefault().Year == Model.thisYear)
     {
         <a class="btn btn-primary" asp-page="EditCDP">Update Career Plan</a>
     }
@@ -35,24 +38,37 @@
     }
 </div>
 
+
 <div class="info-container">
-    <label for="prof" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Professional Interests:</label>
-    <textarea class="form-control" id="prof" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().ProfessionalInterests)</textarea>
-
-    <label for="emp" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Employers of Interest:</label>
-    <textarea class="form-control" id="emp" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().EmployersOfInterest)</textarea>
-    <div class="info-container">
-        <label for="per" style="display: inline-block; margin-right: 50px; margin-bottom: 20px; vertical-align: middle;">Personal Values:</label>
-        <textarea class="form-control" id="per" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().PersonalValues)</textarea>
-    
-        <label for="dev" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Development Focus for This Year:</label>
-        <textarea class="form-control" id="dev" style="height: 100px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" rows="5" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().DevelopmentFocus)</textarea>
+    <div class="info-row">
+        <label for="prof">Professional Interests:</label>
+        <textarea id="prof" class="form-control" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().ProfessionalInterests)</textarea>
     </div>
-    <label for="net" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Networking Plan:</label>
-    <textarea class="form-control" id="net" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().NetworkingPlan)</textarea>
 
-    <label for="extra" style="display: inline-block; margin-right: 10px; margin-bottom: 20px; vertical-align: middle;">Extracurricular:</label>
-    <textarea class="form-control" id="extra" rows="3" style="height: 20px; width: 1080px; margin-bottom: 20px; display: inline-block; vertical-align: middle;" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().Extracurricular)</textarea>
+    <div class="info-row">
+        <label for="emp">Employers of Interest:</label>
+        <textarea id="emp" class="form-control" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().EmployersOfInterest)</textarea>
+    </div>
+
+    <div class="info-row">
+        <label for="net">Networking Plan:</label>
+        <textarea id="net" class="form-control" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().NetworkingPlan)</textarea>
+    </div>
+
+    <div class="info-row">
+        <label for="per">Personal Values:</label>
+        <textarea id="per" class="form-control" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().PersonalValues)</textarea>
+    </div>
+
+    <div class="info-row">
+        <label for="extra">Extracurricular:</label>
+        <textarea id="extra" class="form-control" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().Extracurricular)</textarea>
+    </div>
+
+    <div class="info-row">
+        <label for="dev">Development Focus for This Year:</label>
+        <textarea id="dev" class="form-control large" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().DevelopmentFocus)</textarea>
+    </div>
 </div>
 
 <a class="btn btn-primary" asp-page="Create">New Goal</a>
