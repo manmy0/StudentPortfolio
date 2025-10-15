@@ -58,6 +58,12 @@ namespace StudentPortfolio.Pages.Summary
             {
                 CurrentUser = await _userManager.FindByIdAsync(userId);
 
+                if (selectedYear == 0)
+                {
+                    // default to current year if no year is selected
+                    selectedYear = DateTime.Now.Year;
+                }
+
                 int goalsCompletedCount = await _context.Goals
                     .Where(g => g.UserId == userId)
                     .Where(g => g.CompleteDate.HasValue && g.CompleteDate.Value.Year == selectedYear)
@@ -65,7 +71,7 @@ namespace StudentPortfolio.Pages.Summary
 
                 var competencies = await _context.CompetencyTrackers
                     .Where(i => i.UserId == userId)
-                    .Where(i => i.Created.Year <= selectedYear)
+                    .Where(i => i.Created.Year == selectedYear)
                     .ToListAsync();
 
                 var distinctCompetencyLevels = competencies
