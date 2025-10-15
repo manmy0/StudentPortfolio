@@ -67,13 +67,18 @@ namespace StudentPortfolio.Pages.Summary
                     .Where(i => i.Created.Year <= selectedYear)
                     .ToListAsync();
 
+                var distinctCompetencyLevels = competencies
+                    .Select(c => new { c.CompetencyId, c.LevelId })
+                    .Distinct()
+                    .ToList();
+
                 SummaryData = new SummaryViewModel
                 {
                     GoalsCompleted = goalsCompletedCount,
-                    Emerging = competencies.Count(c => c.LevelId == 1),
-                    Developing = competencies.Count(c => c.LevelId == 2),
-                    Proficient = competencies.Count(c => c.LevelId == 3),
-                    Confident = competencies.Count(c => c.LevelId == 4),
+                    Emerging = distinctCompetencyLevels.Count(d => d.LevelId == 1),
+                    Developing = distinctCompetencyLevels.Count(d => d.LevelId == 2),
+                    Proficient = distinctCompetencyLevels.Count(d => d.LevelId == 3),
+                    Confident = distinctCompetencyLevels.Count(d => d.LevelId == 4)
                 };
             }
 
