@@ -21,12 +21,16 @@ namespace StudentPortfolio.Pages.Competencies
             _userManager = userManager;
         }
 
+        [BindProperty(Name = "competencyId", SupportsGet = true)]
+        public int Id { get; set; }
+
         public CompetencyTracker CompetencyTracker { get; set; } = default!;
         public Competency Competency { get; set; } = default!;
         public Competency ParentCompetency { get; set; } = default!;
 
         public IList<Level> PossibleLevels { get; set; } = default!;
 
+        
         public async Task<IActionResult> OnGetAsync(long? competencyId)
         {
 
@@ -54,6 +58,8 @@ namespace StudentPortfolio.Pages.Competencies
                 .Where(m => m.CompetencyId == competencyId && m.UserId == userId)
                 .ToListAsync();
 
+            // If the user has no tracker entries then they can only add an entry for the first level
+            // If the user has tracker entries then they can add and entry at any level up to 1 above their current highest
             if (!competencyTracker.Any())
             {
                 PossibleLevels = await _context.Levels
@@ -63,15 +69,27 @@ namespace StudentPortfolio.Pages.Competencies
             }
             else
             {
-                PossibleLevels = await _context.Levels
+                var allLevels = await _context.Levels
                     .OrderBy(l => l.Rank)
                     .ToListAsync();
+
+                var highestCurrentLevel = competencyTracker
+                    .Select(m => m.Level.Rank)
+                    .LastOrDefault();
+
+                int highestPossibleLevel = highestCurrentLevel + 1;
+                
+                PossibleLevels = allLevels
+                    .Where(l => l.Rank <= highestPossibleLevel)
+                    .OrderByDescending(l => l.Rank)
+                    .ToList();
+
             }
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync([Bind("CompetencyId, UserId, LevelId, StartDate, EndDate, SkillsReview, Evidence")] CompetencyTracker CompetencyTracker)
+        public async Task<IActionResult> OnPostAsync([Bind("LevelId, StartDate, EndDate, SkillsReview, Evidence")] CompetencyTracker CompetencyTracker)
         {
             
             if (!ModelState.IsValid)
@@ -80,13 +98,34 @@ namespace StudentPortfolio.Pages.Competencies
 
             }
 
-            PossibleLevels = await _context.Levels
-                    .OrderBy(l => l.Rank)
-                    .ToListAsync();
+            var competency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == Id);
+            if (competency == null)
+            {
+                return NotFound();
+            }
+            Competency = competency;
 
-            CompetencyTracker.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // StartDate must be before EndDate
+            if (CompetencyTracker.StartDate >= CompetencyTracker.EndDate)
+            {
+                ModelState.AddModelError("CompetencyTracker.EndDate", "End Date must be after Start Date.");
+                return Page();
+            }
 
-            _context.CompetencyTrackers.Add(CompetencyTracker);
+            CompetencyTracker compTracker = new CompetencyTracker();
+
+            compTracker.CompetencyId = Competency.CompetencyId;
+            compTracker.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            compTracker.LevelId = CompetencyTracker.LevelId;
+            compTracker.StartDate = CompetencyTracker.StartDate;
+            compTracker.EndDate = CompetencyTracker.EndDate;
+            compTracker.SkillsReview = CompetencyTracker.SkillsReview;
+            compTracker.Evidence = CompetencyTracker.Evidence;
+            compTracker.Created = DateTime.Now;
+            compTracker.LastUpdated = DateTime.Now;
+
+
+            _context.CompetencyTrackers.Add(compTracker);
             await _context.SaveChangesAsync();
             return RedirectToPage("Competencies");
 

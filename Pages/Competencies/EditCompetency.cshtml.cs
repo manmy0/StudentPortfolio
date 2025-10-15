@@ -82,10 +82,10 @@ namespace StudentPortfolio.Pages.Competencies
 
             // StartDate must be before EndDate
             if (CompetencyTracker.StartDate >= CompetencyTracker.EndDate)
-                {
-                    ModelState.AddModelError("CompetencyTracker.EndDate", "End Date must be after Start Date.");
-                    return Page();
-                }
+            {
+                ModelState.AddModelError("CompetencyTracker.EndDate", "End Date must be after Start Date.");
+                return Page();
+            }
 
             var compTracker = await _context.CompetencyTrackers
                 .Include(c => c.Level)
