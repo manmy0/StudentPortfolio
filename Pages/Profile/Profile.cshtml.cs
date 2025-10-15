@@ -27,7 +27,8 @@ namespace StudentPortfolio.Pages.Profile
         }
 
         public ApplicationUser CurrentUser { get; set; }
-        public IList<CareerDevelopmentPlan> CDP { get; set; } = default!;
+        public CareerDevelopmentPlan CDP { get; set; }
+        public IList<UserLink> UserLinks { get; set; } = default!;
 
         // convert the users byte representation of an image
         // in the database to base64 which can be displayed
@@ -45,9 +46,14 @@ namespace StudentPortfolio.Pages.Profile
                 CurrentUser = await _userManager.FindByIdAsync(userId);
 
                 CDP = await _context.CareerDevelopmentPlans
-                   .Where(i => i.UserId == userId)
-                   .Include(i => i.User)
-                   .ToListAsync();
+                    .OrderBy(c => c.Year)
+                    .Include(c => c.User)
+                    .LastOrDefaultAsync(c => c.UserId == userId);
+
+                UserLinks = await _context.UserLinks
+                    .Where(l => l.UserId == userId)
+                    .ToListAsync();
+                   
             }
 
         }

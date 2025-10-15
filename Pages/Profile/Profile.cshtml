@@ -50,9 +50,9 @@
 
             <!-- show actions that need to be done, could be many so displayed as a list -->
             <ul>
-                @foreach (var item in Model.CDP)
+                @if (Model.CDP != null)
                 {
-                    <li>@Html.DisplayFor(modelItem => item.NetworkingPlan)</li>
+                    <li>@Html.DisplayFor(model => model.CDP.NetworkingPlan)</li>
                 }
             </ul>
         </div>
@@ -64,7 +64,13 @@
             <ul>
                 <li><a href="@Model.CurrentUser.LinkedIn">LinkedIn</a></li>
                 <li><a href="@Model.CurrentUser.Resume">Resume</a></li>
-                <li><a href="@Model.CurrentUser.UserLinks">Supporting Documents</a></li>
+                <li><a href="@Model.CurrentUser.CoverLetter">Cover Letter</a></li>
+                <li><a href="@Model.CurrentUser.Certificates">Certificates</a></li>
+
+                @foreach (var link in Model.UserLinks)
+                {
+                    <li><a href="@link.Link">External Link</a></li>
+                }
             </ul>
         </div>
     </div>
