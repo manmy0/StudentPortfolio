@@ -1,9 +1,9 @@
 ﻿@{
-    @if (!this.User.Identity.IsAuthenticated)
+    @if (!this.User.Identity.IsAuthenticated || User.IsInRole("Admin"))
     {
           Layout = "_Layout";
     }
-    else
+    else if (User.IsInRole("Student"))
     {
         Layout = "_LayoutUser";
     }
