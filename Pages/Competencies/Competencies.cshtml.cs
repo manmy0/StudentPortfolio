@@ -32,6 +32,9 @@ namespace StudentPortfolio.Pages.Competencies
         [BindProperty(SupportsGet = true)]
         public string? To { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string CurrentSort { get; set; } = "competencyId";
+
         public ApplicationUser CurrentUser { get; set; }
         public IList<CompetencyTracker> CompetencyTracker { get;set; } = default!;
         public IList<Competency> Competencies { get; set; } = default!;

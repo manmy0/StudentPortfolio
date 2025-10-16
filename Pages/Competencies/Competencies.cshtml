@@ -21,6 +21,27 @@
         <input class="form-control w-auto" type="month" id="toInput" name="to" value="=@Model.To">
         <button type="submit" class="btn btn-primary">Filter</button>
     </form>
+
+    <form method="get" class="mb-4">
+        <div class="btn-group" role="group" aria-label="Sort by">
+            <input type="hidden" name="sortBy" value="@Model.CurrentSort" />
+
+            <button type="submit" name="sortBy" value="competencyId"
+                    class="btn btn-outline-primary @(Model.CurrentSort == "competencyId" ? "active" : "")">
+                Competency ID
+            </button>
+
+            <button type="submit" name="sortBy" value="level"
+                    class="btn btn-outline-primary @(Model.CurrentSort == "level" ? "active" : "")">
+                Level
+            </button>
+
+            <button type="submit" name="sortBy" value="lastUpdated"
+                    class="btn btn-outline-primary @(Model.CurrentSort == "lastUpdated" ? "active" : "")">
+                Last Updated
+            </button>
+        </div>
+    </form>
 </div>
 
 @foreach (var parentComp in Model.ParentCompetencies)
