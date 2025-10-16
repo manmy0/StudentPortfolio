@@ -73,13 +73,16 @@
 
 <a class="btn btn-primary" asp-page="Create">New Goal</a>
 
-<div class="input-container">
+<div class="input-container mb-3">
     <h3>Date Range</h3>
-    <label for="fromInput">From:</label>
-    <input class="input" type="month" id="fromInput" name="from">
+    <form method="get" class="d-flex align-items-center gap-3">
+        <label for="fromInput">From:</label>
+        <input class="form-control w-auto" type="month" id="fromInput" name="from" value="@Model.From">
 
-    <label for="toInput">To:</label>
-    <input class="input" type="month" id="toInput" name="to">
+        <label for="toInput">To:</label>
+        <input class="form-control w-auto" type="month" id="toInput" name="to" value="=@Model.To">
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
 </div>
 
 <table class="table table-bordered table-striped">
