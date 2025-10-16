@@ -145,6 +145,7 @@ namespace StudentPortfolio.Pages.Export
                 {
                     g.Description,
                     g.Timeline,
+                    GoalSteps = g.GoalSteps.Select(gs => gs.Step).ToList(),
                     g.Progress,
                     g.Learnings,
                     g.StartDate,
@@ -157,12 +158,16 @@ namespace StudentPortfolio.Pages.Export
 
             if (goals.Any())
             {
-                sbGoals.AppendLine("\"Goal\",\"Timeline\",\"Progress\",\"Learnings\",\"Start Date\",\"End Date\",\"Set Date\",\"Complete Date\",\"Completion Notes\"");
+                sbGoals.AppendLine("\"Goal\",\"Timeline\",\"Goal Steps\",\"Progress\",\"Learnings\",\"Start Date\",\"End Date\",\"Set Date\",\"Complete Date\",\"Completion Notes\"");
                 foreach (var goal in goals)
                 {
+                    // make all the steps a single string separated by ;
+                    string steps = string.Join("; ", goal.GoalSteps);
+
                     sbGoals.AppendLine(
                         $"{CleanCSV(goal.Description)}," +
                         $"{CleanCSV(goal.Timeline)}," +
+                        $"{CleanCSV(steps)}," +
                         $"{CleanCSV(goal.Progress)}," +
                         $"{CleanCSV(goal.Learnings)}," +
                         $"{CleanCSV(goal.StartDate.ToString())}," +
@@ -250,7 +255,7 @@ namespace StudentPortfolio.Pages.Export
                     exportData.Add("Goals.csv", goalsSb);
             }
 
-            if (exportData.Count == 0 && !resumeExported)
+            if (exportData.Count == 0)
             {
                 return RedirectToPage();
             }
