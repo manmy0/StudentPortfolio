@@ -177,31 +177,39 @@ namespace StudentPortfolio.Pages.Export
             return sbGoals;
         }
 
+        // takes exportData which has name of file and data to be written to it
         private IActionResult CreateZipFile(Dictionary<string, StringBuilder> exportData)
         {
+            // create a new memory stream object to temporarily hold the zip file while its being built
             using (var memoryStream = new MemoryStream())
             {
+
+                // create a zip archive object to build the zip
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
+
+                    // loop through all the files that need to be created from dict
                     foreach (var kvp in exportData)
                     {
                         string fileName = kvp.Key;
                         StringBuilder content = kvp.Value;
 
-                        // Only create the file if there is content (though the calling method should ensure this)
                         if (content.Length > 0)
                         {
+
+                            // create new file
                             var entry = archive.CreateEntry(fileName);
                             using (var entryStream = entry.Open())
                             using (var writer = new StreamWriter(entryStream, Encoding.UTF8))
                             {
+                                // write to the file
                                 writer.Write(content.ToString());
                             }
                         }
                     }
                 }
 
-                // Export the zip file
+                // export the zip file
                 return File(memoryStream.ToArray(), "application/zip", "Portfolio_Export.zip");
             }
         }
@@ -216,14 +224,17 @@ namespace StudentPortfolio.Pages.Export
 
             CurrentUser = await _userManager.FindByIdAsync(userId);
 
-            // 1. Prepare data for export
             var exportData = new Dictionary<string, StringBuilder>();
 
             if (ExportSummary)
+            {
                 exportData.Add("Personal_Summary.csv", GetSummaryCsv());
+            }
 
             if (ExportPitch)
+            {
                 exportData.Add("Elevator_Pitch.csv", GetPitchCsv());
+            }
 
             if (ExportCompetencies)
             {
@@ -239,13 +250,11 @@ namespace StudentPortfolio.Pages.Export
                     exportData.Add("Goals.csv", goalsSb);
             }
 
-            // 2. Check if anything was exported
-            if (exportData.Count == 0)
+            if (exportData.Count == 0 && !resumeExported)
             {
                 return RedirectToPage();
             }
 
-            // 3. Create and return the zip file
             return CreateZipFile(exportData);
         }
     }
