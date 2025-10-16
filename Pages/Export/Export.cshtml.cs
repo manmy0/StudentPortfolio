@@ -86,6 +86,7 @@ namespace StudentPortfolio.Pages.Export
             var sbSummary = new StringBuilder();
             var sbPitch = new StringBuilder();
             var sbCompetencies = new StringBuilder();
+            var sbGoals = new StringBuilder();
 
             if (ExportSummary)
             {
@@ -112,24 +113,24 @@ namespace StudentPortfolio.Pages.Export
                     .Select(c => new
                     {
                         c.CompetencyTrackerId,
-                        c.CompetencyId,
-                        c.StartDate,
-                        c.EndDate,
-                        c.LevelId,
+                        CompetencyDescription = c.Competency.Description,
+                        LevelDescription = c.Level.Name,
                         c.SkillsReview,
                         c.Evidence,
+                        c.StartDate,
+                        c.EndDate,
                         c.Created,
                         c.LastUpdated
                     })
                     .ToListAsync();
 
-                sbCompetencies.AppendLine("\"Competency Tracker ID\",\"Competency ID\",\"Level ID\",\"Skills Review\",\"Evidence\",\"Start Date\",\"End Date\",\"Created\",\"Last Updated\"");
+                sbCompetencies.AppendLine("\"Competency Number\",\"Competency Description\",\"Level\",\"Skills Review\",\"Evidence\",\"Start Date\",\"End Date\",\"Created\",\"Last Updated\"");
                 foreach (var comp in competencies)
                 {
                     sbCompetencies.AppendLine(
                         $"{CleanCSV(comp.CompetencyTrackerId.ToString())}," +
-                        $"{CleanCSV(comp.CompetencyId.ToString())}," +
-                        $"{CleanCSV(comp.LevelId.ToString())}," +
+                        $"{CleanCSV(comp.CompetencyDescription.ToString())}," +
+                        $"{CleanCSV(comp.LevelDescription.ToString())}," +
                         $"{CleanCSV(comp.SkillsReview)}," +
                         $"{CleanCSV(comp.Evidence)}," +
                         $"{CleanCSV(comp.StartDate.ToString())}," +
@@ -140,8 +141,43 @@ namespace StudentPortfolio.Pages.Export
                 }
             }
 
+            if (ExportGoals)
+            {
+                var goals = await _context.Goals
+                    .Where(g => g.UserId == userId)
+                    .Select(g => new
+                    {
+                        g.Description,
+                        g.Timeline,
+                        g.Progress,
+                        g.Learnings,
+                        g.StartDate,
+                        g.EndDate,
+                        g.DateSet,
+                        g.CompleteDate,
+                        g.CompletionNotes
+                    })
+                    .ToListAsync();
+
+                sbGoals.AppendLine("\"Goal\",\"Timeline\",\"Progress\",\"Learnings\",\"Start Date\",\"End Date\",\"Set Date\",\"Complete Date\",\"Completion Notes\"");
+                foreach (var goal in goals)
+                {
+                    sbGoals.AppendLine(
+                        $"{CleanCSV(goal.Description)}," +
+                        $"{CleanCSV(goal.Timeline)}," +
+                        $"{CleanCSV(goal.Progress)}," +
+                        $"{CleanCSV(goal.Learnings)}," +
+                        $"{CleanCSV(goal.StartDate.ToString())}," +
+                        $"{CleanCSV(goal.EndDate.ToString())}," +
+                        $"{CleanCSV(goal.DateSet.ToString())}," +
+                        $"{CleanCSV(goal.CompleteDate.ToString())}," +
+                        $"{CleanCSV(goal.CompletionNotes)}"
+                    );
+                }
+            }
+
             // just refresh the page if nothing was exported
-            if (sbSummary.Length == 0 && sbPitch.Length == 0 && sbCompetencies.Length == 0)
+            if (sbSummary.Length == 0 && sbPitch.Length == 0 && sbCompetencies.Length == 0 && sbGoals.Length == 0)
             {
                 return RedirectToPage();
             }
@@ -182,6 +218,16 @@ namespace StudentPortfolio.Pages.Export
                         using (var writer = new StreamWriter(entryStream, Encoding.UTF8))
                         {
                             writer.Write(sbCompetencies.ToString());
+                        }
+                    }
+
+                    if (sbGoals.Length > 0)
+                    {
+                        var entry = archive.CreateEntry("Goals.csv");
+                        using (var entryStream = entry.Open())
+                        using (var writer = new StreamWriter(entryStream, Encoding.UTF8))
+                        {
+                            writer.Write(sbGoals.ToString());
                         }
                     }
                 }
