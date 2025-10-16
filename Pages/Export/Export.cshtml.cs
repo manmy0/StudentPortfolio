@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using StudentPortfolio.Models;
+using System.IO.Compression;
 using System.Security.Claims;
 using System.Text;
 
@@ -81,39 +83,112 @@ namespace StudentPortfolio.Pages.Export
             // if not null then we can grab the info we need
             CurrentUser = await _userManager.FindByIdAsync(userId);
 
-            var sb = new StringBuilder();
+            var sbSummary = new StringBuilder();
+            var sbPitch = new StringBuilder();
+            var sbCompetencies = new StringBuilder();
 
             if (ExportSummary)
             {
                 var summary = CurrentUser.Introduction ?? "No personal summary found.";
 
-                sb.AppendLine("Personal Summary");
-                sb.AppendLine(CleanCSV(summary));
-                sb.AppendLine();
+                sbSummary.AppendLine("Personal Summary");
+                sbSummary.AppendLine(CleanCSV(summary));
+                sbSummary.AppendLine();
             }
 
             if (ExportPitch)
             {
                 var pitch = CurrentUser.Pitch ?? "No elevator pitch found.";
 
-                sb.AppendLine("Elevator Pitch");
-                sb.AppendLine(CleanCSV(pitch));
-                sb.AppendLine();
+                sbPitch.AppendLine("Elevator Pitch");
+                sbPitch.AppendLine(CleanCSV(pitch));
+                sbPitch.AppendLine();
+            }
+
+            if (ExportCompetencies)
+            {
+                var competencies = await _context.CompetencyTrackers
+                    .Where(c => c.UserId == userId)
+                    .Select(c => new
+                    {
+                        c.CompetencyTrackerId,
+                        c.CompetencyId,
+                        c.StartDate,
+                        c.EndDate,
+                        c.LevelId,
+                        c.SkillsReview,
+                        c.Evidence,
+                        c.Created,
+                        c.LastUpdated
+                    })
+                    .ToListAsync();
+
+                sbCompetencies.AppendLine("\"Competency Tracker ID\",\"Competency ID\",\"Level ID\",\"Skills Review\",\"Evidence\",\"Start Date\",\"End Date\",\"Created\",\"Last Updated\"");
+                foreach (var comp in competencies)
+                {
+                    sbCompetencies.AppendLine(
+                        $"{CleanCSV(comp.CompetencyTrackerId.ToString())}," +
+                        $"{CleanCSV(comp.CompetencyId.ToString())}," +
+                        $"{CleanCSV(comp.LevelId.ToString())}," +
+                        $"{CleanCSV(comp.SkillsReview)}," +
+                        $"{CleanCSV(comp.Evidence)}," +
+                        $"{CleanCSV(comp.StartDate.ToString())}," +
+                        $"{CleanCSV(comp.EndDate.ToString())}," +
+                        $"{CleanCSV(comp.Created.ToString())}," +
+                        $"{CleanCSV(comp.LastUpdated.ToString())}"
+                    );
+                }
             }
 
             // just refresh the page if nothing was exported
-            if (sb.Length == 0)
+            if (sbSummary.Length == 0 && sbPitch.Length == 0 && sbCompetencies.Length == 0)
             {
                 return RedirectToPage();
             }
-            
 
-            // encode it to a byte array so it can be exported
-            var bytes = Encoding.UTF8.GetPreamble()
-                .Concat(Encoding.UTF8.GetBytes(sb.ToString()))
-                .ToArray();
 
-            return File(bytes, "text/csv", "Portfolio_Export.csv");
+            // create a new memory stream object to temporarily hold the zip file while its being built
+            using (var memoryStream = new MemoryStream())
+            {
+                // create a zip archive object to build the zip
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    if (sbSummary.Length > 0)
+                    {
+                        // create new csv file
+                        var entry = archive.CreateEntry("Personal_Summary.csv");
+                        using (var entryStream = entry.Open())
+                        using (var writer = new StreamWriter(entryStream, Encoding.UTF8))
+                        {
+                            // write to the file
+                            writer.Write(sbSummary.ToString());
+                        }
+                    }
+
+                    if (sbPitch.Length > 0)
+                    {
+                        var entry = archive.CreateEntry("Elevator_Pitch.csv");
+                        using (var entryStream = entry.Open())
+                        using (var writer = new StreamWriter(entryStream, Encoding.UTF8))
+                        {
+                            writer.Write(sbPitch.ToString());
+                        }
+                    }
+
+                    if (sbCompetencies.Length > 0)
+                    {
+                        var entry = archive.CreateEntry("Competencies.csv");
+                        using (var entryStream = entry.Open())
+                        using (var writer = new StreamWriter(entryStream, Encoding.UTF8))
+                        {
+                            writer.Write(sbCompetencies.ToString());
+                        }
+                    }
+                }
+
+                // export the zip file
+                return File(memoryStream.ToArray(), "application/zip", "Portfolio_Export.zip");
+            }
         }
     }
 }
