@@ -11,13 +11,16 @@
     </li>
 }
 
-<div class="input-container">
+<div class="input-container mb-3">
     <h3>Date Range</h3>
+    <form method="get" class="d-flex align-items-center gap-3">
     <label for="fromInput">From:</label>
-    <input class="input" type="month" id="fromInput" name="startMonth">
+    <input class="form-control w-auto" type="month" id="fromInput" name="from" value="@Model.From">
 
     <label for="toInput">To:</label>
-    <input class="input" type="month" id="toInput" name="endMonth">
+        <input class="form-control w-auto" type="month" id="toInput" name="to" value="=@Model.To">
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
 </div>
 
 @foreach (var parentComp in Model.ParentCompetencies)
@@ -96,7 +99,7 @@
                                 <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.First().CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
                                     <button class="delete-button" type="submit" title="Delete Entry">
                                         <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Entry">
-                                    </button> @*Delete the entry for this level(can't delete lower levels)*@
+                                    </button> 
                                 </form>
                             </div>
                         </td>
