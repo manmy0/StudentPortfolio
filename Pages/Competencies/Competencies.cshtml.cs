@@ -50,6 +50,9 @@ namespace StudentPortfolio.Pages.Competencies
                      .Include(i => i.User)
                      .Include(i => i.Level)
                      .OrderBy(i => i.CompetencyId)
+                     .ThenByDescending(i => i.Level.Rank)
+                     .ThenByDescending(i => i.StartDate)
+                     .ThenByDescending(i => i.EndDate)
                      .ToListAsync();
 
                 var compIds = await _context.CompetencyTrackers
