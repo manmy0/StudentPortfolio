@@ -2,8 +2,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using StudentPortfolio.Models;
+using System.IO.Compression;
 using System.Security.Claims;
+using System.Text;
 
 namespace StudentPortfolio.Pages.Export
 {
@@ -14,6 +17,24 @@ namespace StudentPortfolio.Pages.Export
         private readonly UserManager<ApplicationUser> _userManager;
 
         public ApplicationUser CurrentUser { get; set; }
+
+        [BindProperty]
+        public bool ExportSummary {  get; set; }
+
+        [BindProperty]
+        public bool ExportPitch { get; set; }
+
+        [BindProperty]
+        public bool ExportCompetencies { get; set; }
+
+        [BindProperty]
+        public bool ExportResume { get; set; }
+
+        [BindProperty]
+        public bool ExportCoverLetter { get; set; }
+
+        [BindProperty]
+        public bool ExportGoals { get; set; }
 
         public ExportModel(StudentPortfolio.Data.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -31,6 +52,215 @@ namespace StudentPortfolio.Pages.Export
             }
 
         }
-        
+
+        // method to clean up the data from the database so it can be exported
+        public static string CleanCSV(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return "";
+
+            // double any quote
+            value = value.Replace("\"", "\"\"");
+
+            // wrap a comma, quote or new line in quotes
+            if (value.Contains(',') || value.Contains('"') || value.Contains('\n') || value.Contains('\r'))
+            {
+                value = $"\"{value}\"";
+            }
+
+            return value;
+        }
+
+        private StringBuilder GetSummaryCsv()
+        {
+            var sb = new StringBuilder();
+            var summary = CurrentUser.Introduction ?? "No personal summary found.";
+
+            sb.AppendLine("Personal Summary");
+            sb.AppendLine(CleanCSV(summary));
+            sb.AppendLine();
+            return sb;
+        }
+
+        private StringBuilder GetPitchCsv()
+        {
+            var sb = new StringBuilder();
+            var pitch = CurrentUser.Pitch ?? "No elevator pitch found.";
+
+            sb.AppendLine("Elevator Pitch");
+            sb.AppendLine(CleanCSV(pitch));
+            sb.AppendLine();
+            return sb;
+        }
+
+        private async Task<StringBuilder> GetCompetenciesCsvAsync(string userId)
+        {
+            var sbCompetencies = new StringBuilder();
+
+            var competencies = await _context.CompetencyTrackers
+                .Where(c => c.UserId == userId)
+                .Select(c => new
+                {
+                    c.CompetencyTrackerId,
+                    CompetencyDescription = c.Competency.Description,
+                    LevelDescription = c.Level.Name,
+                    c.SkillsReview,
+                    c.Evidence,
+                    c.StartDate,
+                    c.EndDate,
+                    c.Created,
+                    c.LastUpdated
+                })
+                .ToListAsync();
+
+            if (competencies.Any())
+            {
+                sbCompetencies.AppendLine("\"Competency Number\",\"Competency Description\",\"Level\",\"Skills Review\",\"Evidence\",\"Start Date\",\"End Date\",\"Created\",\"Last Updated\"");
+                foreach (var comp in competencies)
+                {
+                    sbCompetencies.AppendLine(
+                        $"{CleanCSV(comp.CompetencyTrackerId.ToString())}," +
+                        $"{CleanCSV(comp.CompetencyDescription)}," +
+                        $"{CleanCSV(comp.LevelDescription)}," +
+                        $"{CleanCSV(comp.SkillsReview)}," +
+                        $"{CleanCSV(comp.Evidence)}," +
+                        $"{CleanCSV(comp.StartDate.ToString())}," +
+                        $"{CleanCSV(comp.EndDate.ToString())}," +
+                        $"{CleanCSV(comp.Created.ToString())}," +
+                        $"{CleanCSV(comp.LastUpdated.ToString())}"
+                    );
+                }
+            }
+
+            return sbCompetencies;
+        }
+
+        private async Task<StringBuilder> GetGoalsCsvAsync(string userId)
+        {
+            var sbGoals = new StringBuilder();
+
+            var goals = await _context.Goals
+                .Where(g => g.UserId == userId)
+                .Select(g => new
+                {
+                    g.Description,
+                    g.Timeline,
+                    GoalSteps = g.GoalSteps.Select(gs => gs.Step).ToList(),
+                    g.Progress,
+                    g.Learnings,
+                    g.StartDate,
+                    g.EndDate,
+                    g.DateSet,
+                    g.CompleteDate,
+                    g.CompletionNotes
+                })
+                .ToListAsync();
+
+            if (goals.Any())
+            {
+                sbGoals.AppendLine("\"Goal\",\"Timeline\",\"Goal Steps\",\"Progress\",\"Learnings\",\"Start Date\",\"End Date\",\"Set Date\",\"Complete Date\",\"Completion Notes\"");
+                foreach (var goal in goals)
+                {
+                    // make all the steps a single string separated by ;
+                    string steps = string.Join("; ", goal.GoalSteps);
+
+                    sbGoals.AppendLine(
+                        $"{CleanCSV(goal.Description)}," +
+                        $"{CleanCSV(goal.Timeline)}," +
+                        $"{CleanCSV(steps)}," +
+                        $"{CleanCSV(goal.Progress)}," +
+                        $"{CleanCSV(goal.Learnings)}," +
+                        $"{CleanCSV(goal.StartDate.ToString())}," +
+                        $"{CleanCSV(goal.EndDate.ToString())}," +
+                        $"{CleanCSV(goal.DateSet.ToString())}," +
+                        $"{CleanCSV(goal.CompleteDate.ToString())}," +
+                        $"{CleanCSV(goal.CompletionNotes)}"
+                    );
+                }
+            }
+
+            return sbGoals;
+        }
+
+        // takes exportData which has name of file and data to be written to it
+        private IActionResult CreateZipFile(Dictionary<string, StringBuilder> exportData)
+        {
+            // create a new memory stream object to temporarily hold the zip file while its being built
+            using (var memoryStream = new MemoryStream())
+            {
+
+                // create a zip archive object to build the zip
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+
+                    // loop through all the files that need to be created from dict
+                    foreach (var kvp in exportData)
+                    {
+                        string fileName = kvp.Key;
+                        StringBuilder content = kvp.Value;
+
+                        if (content.Length > 0)
+                        {
+
+                            // create new file
+                            var entry = archive.CreateEntry(fileName);
+                            using (var entryStream = entry.Open())
+                            using (var writer = new StreamWriter(entryStream, Encoding.UTF8))
+                            {
+                                // write to the file
+                                writer.Write(content.ToString());
+                            }
+                        }
+                    }
+                }
+
+                // export the zip file
+                return File(memoryStream.ToArray(), "application/zip", "Portfolio_Export.zip");
+            }
+        }
+
+        public async Task<IActionResult> OnPostExportPortfolio()
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToPage("/Account/Login");
+            }
+
+            CurrentUser = await _userManager.FindByIdAsync(userId);
+
+            var exportData = new Dictionary<string, StringBuilder>();
+
+            if (ExportSummary)
+            {
+                exportData.Add("Personal_Summary.csv", GetSummaryCsv());
+            }
+
+            if (ExportPitch)
+            {
+                exportData.Add("Elevator_Pitch.csv", GetPitchCsv());
+            }
+
+            if (ExportCompetencies)
+            {
+                var competenciesSb = await GetCompetenciesCsvAsync(userId);
+                if (competenciesSb.Length > 0)
+                    exportData.Add("Competencies.csv", competenciesSb);
+            }
+
+            if (ExportGoals)
+            {
+                var goalsSb = await GetGoalsCsvAsync(userId);
+                if (goalsSb.Length > 0)
+                    exportData.Add("Goals.csv", goalsSb);
+            }
+
+            if (exportData.Count == 0)
+            {
+                return RedirectToPage();
+            }
+
+            return CreateZipFile(exportData);
+        }
     }
 }
