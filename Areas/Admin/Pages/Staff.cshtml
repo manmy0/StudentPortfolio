@@ -1,10 +1,11 @@
 ﻿@page
-@model StudentPortfolio.Areas.Admin.Pages.StudentsModel
+@model StudentPortfolio.Areas.Admin.Pages.StaffModel
+
 @{
-    ViewData["Title"] = "Students";
+    ViewData["Title"] = "Staff";
 }
 
-<a class="btn btn-success" style="margin-bottom: 20px;" asp-area="Admin" asp-page="Register">Register New Student</a>
+<a class="btn btn-success" style="margin-bottom: 20px;" asp-area="Staff" asp-page="Register">Register New Staff</a>
 
 <table class="table table-bordered table-striped" id="myTable" data-toggle="table" data-select-item-name="btSelectItem" data-multiple-select-row="true">
     <thead>
@@ -12,9 +13,6 @@
             <th><input type="checkbox" id="selectAllRows"></th>
             <th>
                 Name
-            </th>
-            <th>
-                Degree
             </th>
             <th>
                 View Data
@@ -31,10 +29,6 @@
                     @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Degree)
-                </td>
-                <td>
-                  
                 </td>
             </tr>
         }

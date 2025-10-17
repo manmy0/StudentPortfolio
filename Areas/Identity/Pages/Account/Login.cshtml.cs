@@ -133,6 +133,12 @@ namespace StudentPortfolio.Areas.Identity.Pages.Account
                         return LocalRedirect("/Dashboard/Dashboard");
                     }
 
+                    else if (user != null && await _userManager.IsInRoleAsync(user, "Staff"))
+                    {
+                        //If the user is a student, redirect them to the Staff Dashboard
+                        return LocalRedirect("/Staff/Index");
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

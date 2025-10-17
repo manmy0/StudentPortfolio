@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace StudentPortfolio.Areas.Staff.Pages
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Staff")]
     public class IndexModel : PageModel
     {
         public void OnGet()
