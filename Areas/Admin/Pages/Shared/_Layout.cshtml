@@ -40,6 +40,16 @@
                                 <a class="nav-link text-dark" asp-area="Admin" asp-page="Staff">Staff</a>
                             </li>
                         }
+                        @if (IsSectionDefined("AdminNav"))
+                        {
+                            @RenderSection("AdminNav", required: false)
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-page="Admins">Admins</a>
+                            </li>
+                        }
                         @if (IsSectionDefined("CompetenciesNav"))
                         {
                             @RenderSection("CompetenciesNav", required: false)

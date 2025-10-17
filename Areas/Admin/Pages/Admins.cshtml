@@ -1,11 +1,11 @@
 ﻿@page
-@model StudentPortfolio.Areas.Admin.Pages.StaffModel
+@model StudentPortfolio.Areas.Admin.Pages.AdminModel
 
 @{
-    ViewData["Title"] = "Staff";
+    ViewData["Title"] = "Admins";
 }
 
-<a class="btn btn-success" style="margin-bottom: 20px;" asp-area="Staff" asp-page="Register">Register New Staff</a>
+<a class="btn btn-success" style="margin-bottom: 20px;" asp-area="Admin" asp-page="Register">Register New Admin</a>
 
 <form asp-page-handler="Search" method="get" style="margin-bottom: 20px;" class="d-flex">
     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="SearchString" value="@Model.SearchString">

@@ -7,12 +7,12 @@ using StudentPortfolio.Models;
 namespace StudentPortfolio.Areas.Admin.Pages
 {
     [Authorize(Roles = "Admin")]
-    public class StaffModel : PageModel
+    public class AdminModel : PageModel
     {
         private readonly StudentPortfolio.Data.ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public StaffModel(StudentPortfolio.Data.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public AdminModel(StudentPortfolio.Data.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -26,7 +26,7 @@ namespace StudentPortfolio.Areas.Admin.Pages
         {
             SearchString = searchString;
 
-            var usersInRole = await _userManager.GetUsersInRoleAsync("Staff");
+            var usersInRole = await _userManager.GetUsersInRoleAsync("Admin");
 
             // Convert usersInRole variable to an IEnumerable for filtering
             IEnumerable<ApplicationUser> query = usersInRole;
@@ -47,7 +47,5 @@ namespace StudentPortfolio.Areas.Admin.Pages
         }
 
     }
-
-
 }
 

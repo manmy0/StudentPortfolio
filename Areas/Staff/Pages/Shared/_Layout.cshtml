@@ -27,17 +27,37 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="Students">Students</a>
+                                <a class="nav-link text-dark" asp-area="Staff" asp-page="Students">Students</a>
                             </li>
                         }
-                        @if (IsSectionDefined("StaffNav"))
+                        @if (IsSectionDefined("FeedbackNav"))
                         {
-                            @RenderSection("StaffNav", required: false)
+                            @RenderSection("FeedbackNav", required: false)
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="Staff">Staff</a>
+                                <a class="nav-link text-dark" asp-area="Staff" asp-page="Feedback">Feedback</a>
+                            </li>
+                        }
+                        @if (IsSectionDefined("CDLNav"))
+                        {
+                            @RenderSection("CDLfNav", required: false)
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Ataff" asp-page="CDL">CDL</a>
+                            </li>
+                        }
+                        @if (IsSectionDefined("ExportNav"))
+                        {
+                            @RenderSection("ExportNav", required: false)
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Staff" asp-page="Export">Export</a>
                             </li>
                         }
                     </ul>
