@@ -31,6 +31,9 @@ namespace StudentPortfolio.Areas.Identity.Pages.Account
             _userManager = userManager;
         }
 
+        [BindProperty(Name = "userType", SupportsGet = true)]
+        public string UserType { get; set; }
+
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -87,12 +90,30 @@ namespace StudentPortfolio.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
+        /// <summary>
+        ///  Sets the ViewData title to the chosen user type that is reflected in the URL.
+        /// </summary>
+        private void SetPageTitle()
+        {
+            if (!string.IsNullOrEmpty(UserType) && (UserType == "Student" || UserType == "Staff" || UserType == "Admin"))
+            {
+                ViewData["Title"] = $"{UserType} Log in";
+            }
+            else
+            {
+                ViewData["Title"] = "Log in";
+            }
+        }
+
         public async Task OnGetAsync(string returnUrl = null)
         {
+            SetPageTitle();
+
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
+          
 
             returnUrl ??= Url.Content("~/");
 
@@ -106,6 +127,8 @@ namespace StudentPortfolio.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            SetPageTitle();
+
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
