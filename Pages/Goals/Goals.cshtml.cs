@@ -30,6 +30,12 @@ namespace StudentPortfolio.Pages.Goals
         [BindProperty(SupportsGet = true)]
         public short selectedYear { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string? From { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string? To { get; set; }
+
         public short thisYear = (short)DateTime.Now.Year;
         public IList<short> PossibleYears { get; set; } = default!;
         public ApplicationUser CurrentUser { get; set; }
@@ -44,19 +50,43 @@ namespace StudentPortfolio.Pages.Goals
             if (userId != null)
             {
                 
-                Goal = await _context.Goals
+                var allGoals = await _context.Goals
                     .Where(i => i.UserId == userId)
                     .Include(i => i.User)
                     .ToListAsync();
 
-                var goalIds = await _context.Goals
-                    .Where(i => i.UserId == userId)
+                // If the user provided a date range
+                if (!string.IsNullOrEmpty(From) && !string.IsNullOrEmpty(To))
+                {
+                    // Parse inputs like "2025-03" into full DateOnly
+                    DateOnly fromDate = DateOnly.ParseExact(From + "-01", "yyyy-MM-dd", null);
+                    // Set 'toDate' as the last day of that month
+                    DateOnly toDate = DateOnly.ParseExact(To + "-01", "yyyy-MM-dd", null)
+                        .AddMonths(1)
+                        .AddDays(-1);
+
+                    // Filter goals that fall within this date range
+                    Goal = allGoals
+                        .Where(g =>
+                            (g.StartDate >= fromDate && g.StartDate <= toDate) ||  // start date in range
+                            (g.EndDate >= fromDate && g.EndDate <= toDate) ||      // end date in range
+                            (g.StartDate <= fromDate && g.EndDate >= toDate)       // tracker spans entire range
+                        )
+                        .ToList();
+                }
+                else
+                {
+                    Goal = allGoals;
+                }
+
+                var goalIds = Goal
                     .Select(i => i.GoalId)
-                    .ToListAsync();
+                    .ToList();
 
                 GoalSteps = await _context.GoalSteps
                     .Where(i => goalIds.Contains(i.GoalId))
                     .ToListAsync();
+
 
                 var AllCDP = await _context.CareerDevelopmentPlans
                     .Where(i => i.UserId == userId)

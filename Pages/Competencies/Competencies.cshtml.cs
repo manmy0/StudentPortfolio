@@ -26,6 +26,15 @@ namespace StudentPortfolio.Pages.Competencies
             _userManager = userManager;
         }
 
+        [BindProperty(SupportsGet = true)]
+        public string? From { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string? To { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string CurrentSort { get; set; } = "competencyId";
+
         public ApplicationUser CurrentUser { get; set; }
         public IList<CompetencyTracker> CompetencyTracker { get;set; } = default!;
         public IList<Competency> Competencies { get; set; } = default!;
@@ -39,12 +48,14 @@ namespace StudentPortfolio.Pages.Competencies
             if (userId != null)
             {
                 
-                CompetencyTracker = await _context.CompetencyTrackers
+                var competencyTracker = await _context.CompetencyTrackers
                      .Where(i => i.UserId == userId)
                      .Include(i => i.User)
                      .Include(i => i.Level)
                      .OrderBy(i => i.CompetencyId)
                      .ThenByDescending(i => i.Level.Rank)
+                     .ThenByDescending(i => i.StartDate)
+                     .ThenByDescending(i => i.EndDate)
                      .ToListAsync();
 
                 var compIds = await _context.CompetencyTrackers
@@ -58,6 +69,30 @@ namespace StudentPortfolio.Pages.Competencies
                 ParentCompetencies = await _context.Competencies
                     .Where(i => i.ParentCompetencyId == null)
                     .ToListAsync();
+
+                // If the user provided a date range
+                if (!string.IsNullOrEmpty(From) && !string.IsNullOrEmpty(To))
+                {
+                    // Parse inputs like "2025-03" into full DateOnly
+                    DateOnly fromDate = DateOnly.ParseExact(From + "-01", "yyyy-MM-dd", null);
+                    // Set 'toDate' as the last day of that month
+                    DateOnly toDate = DateOnly.ParseExact(To + "-01", "yyyy-MM-dd", null)
+                        .AddMonths(1)
+                        .AddDays(-1);
+
+                    // Filter competency trackers that fall within this date range
+                    CompetencyTracker = competencyTracker
+                        .Where(g =>
+                            (g.StartDate >= fromDate && g.StartDate <= toDate) ||  // start date in range
+                            (g.EndDate >= fromDate && g.EndDate <= toDate) ||      // end date in range
+                            (g.StartDate <= fromDate && g.EndDate >= toDate)       // tracker spans entire range
+                        )
+                        .ToList();
+                }
+                else
+                {
+                    CompetencyTracker = competencyTracker;
+                }
             }
         }
 
