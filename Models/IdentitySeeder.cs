@@ -11,7 +11,7 @@ namespace StudentPortfolio.Models
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             // Define roles to seed
-            var roles = new[] { "Admin", "Student" };
+            var roles = new[] { "Admin", "Student", "Staff" };
 
             // Seed roles
             foreach (var role in roles)
