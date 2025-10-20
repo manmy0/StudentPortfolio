@@ -48,12 +48,12 @@ button.accept-policy {
 }
 
 .navbar {
-    overflow: hidden; 
-    background-color: #333; 
-    position: fixed; 
-    top: 0; 
+    overflow: visible;
+    background-color: #333;
+    position: fixed;
+    top: 0;
     width: 100%;
-    z-index: 1000; 
+    z-index: 1000;
 }
 
 main {
