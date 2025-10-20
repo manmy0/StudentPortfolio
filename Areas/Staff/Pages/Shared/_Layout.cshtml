@@ -13,7 +13,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="Admin" asp-page="Index">Portfolio</a>
+                <a class="navbar-brand" asp-area="Staff" asp-page="Index">Portfolio</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -27,37 +27,37 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-page="Students">Students</a>
+                                <a class="nav-link text-dark" asp-area="Staff" asp-page="Students">Students</a>
                             </li>
                         }
-                        @if (IsSectionDefined("StaffNav"))
+                        @if (IsSectionDefined("FeedbackNav"))
                         {
-                            @RenderSection("StaffNav", required: false)
+                            @RenderSection("FeedbackNav", required: false)
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-page="Staff">Staff</a>
+                                <a class="nav-link text-dark" asp-area="Staff" asp-page="Feedback">Feedback</a>
                             </li>
                         }
-                        @if (IsSectionDefined("AdminNav"))
+                        @if (IsSectionDefined("CDLNav"))
                         {
-                            @RenderSection("AdminNav", required: false)
+                            @RenderSection("CDLfNav", required: false)
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-page="Admins">Admins</a>
+                                <a class="nav-link text-dark" asp-area="Staff" asp-page="CDL">CDL</a>
                             </li>
                         }
-                        @if (IsSectionDefined("CompetenciesNav"))
+                        @if (IsSectionDefined("ExportNav"))
                         {
-                            @RenderSection("CompetenciesNav", required: false)
+                            @RenderSection("ExportNav", required: false)
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-page="Competencies">Competencies</a>
+                                <a class="nav-link text-dark" asp-area="Staff" asp-page="Export">Export</a>
                             </li>
                         }
                     </ul>
