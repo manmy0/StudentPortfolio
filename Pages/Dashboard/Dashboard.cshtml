@@ -174,7 +174,14 @@
                 }
                 else
                 {
-                    <p class="text-muted">No competency tracking data found from @(Model.fromYear) to @(Model.toYear)</p>
+                    @if (Model.fromYear > Model.toYear)
+                    {
+                        <p class="text-muted">Please make sure the "from" year is less than the "to" year.</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No competency tracking data found from @(Model.fromYear) to @(Model.toYear)</p>
+                    }
                 }
             </div>
         </div>
@@ -190,7 +197,14 @@
                     }
                     else
                     {
-                        <p class="text-muted">No competency tracking data found from @(Model.fromYear) to @(Model.toYear)</p>
+                        @if (Model.fromYear > Model.toYear)
+                        {
+                            <p class="text-muted">Please make sure the "from" year is less than the "to" year.</p>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No competency tracking data found from @(Model.fromYear) to @(Model.toYear)</p>
+                        }
                     }
                 </div>
             </div>
@@ -223,7 +237,14 @@
                 }
                 else
                 {
-                    <p class="text-muted">No competency tracking data found from @(Model.fromYear) to @(Model.toYear)</p>
+                    @if (Model.fromYear > Model.toYear)
+                    {
+                        <p class="text-muted">Please make sure the "from" year is less than the "to" year.</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No competency tracking data found from @(Model.fromYear) to @(Model.toYear)</p>
+                    }
                 }
             </div>
         </div>
