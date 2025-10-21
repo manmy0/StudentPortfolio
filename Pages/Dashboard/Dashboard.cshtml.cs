@@ -30,9 +30,12 @@ namespace StudentPortfolio.Pages.Dashboard
 
         }
 
-        // grab the selectedYear=202x from the url and assign it to selectedYear in this controller
+        // grab the selectedYear=202x from the url and assign it to startYear in this controller
         [BindProperty(SupportsGet = true)]
-        public int selectedYear { get; set; }
+        public int startYear { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int endYear { get; set; }
         public ApplicationUser CurrentUser { get; set; }
         public List<CompetencyPerformanceSummaryModel> CompetencyPerformanceSummary { get; set; } = new List<CompetencyPerformanceSummaryModel>();
         public List<CompetencyPerformanceSummaryModel> LowestFiveCompetencies { get; set; } = new List<CompetencyPerformanceSummaryModel>(5);
@@ -43,15 +46,21 @@ namespace StudentPortfolio.Pages.Dashboard
 
             if (userId != null)
             {
-                if (selectedYear == 0)
+                if (startYear == 0)
                 {
                     // default to current year if no year is selected
-                    selectedYear = DateTime.Now.Year;
+                    startYear = DateTime.Now.Year;
+                }
+                if (endYear == 0)
+                {
+                    // set end year to the start year if none selected
+                    endYear = startYear;
                 }
 
                 var allCompetencyData = await _context.CompetencyTrackers
                     .Where(i => i.UserId == userId)
-                    .Where(i => i.Created.Year <= selectedYear)
+                    .Where(i => i.Created.Year <= endYear)
+                    .Where(i => i.Created.Year >= startYear)
                     .Include(i => i.Competency) // need the competency table for the display id
 
                     // groups by the competencyId and displayId
