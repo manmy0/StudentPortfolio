@@ -1,3 +1,11 @@
 ﻿@{
-    Layout = "_Layout";
+    if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        // If the user is an Admin, use the Admin layout
+        Layout = "/Areas/Admin/Pages/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
 }
