@@ -23,13 +23,6 @@ namespace StudentPortfolio.Pages.Summary
             _userManager = userManager;
         }
 
-        /* 
-         Things i want to get:
-            Goals completed in year
-            Number of competencies at each level
-            
-         */
-
         public class SummaryViewModel
         {
             public int GoalsCompleted { get; set; }
