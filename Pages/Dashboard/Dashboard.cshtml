@@ -107,9 +107,10 @@
                     <label for="from-year" class="form-label fw-bold">From</label>
                     <select id="from-year" class="form-select" name="fromYear" onchange="this.form.submit()">
                         <option disabled selected>Select start year</option>
-                        <option value="2023" selected="@(Model.fromYear == 2023)">2023</option>
-                        <option value="2024" selected="@(Model.fromYear == 2024)">2024</option>
-                        <option value="2025" selected="@(Model.fromYear == 2025)">2025</option>
+                        @foreach (var year in Model.AvailableYears)
+                        {
+                            <option value="@year" selected="@(Model.fromYear == year)">@year</option>
+                        }
                     </select>
                 </div>
 
@@ -118,9 +119,10 @@
                     <label for="to-year" class="form-label fw-bold">To</label>
                     <select id="to-year" class="form-select" name="toYear" onchange="this.form.submit()">
                         <option disabled selected>Select end year</option>
-                        <option value="2023" selected="@(Model.toYear == 2023)">2023</option>
-                        <option value="2024" selected="@(Model.toYear == 2024)">2024</option>
-                        <option value="2025" selected="@(Model.toYear == 2025)">2025</option>
+                        @foreach (var year in Model.AvailableYears)
+                        {
+                            <option value="@year" selected="@(Model.toYear == year)">@year</option>
+                        }
                     </select>
                 </div>
             </form>
