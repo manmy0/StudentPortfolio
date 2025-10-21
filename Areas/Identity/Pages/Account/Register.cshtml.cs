@@ -92,11 +92,11 @@ namespace StudentPortfolio.Areas.Identity.Pages.Account
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
-            [Display(Name = "Last Name")]
+            [Display(Name = "Degree")]
             public string Degree { get; set; }
 
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
-            [Display(Name = "Last Name")]
+            [Display(Name = "Specialisation")]
             public string Specialisation { get; set; }
 
 
