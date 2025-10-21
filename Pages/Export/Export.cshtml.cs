@@ -36,6 +36,9 @@ namespace StudentPortfolio.Pages.Export
         [BindProperty]
         public bool ExportGoals { get; set; }
 
+        [BindProperty]
+        public bool ExportCDP { get; set; }
+
         public ExportModel(StudentPortfolio.Data.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -214,8 +217,14 @@ namespace StudentPortfolio.Pages.Export
                     }
                 }
 
+                // create the file name
+                var user = CurrentUser.FirstName + "_" + CurrentUser.LastName;
+                var date = DateTime.Now;
+                var dateString = date.ToString("dd-MM-yyyy");
+                var finalFileName = $"{user}_Portfolio_Export_{dateString}.zip";
+
                 // export the zip file
-                return File(memoryStream.ToArray(), "application/zip", "Portfolio_Export.zip");
+                return File(memoryStream.ToArray(), "application/zip", finalFileName);
             }
         }
 
