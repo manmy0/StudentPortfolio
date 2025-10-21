@@ -37,6 +37,7 @@ namespace StudentPortfolio.Pages.Summary
         [BindProperty(SupportsGet = true)]
         public int selectedYear { get; set; }
         public SummaryViewModel SummaryData = new SummaryViewModel();
+        public List<int> AvailableYears { get; set; } = new List<int>();
 
         public string? ProfileImageBase64 =>
             CurrentUser?.ProfileImage != null
@@ -51,10 +52,24 @@ namespace StudentPortfolio.Pages.Summary
             {
                 CurrentUser = await _userManager.FindByIdAsync(userId);
 
+                AvailableYears = await _context.CompetencyTrackers
+                    .Where(i => i.UserId == userId)
+                    .Select(i => i.Created.Year)
+                    .Distinct()
+                    .OrderBy(year => year)
+                    .ToListAsync();
+
+                // set to current year if no data is found
+                if (!AvailableYears.Any())
+                {
+                    AvailableYears.Add(DateTime.Now.Year);
+                }
+
+                // set year to the highest available year if it = 0 for some reason
+                // set year to current year if available years doesnt have anything in it
                 if (selectedYear == 0)
                 {
-                    // default to current year if no year is selected
-                    selectedYear = DateTime.Now.Year;
+                    selectedYear = AvailableYears.Any() ? AvailableYears.Max() : DateTime.Now.Year;
                 }
 
                 int goalsCompletedCount = await _context.Goals
