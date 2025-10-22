@@ -45,8 +45,8 @@ namespace StudentPortfolio.Areas.Staff.Pages
             var date = DateTime.Now;
             var dateString = date.ToString("dd-MM-yyyy");
 
-            var fileName = $"{userName}_Personal_Summary_{dateString}.csv";
-            exportData.Add(fileName, GetSummaryCsv(user));
+            exportData.Add($"{userName}_Personal_Summary_{dateString}.csv", GetSummaryCsv(user));
+            exportData.Add($"{userName}_Elevator_Pitch_{dateString}.csv", GetPitchCsv(user));
 
             return CreateZipFile(exportData, user);
         }
@@ -81,6 +81,17 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
             sb.AppendLine("Personal Summary");
             sb.AppendLine(CleanCSV(summary));
+            sb.AppendLine();
+            return sb;
+        }
+
+        private StringBuilder GetPitchCsv(ApplicationUser user)
+        {
+            var sb = new StringBuilder();
+            var pitch = user.Pitch ?? "No elevator pitch found.";
+
+            sb.AppendLine("Elevator Pitch");
+            sb.AppendLine(CleanCSV(pitch));
             sb.AppendLine();
             return sb;
         }
