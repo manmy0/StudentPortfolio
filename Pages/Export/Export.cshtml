@@ -4,78 +4,90 @@
     ViewData["Title"] = "Export";
 }
 
+<div class="container-md mt-4">
+    <div class="mx-auto" style="max-width: 900px">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0">Export Portfolio</h2>
+            <a class="btn btn-primary" asp-page="/Summary/Summary">Back to Summary</a>
+        </div>
 
-<div style="display: flex; justify-content: flex-end;">
-    <a class="btn btn-primary" asp-page="/Summary/Summary">Back to Summary</a>
-</div>
+        <form method="post" asp-page-handler="ExportPortfolio">
 
-<form method="post" asp-page-handler="ExportPortfolio">
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Item</th>
-                <th scope="col">Export</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Personal Summary</td>
-                <td>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" asp-for="ExportSummary" id="summaryCheckbox">
-                        <label class="form-check-label" for="summaryCheckbox"></label>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>Elevator Pitch</td>
-                <td>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" asp-for="ExportPitch" id="pitchCheckbox">
-                        <label class="form-check-label" for="pitchCheckbox"></label>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>Competency Entries</td>
-                <td>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" asp-for="ExportCompetencies" id="competenciesCheckbox">
-                        <label class="form-check-label" for="competenciesCheckbox"></label>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>Career Development Plan</td>
-                <td>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" asp-for="ExportCDP" id="CDPCheckbox">
-                        <label class="form-check-label" for="CDPCheckbox"></label>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>Goals</td>
-                <td>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" asp-for="ExportGoals" id="goalsCheckbox">
-                        <label class="form-check-label" for="goalsCheckbox"></label>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>General Statistics</td>
-                <td>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" asp-for="ExportStats" id="statsCheckbox">
-                        <label class="form-check-label" for="statsCheckbox"></label>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
 
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary mb-2">Export</button>
+                    <p class="text-muted mb-4">
+                        Choose which sections of your portfolio you'd like to export:
+                    </p>
+
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+
+                        <!-- personal summary -->
+                        <div class="col">
+                            <div class="option-card card h-100 p-3 border-0 shadow-sm hover-card">
+                                <div class="form-check d-flex align-items-center">
+                                    <input class="form-check-input me-2" type="checkbox" asp-for="ExportSummary" id="summaryCheckbox">
+                                    <label class="form-check-label fw-semibold flex-grow-1" for="summaryCheckbox">Personal Summary</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- elevator pitch -->
+                        <div class="col">
+                            <div class="option-card card h-100 p-3 border-0 shadow-sm hover-card">
+                                <div class="form-check d-flex align-items-center">
+                                    <input class="form-check-input me-2" type="checkbox" asp-for="ExportPitch" id="pitchCheckbox">
+                                    <label class="form-check-label fw-semibold flex-grow-1" for="pitchCheckbox">Elevator Pitch</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- competency entries -->
+                        <div class="col">
+                            <div class="option-card card h-100 p-3 border-0 shadow-sm hover-card">
+                                <div class="form-check d-flex align-items-center">
+                                    <input class="form-check-input me-2" type="checkbox" asp-for="ExportCompetencies" id="competenciesCheckbox">
+                                    <label class="form-check-label fw-semibold flex-grow-1" for="competenciesCheckbox">Competency Entries</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CDL -->
+                        <div class="col">
+                            <div class="option-card card h-100 p-3 border-0 shadow-sm hover-card">
+                                <div class="form-check d-flex align-items-center">
+                                    <input class="form-check-input me-2" type="checkbox" asp-for="ExportCDP" id="CDPCheckbox">
+                                    <label class="form-check-label fw-semibold flex-grow-1" for="CDPCheckbox">Career Development Plan</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- goals -->
+                        <div class="col">
+                            <div class="option-card card h-100 p-3 border-0 shadow-sm hover-card">
+                                <div class="form-check d-flex align-items-center">
+                                    <input class="form-check-input me-2" type="checkbox" asp-for="ExportGoals" id="goalsCheckbox">
+                                    <label class="form-check-label fw-semibold flex-grow-1" for="goalsCheckbox">Goals</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- general statistics -->
+                        <div class="col">
+                            <div class="option-card card h-100 p-3 border-0 shadow-sm hover-card">
+                                <div class="form-check d-flex align-items-center">
+                                    <input class="form-check-input me-2" type="checkbox" asp-for="ExportStats" id="statsCheckbox">
+                                    <label class="form-check-label fw-semibold flex-grow-1" for="statsCheckbox">General Statistics</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-warning">Export Selected</button>
+            </div>
+        </form>
     </div>
-</form>
+</div>

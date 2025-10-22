@@ -7,7 +7,6 @@ using StudentPortfolio.Models;
 using System.IO.Compression;
 using System.Security.Claims;
 using System.Text;
-using static StudentPortfolio.Pages.Summary.SummaryModel;
 
 namespace StudentPortfolio.Pages.Export
 {
