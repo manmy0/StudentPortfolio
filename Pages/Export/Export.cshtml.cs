@@ -7,6 +7,7 @@ using StudentPortfolio.Models;
 using System.IO.Compression;
 using System.Security.Claims;
 using System.Text;
+using static StudentPortfolio.Pages.Summary.SummaryModel;
 
 namespace StudentPortfolio.Pages.Export
 {
@@ -39,10 +40,25 @@ namespace StudentPortfolio.Pages.Export
         [BindProperty]
         public bool ExportCDP { get; set; }
 
+        [BindProperty]
+        public bool ExportStats { get; set; }
+
+        public StatisticsModel Statistics = new StatisticsModel();
+
         public ExportModel(StudentPortfolio.Data.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
+        }
+
+        public class StatisticsModel
+        {
+            public int GoalsCompleted { get; set; }
+            public int NumCompetencies { get; set; }
+            public int Emerging { get; set; }
+            public int Developing { get; set; }
+            public int Proficient { get; set; }
+            public int Confident { get; set; }
         }
 
         public async Task OnGetAsync()
@@ -223,6 +239,51 @@ namespace StudentPortfolio.Pages.Export
             return sbCDP;
         }
 
+        private async Task<StringBuilder> GetStatisticsCsvAsync(string userId)
+        {
+            var sbStats = new StringBuilder();
+
+            int goalsCompletedCount = await _context.Goals
+                    .Where(g => g.UserId == userId)
+                    .Where(g => g.CompleteDate.HasValue)
+                    .CountAsync();
+
+            var competencies = await _context.CompetencyTrackers
+                .Where(i => i.UserId == userId)
+                .ToListAsync();
+
+            var distinctCompetencyLevels = competencies
+                .GroupBy(c => c.CompetencyId)
+                .Select(g => new
+                {
+                    CompetencyId = g.Key,
+                    LevelId = g.Max(c => c.LevelId)
+                })
+                .ToList();
+
+            Statistics = new StatisticsModel
+            {
+                GoalsCompleted = goalsCompletedCount,
+                NumCompetencies = competencies.Count(),
+                Emerging = distinctCompetencyLevels.Count(d => d.LevelId == 1),
+                Developing = distinctCompetencyLevels.Count(d => d.LevelId == 2),
+                Proficient = distinctCompetencyLevels.Count(d => d.LevelId == 3),
+                Confident = distinctCompetencyLevels.Count(d => d.LevelId == 4)
+            };
+
+            sbStats.AppendLine("\"Goals Completed\",\"Number of Competency Entries\",\"Competencies at Emerging\",\"Competencies at Developing\",\"Competencies at Proficient\",\"Competencies at Confident\"");
+            sbStats.AppendLine(
+                    $"{CleanCSV(Statistics.GoalsCompleted.ToString())}," +
+                    $"{CleanCSV(Statistics.NumCompetencies.ToString())}," +
+                    $"{CleanCSV(Statistics.Emerging.ToString())}," +
+                    $"{CleanCSV(Statistics.Developing.ToString())}," +
+                    $"{CleanCSV(Statistics.Proficient.ToString())}," +
+                    $"{CleanCSV(Statistics.Confident.ToString())},"
+                );
+
+            return sbStats;
+        }
+
         // takes exportData which has name of file and data to be written to it
         private IActionResult CreateZipFile(Dictionary<string, StringBuilder> exportData)
         {
@@ -322,6 +383,16 @@ namespace StudentPortfolio.Pages.Export
                 {
                     var fileName = $"{user}_CDP_{dateString}.csv";
                     exportData.Add(fileName, cdpSb);
+                }
+            }
+
+            if (ExportStats)
+            {
+                var statsSb = await GetStatisticsCsvAsync(userId);
+                if (statsSb.Length > 0)
+                {
+                    var fileName = $"{user}_General_Statistics_{dateString}.csv";
+                    exportData.Add(fileName, statsSb);
                 }
             }
 
