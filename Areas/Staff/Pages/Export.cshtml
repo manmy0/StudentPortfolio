@@ -1,0 +1,47 @@
+﻿@page
+@model StudentPortfolio.Areas.Staff.Pages.ExportModel
+@{
+    ViewData["Title"] = "Export";
+}
+
+<div class="container-md mt-4">
+    <div class="mx-auto" style="max-width: 900px">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0">Export Student Data</h2>
+            <a class="btn btn-primary" asp-page="/Staff/Students">Back to Students</a>
+        </div>
+
+        <form method="post" asp-page-handler="ExportIndividualStudentData">
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+
+                    <p class="text-muted mb-4">
+                        Select an individual student to export their data, or select export all:
+                    </p>
+
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+
+                        @foreach (var student in Model.Users)
+                        {
+                            <div class="col">
+                                <button type="submit"
+                                        name="studentId"
+                                        value="@student.Id"
+                                        class="option-card card h-100 p-3 border-0 shadow-sm hover-card text-start w-100">
+                                    <div class="fw-semibold">@student.FirstName @student.LastName</div>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <form method="post" asp-page-handler="ExportAllStudentData">
+            <div class="text-center">
+                <button type="submit" class="btn btn-warning">Export All</button>
+            </div>
+        </form>
+    </div>
+</div>
