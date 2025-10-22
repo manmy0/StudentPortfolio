@@ -185,6 +185,44 @@ namespace StudentPortfolio.Pages.Export
             return sbGoals;
         }
 
+        private async Task<StringBuilder> GetCDPCsvAsync(string userId)
+        {
+            var sbCDP = new StringBuilder();
+
+            var CDP = await _context.CareerDevelopmentPlans
+                .Where(c => c.UserId == userId)
+                .Select(c => new
+                {
+                    c.Year,
+                    c.ProfessionalInterests,
+                    c.EmployersOfInterest,
+                    c.PersonalValues,
+                    c.DevelopmentFocus,
+                    c.Extracurricular,
+                    c.NetworkingPlan
+                })
+                .ToListAsync();
+
+            if (CDP.Any())
+            {
+                sbCDP.AppendLine("\"Year\",\"Professional Interests\",\"Employers of Interest\",\"Personal Values\",\"Development Focus\",\"Extra Curricular\",\"Networking Plan\"");
+                foreach (var cdp in CDP)
+                {
+                    sbCDP.AppendLine(
+                        $"{CleanCSV(cdp.Year.ToString())}," +
+                        $"{CleanCSV(cdp.ProfessionalInterests)}," +
+                        $"{CleanCSV(cdp.EmployersOfInterest)}," +
+                        $"{CleanCSV(cdp.PersonalValues)}," +
+                        $"{CleanCSV(cdp.DevelopmentFocus)}," +
+                        $"{CleanCSV(cdp.Extracurricular)}," +
+                        $"{CleanCSV(cdp.NetworkingPlan)}"
+                    );
+                }
+            }
+
+            return sbCDP;
+        }
+
         // takes exportData which has name of file and data to be written to it
         private IActionResult CreateZipFile(Dictionary<string, StringBuilder> exportData)
         {
@@ -240,28 +278,51 @@ namespace StudentPortfolio.Pages.Export
 
             var exportData = new Dictionary<string, StringBuilder>();
 
+            // get the date and user name for the file name
+            var user = CurrentUser.FirstName + "_" + CurrentUser.LastName;
+            var date = DateTime.Now;
+            var dateString = date.ToString("dd-MM-yyyy");
+
             if (ExportSummary)
             {
-                exportData.Add("Personal_Summary.csv", GetSummaryCsv());
+                var fileName = $"{user}_Personal_Summary_{dateString}.csv";
+                exportData.Add(fileName, GetSummaryCsv());
             }
 
             if (ExportPitch)
             {
-                exportData.Add("Elevator_Pitch.csv", GetPitchCsv());
+                var fileName = $"{user}_Elevator_Pitch_{dateString}.csv";
+                exportData.Add(fileName, GetPitchCsv());
             }
 
             if (ExportCompetencies)
             {
                 var competenciesSb = await GetCompetenciesCsvAsync(userId);
                 if (competenciesSb.Length > 0)
-                    exportData.Add("Competencies.csv", competenciesSb);
+                {
+                    var fileName = $"{user}_Competencies_{dateString}.csv";
+                    exportData.Add(fileName, competenciesSb);
+                } 
             }
 
             if (ExportGoals)
             {
                 var goalsSb = await GetGoalsCsvAsync(userId);
                 if (goalsSb.Length > 0)
-                    exportData.Add("Goals.csv", goalsSb);
+                {
+                    var fileName = $"{user}_Goals_{dateString}.csv";
+                    exportData.Add(fileName, goalsSb);
+                }
+            }
+
+            if (ExportCDP)
+            {
+                var cdpSb = await GetCDPCsvAsync(userId);
+                if (cdpSb.Length > 0)
+                {
+                    var fileName = $"{user}_CDP_{dateString}.csv";
+                    exportData.Add(fileName, cdpSb);
+                }
             }
 
             if (exportData.Count == 0)
