@@ -48,6 +48,10 @@ namespace StudentPortfolio.Areas.Staff.Pages
             exportData.Add($"{userName}_Personal_Summary_{dateString}.csv", GetSummaryCsv(user));
             exportData.Add($"{userName}_Elevator_Pitch_{dateString}.csv", GetPitchCsv(user));
 
+            var competenciesSb = await GetCompetenciesCsvAsync(user.Id);
+            if (competenciesSb.Length > 0)
+                exportData.Add($"{userName}_Competencies_{dateString}.csv", competenciesSb);
+
             return CreateZipFile(exportData, user);
         }
 
@@ -94,6 +98,48 @@ namespace StudentPortfolio.Areas.Staff.Pages
             sb.AppendLine(CleanCSV(pitch));
             sb.AppendLine();
             return sb;
+        }
+
+        private async Task<StringBuilder> GetCompetenciesCsvAsync(string userId)
+        {
+            var sbCompetencies = new StringBuilder();
+
+            var competencies = await _context.CompetencyTrackers
+                .Where(c => c.UserId == userId)
+                .Select(c => new
+                {
+                    c.CompetencyTrackerId,
+                    CompetencyDescription = c.Competency.Description,
+                    LevelDescription = c.Level.Name,
+                    c.SkillsReview,
+                    c.Evidence,
+                    c.StartDate,
+                    c.EndDate,
+                    c.Created,
+                    c.LastUpdated
+                })
+                .ToListAsync();
+
+            if (competencies.Any())
+            {
+                sbCompetencies.AppendLine("\"Competency Number\",\"Competency Description\",\"Level\",\"Skills Review\",\"Evidence\",\"Start Date\",\"End Date\",\"Created\",\"Last Updated\"");
+                foreach (var comp in competencies)
+                {
+                    sbCompetencies.AppendLine(
+                        $"{CleanCSV(comp.CompetencyTrackerId.ToString())}," +
+                        $"{CleanCSV(comp.CompetencyDescription)}," +
+                        $"{CleanCSV(comp.LevelDescription)}," +
+                        $"{CleanCSV(comp.SkillsReview)}," +
+                        $"{CleanCSV(comp.Evidence)}," +
+                        $"{CleanCSV(comp.StartDate.ToString())}," +
+                        $"{CleanCSV(comp.EndDate.ToString())}," +
+                        $"{CleanCSV(comp.Created.ToString())}," +
+                        $"{CleanCSV(comp.LastUpdated.ToString())}"
+                    );
+                }
+            }
+
+            return sbCompetencies;
         }
 
         private IActionResult CreateZipFile(Dictionary<string, StringBuilder> exportData, ApplicationUser user)
