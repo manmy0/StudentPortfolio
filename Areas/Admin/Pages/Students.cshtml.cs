@@ -24,6 +24,9 @@ namespace StudentPortfolio.Areas.Admin.Pages
         public IList<ApplicationUser> Users { get; set; }
         public string SearchString { get; set; }
 
+        [BindProperty]
+        public string[] SelectedStudentIds { get; set; }
+
         public async Task OnGetAsync(string searchString)
         {
             SearchString = searchString;
@@ -48,6 +51,26 @@ namespace StudentPortfolio.Areas.Admin.Pages
             Users = query.ToList();
         }
 
+        public async Task<IActionResult> OnPostDeleteAsync()
+        {
+            if (SelectedStudentIds != null && SelectedStudentIds.Any())
+            {
+                foreach (var id in SelectedStudentIds)
+                {
+                    var user = await _userManager.FindByIdAsync(id);
+                    if (user != null)
+                    {
+                        var result = await _userManager.DeleteAsync(user);
+                        if (!result.Succeeded)
+                        {
+                            ModelState.AddModelError("", $"Error deleting user {user.UserName}: {result.Errors.FirstOrDefault()?.Description}");
+                        }
+                    }
+                }
+            }
 
+            return RedirectToPage(new { searchString = SearchString });
+        }
     }
+
 }
