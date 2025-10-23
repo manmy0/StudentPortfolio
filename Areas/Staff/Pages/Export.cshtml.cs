@@ -49,24 +49,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
                 return NotFound();
             }
 
-            var exportData = new Dictionary<string, StringBuilder>();
-
-            // get the date and user name for the file name
-            var userName = user.FirstName + "_" + user.LastName;
-            var date = DateTime.Now;
-            var dateString = date.ToString("dd-MM-yyyy");
-
-            var competenciesSb = await GetCompetenciesCsvAsync(user.Id);
-            var goalsSb = await GetGoalsCsvAsync(user.Id);
-            var CDPSb = await GetCDPCsvAsync(user.Id);
-            var statsSb = await GetStatisticsCsvAsync(user.Id);
-
-            exportData.Add($"{userName}_Personal_Summary_{dateString}.csv", GetSummaryCsv(user));
-            exportData.Add($"{userName}_Elevator_Pitch_{dateString}.csv", GetPitchCsv(user));
-            exportData.Add($"{userName}_Competencies_{dateString}.csv", competenciesSb);
-            exportData.Add($"{userName}_Goals_{dateString}.csv", goalsSb);
-            exportData.Add($"{userName}_CDP_{dateString}.csv", CDPSb);
-            exportData.Add($"{userName}_General_Statistics_{dateString}.csv", statsSb);
+            var exportData = await CreateExportDataAsync(user);
 
             return CreateZipFile(exportData, user);
         }
@@ -286,6 +269,30 @@ namespace StudentPortfolio.Areas.Staff.Pages
                 );
 
             return sbStats;
+        }
+
+        private async Task<Dictionary<string, StringBuilder>> CreateExportDataAsync(ApplicationUser user)
+        {
+            var exportData = new Dictionary<string, StringBuilder>();
+
+            // get the date and user name for the file name
+            var userName = user.FirstName + "_" + user.LastName;
+            var date = DateTime.Now;
+            var dateString = date.ToString("dd-MM-yyyy");
+
+            var competenciesSb = await GetCompetenciesCsvAsync(user.Id);
+            var goalsSb = await GetGoalsCsvAsync(user.Id);
+            var CDPSb = await GetCDPCsvAsync(user.Id);
+            var statsSb = await GetStatisticsCsvAsync(user.Id);
+
+            exportData.Add($"{userName}_Personal_Summary_{dateString}.csv", GetSummaryCsv(user));
+            exportData.Add($"{userName}_Elevator_Pitch_{dateString}.csv", GetPitchCsv(user));
+            exportData.Add($"{userName}_Competencies_{dateString}.csv", competenciesSb);
+            exportData.Add($"{userName}_Goals_{dateString}.csv", goalsSb);
+            exportData.Add($"{userName}_CDP_{dateString}.csv", CDPSb);
+            exportData.Add($"{userName}_General_Statistics_{dateString}.csv", statsSb);
+
+            return exportData;
         }
 
         private IActionResult CreateZipFile(Dictionary<string, StringBuilder> exportData, ApplicationUser user)
