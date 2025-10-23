@@ -22,6 +22,8 @@
 
 @if (Model.HasOrphanedTrackers)
 {
+    <h2>Some of the competencies you have entries for have been deleted.</h2>
+    <h2>Go to this page to check them out and save them.</h2>
     <div class="text-center mt-4">
         <a class="btn btn-secondary" asp-page="/Export/ExportOrphanedTrackers">Export</a>
     </div>

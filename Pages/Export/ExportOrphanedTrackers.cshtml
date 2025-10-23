@@ -1,10 +1,11 @@
 ﻿@page
 @model StudentPortfolio.Pages.Export.ExportOrphanedTrackersModel
 @{
+    ViewData["Title"] = "ExportOrphanedTrackers";
 }
 
 <tr>
-    <td>Competencies</td>
+    <td>Export</td>
     <td>
         <div class="form-check">
             <input class="form-check-input" type="checkbox" asp-for="ExportCompetencies" id="competenciesCheckbox">
@@ -12,3 +13,32 @@
         </div>
     </td>
 </tr>
+
+@if(Model.Trackers != null)
+{
+    @foreach (var track in Model.Trackers)
+    {
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                @track.Level.Name
+            </td>
+            <td>
+                @track.StartDate
+            </td>
+            <td>
+                @track.EndDate
+            </td>
+            <td>
+                @track.SkillsReview
+            </td>
+            <td>
+                <a href="@track.Evidence">Evidence</a>
+            </td>
+            <td>
+            </td>
+        </tr>
+    }
+}

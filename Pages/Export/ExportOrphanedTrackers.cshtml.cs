@@ -17,6 +17,12 @@ namespace StudentPortfolio.Pages.Export
         private readonly StudentPortfolio.Data.ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        public ExportOrphanedTrackersModel(StudentPortfolio.Data.ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
         public ApplicationUser CurrentUser { get; set; }
 
         [BindProperty]
@@ -33,7 +39,7 @@ namespace StudentPortfolio.Pages.Export
                 CurrentUser = await _userManager.FindByIdAsync(userId);
             }
 
-            await GetOrphanedTrackersAsync(userId);
+            //await GetOrphanedTrackersAsync(userId);
             
 
         }
