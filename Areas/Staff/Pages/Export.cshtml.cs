@@ -56,8 +56,51 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
         public async Task<IActionResult> OnPostExportAllStudentDataAsync()
         {
-            Users = await _userManager.GetUsersInRoleAsync("Student");
-            return Page();
+            var users = await _userManager.GetUsersInRoleAsync("Student");
+
+            // Data contains the byte array that CreateZipFile will return
+            var studentZips = new List<(byte[] Data, string FileName)>();
+
+            foreach (var student in users)
+            {
+                // get the individual student's data ready to be converted to a file
+                var exportData = await CreateExportDataAsync(student);
+
+                // convert data into byte array (FileContentResult is an object that can store the file
+                // as a byte array as well as holding some other important information like the file name)
+                var fileResult = CreateZipFile(exportData, student) as FileContentResult;
+                if (fileResult != null)
+                {
+                    studentZips.Add((fileResult.FileContents, fileResult.FileDownloadName));
+                }
+            }
+
+            // memory stream again to hold the information in memory while the file is being built
+            using (var finalZipStream = new MemoryStream())
+            {
+                // put the memory stream in a ZipArchive which allows us to create a zip file
+                using (var zipArchive = new ZipArchive(finalZipStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (var (data, fileName) in studentZips)
+                    {
+                        // create new entry (file) inside the final zip with correct file name
+                        var entry = zipArchive.CreateEntry(fileName);
+
+                        // open the file, write to the file
+                        using (var entryStream = entry.Open())
+                        using (var ms = new MemoryStream(data))
+                        {
+                            await ms.CopyToAsync(entryStream);
+                        }
+                    }
+                }
+
+                // rewind the stream to the beginning so that next time it reads the bytes from the start
+                finalZipStream.Position = 0;
+
+                // convert the finalZipStream into a byte array which can then be downloaded by the browser
+                return File(finalZipStream.ToArray(), "application/zip", "All_Student_Portfolios.zip");
+            }
         }
 
         public static string CleanCSV(string value)
