@@ -20,6 +20,13 @@
     <input class="input" type="month" id="toInput" name="endMonth">
 </div>
 
+@if (Model.HasOrphanedTrackers)
+{
+    <div class="text-center mt-4">
+        <a class="btn btn-secondary" asp-page="/Export/ExportOrphanedTrackers">Export</a>
+    </div>
+}
+
 @foreach (var parentComp in Model.ParentCompetencies)
 {
     <table class="table table-bordered table-striped collapsible-table">
