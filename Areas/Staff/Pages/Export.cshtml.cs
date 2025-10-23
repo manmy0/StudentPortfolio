@@ -22,7 +22,18 @@ namespace StudentPortfolio.Areas.Staff.Pages
             _userManager = userManager;
         }
 
+        public class StatisticsModel
+        {
+            public int GoalsCompleted { get; set; }
+            public int NumCompetencies { get; set; }
+            public int Emerging { get; set; }
+            public int Developing { get; set; }
+            public int Proficient { get; set; }
+            public int Confident { get; set; }
+        }
+
         public IList<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
+        public StatisticsModel Statistics = new StatisticsModel();
 
         public async Task OnGetAsync()
         {
@@ -45,12 +56,17 @@ namespace StudentPortfolio.Areas.Staff.Pages
             var date = DateTime.Now;
             var dateString = date.ToString("dd-MM-yyyy");
 
+            var competenciesSb = await GetCompetenciesCsvAsync(user.Id);
+            var goalsSb = await GetGoalsCsvAsync(user.Id);
+            var CDPSb = await GetCDPCsvAsync(user.Id);
+            var statsSb = await GetStatisticsCsvAsync(user.Id);
+
             exportData.Add($"{userName}_Personal_Summary_{dateString}.csv", GetSummaryCsv(user));
             exportData.Add($"{userName}_Elevator_Pitch_{dateString}.csv", GetPitchCsv(user));
-
-            var competenciesSb = await GetCompetenciesCsvAsync(user.Id);
-            if (competenciesSb.Length > 0)
-                exportData.Add($"{userName}_Competencies_{dateString}.csv", competenciesSb);
+            exportData.Add($"{userName}_Competencies_{dateString}.csv", competenciesSb);
+            exportData.Add($"{userName}_Goals_{dateString}.csv", goalsSb);
+            exportData.Add($"{userName}_CDP_{dateString}.csv", CDPSb);
+            exportData.Add($"{userName}_General_Statistics_{dateString}.csv", statsSb);
 
             return CreateZipFile(exportData, user);
         }
@@ -140,6 +156,136 @@ namespace StudentPortfolio.Areas.Staff.Pages
             }
 
             return sbCompetencies;
+        }
+
+        private async Task<StringBuilder> GetGoalsCsvAsync(string userId)
+        {
+            var sbGoals = new StringBuilder();
+
+            var goals = await _context.Goals
+                .Where(g => g.UserId == userId)
+                .Select(g => new
+                {
+                    g.Description,
+                    g.Timeline,
+                    GoalSteps = g.GoalSteps.Select(gs => gs.Step).ToList(),
+                    g.Progress,
+                    g.Learnings,
+                    g.StartDate,
+                    g.EndDate,
+                    g.DateSet,
+                    g.CompleteDate,
+                    g.CompletionNotes
+                })
+                .ToListAsync();
+
+            if (goals.Any())
+            {
+                sbGoals.AppendLine("\"Goal\",\"Timeline\",\"Goal Steps\",\"Progress\",\"Learnings\",\"Start Date\",\"End Date\",\"Set Date\",\"Complete Date\",\"Completion Notes\"");
+                foreach (var goal in goals)
+                {
+                    // make all the steps a single string separated by ;
+                    string steps = string.Join("; ", goal.GoalSteps);
+
+                    sbGoals.AppendLine(
+                        $"{CleanCSV(goal.Description)}," +
+                        $"{CleanCSV(goal.Timeline)}," +
+                        $"{CleanCSV(steps)}," +
+                        $"{CleanCSV(goal.Progress)}," +
+                        $"{CleanCSV(goal.Learnings)}," +
+                        $"{CleanCSV(goal.StartDate.ToString())}," +
+                        $"{CleanCSV(goal.EndDate.ToString())}," +
+                        $"{CleanCSV(goal.DateSet.ToString())}," +
+                        $"{CleanCSV(goal.CompleteDate.ToString())}," +
+                        $"{CleanCSV(goal.CompletionNotes)}"
+                    );
+                }
+            }
+
+            return sbGoals;
+        }
+
+        private async Task<StringBuilder> GetCDPCsvAsync(string userId)
+        {
+            var sbCDP = new StringBuilder();
+
+            var CDP = await _context.CareerDevelopmentPlans
+                .Where(c => c.UserId == userId)
+                .Select(c => new
+                {
+                    c.Year,
+                    c.ProfessionalInterests,
+                    c.EmployersOfInterest,
+                    c.PersonalValues,
+                    c.DevelopmentFocus,
+                    c.Extracurricular,
+                    c.NetworkingPlan
+                })
+                .ToListAsync();
+
+            if (CDP.Any())
+            {
+                sbCDP.AppendLine("\"Year\",\"Professional Interests\",\"Employers of Interest\",\"Personal Values\",\"Development Focus\",\"Extra Curricular\",\"Networking Plan\"");
+                foreach (var cdp in CDP)
+                {
+                    sbCDP.AppendLine(
+                        $"{CleanCSV(cdp.Year.ToString())}," +
+                        $"{CleanCSV(cdp.ProfessionalInterests)}," +
+                        $"{CleanCSV(cdp.EmployersOfInterest)}," +
+                        $"{CleanCSV(cdp.PersonalValues)}," +
+                        $"{CleanCSV(cdp.DevelopmentFocus)}," +
+                        $"{CleanCSV(cdp.Extracurricular)}," +
+                        $"{CleanCSV(cdp.NetworkingPlan)}"
+                    );
+                }
+            }
+
+            return sbCDP;
+        }
+
+        private async Task<StringBuilder> GetStatisticsCsvAsync(string userId)
+        {
+            var sbStats = new StringBuilder();
+
+            int goalsCompletedCount = await _context.Goals
+                    .Where(g => g.UserId == userId)
+                    .Where(g => g.CompleteDate.HasValue)
+                    .CountAsync();
+
+            var competencies = await _context.CompetencyTrackers
+                .Where(i => i.UserId == userId)
+                .ToListAsync();
+
+            var distinctCompetencyLevels = competencies
+                .GroupBy(c => c.CompetencyId)
+                .Select(g => new
+                {
+                    CompetencyId = g.Key,
+                    LevelId = g.Max(c => c.LevelId)
+                })
+                .ToList();
+
+            Statistics = new StatisticsModel
+            {
+                GoalsCompleted = goalsCompletedCount,
+                NumCompetencies = competencies.Count(),
+                Emerging = distinctCompetencyLevels.Count(d => d.LevelId == 1),
+                Developing = distinctCompetencyLevels.Count(d => d.LevelId == 2),
+                Proficient = distinctCompetencyLevels.Count(d => d.LevelId == 3),
+                Confident = distinctCompetencyLevels.Count(d => d.LevelId == 4)
+            };
+
+            sbStats.AppendLine("\"Goals Completed\",\"Number of Competency Entries\",\"Competencies at Emerging\",\"Competencies at Developing\",\"Competencies at Proficient\",\"Competencies at Confident\"");
+            sbStats.AppendLine(
+                    $"{CleanCSV(Statistics.GoalsCompleted.ToString())}," +
+                    $"{CleanCSV(Statistics.NumCompetencies.ToString())}," +
+                    $"{CleanCSV(Statistics.Emerging.ToString())}," +
+                    $"{CleanCSV(Statistics.Developing.ToString())}," +
+                    $"{CleanCSV(Statistics.Proficient.ToString())}," +
+                    $"{CleanCSV(Statistics.Confident.ToString())},"
+                );
+
+            return sbStats;
         }
 
         private IActionResult CreateZipFile(Dictionary<string, StringBuilder> exportData, ApplicationUser user)
