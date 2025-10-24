@@ -30,12 +30,16 @@ namespace StudentPortfolio.Pages.Dashboard
 
         }
 
-        // grab the selectedYear=202x from the url and assign it to selectedYear in this controller
+        // grab the selectedYear=202x from the url and assign it to startYear in this controller
         [BindProperty(SupportsGet = true)]
-        public int selectedYear { get; set; }
+        public int fromYear { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int toYear { get; set; }
         public ApplicationUser CurrentUser { get; set; }
         public List<CompetencyPerformanceSummaryModel> CompetencyPerformanceSummary { get; set; } = new List<CompetencyPerformanceSummaryModel>();
         public List<CompetencyPerformanceSummaryModel> LowestFiveCompetencies { get; set; } = new List<CompetencyPerformanceSummaryModel>(5);
+        public List<int> AvailableYears { get; set; } = new List<int>();
 
         public async Task OnGetAsync()
         {
@@ -43,15 +47,50 @@ namespace StudentPortfolio.Pages.Dashboard
 
             if (userId != null)
             {
-                if (selectedYear == 0)
+                AvailableYears = await _context.CompetencyTrackers
+                    .Where(i => i.UserId == userId)
+                    .Select(i => i.Created.Year)
+                    .Distinct()
+                    .OrderBy(year => year)
+                    .ToListAsync();
+
+                // set to current year if no data is found
+                if (!AvailableYears.Any())
                 {
-                    // default to current year if no year is selected
-                    selectedYear = DateTime.Now.Year;
+                    AvailableYears.Add(DateTime.Now.Year);
+                }
+
+                // set from year to the highest available year if it = 0 for some reason
+                // set to current year if availableyears doesnt have anything in it
+                if (fromYear == 0)
+                {
+                    fromYear = AvailableYears.Any() ? AvailableYears.Max() : DateTime.Now.Year;
+                }
+
+                // set to year to from year if no value given
+                if (toYear == 0)
+                {
+                    toYear = fromYear;
+                }
+
+                // some validation checks to make sure it doesnt die in rare circumstances
+                if (AvailableYears.Any())
+                {
+                    if (fromYear < AvailableYears.Min() || fromYear > AvailableYears.Max())
+                    {
+                        fromYear = AvailableYears.Max();
+                    }
+                    
+                    if (toYear < AvailableYears.Min() || toYear > AvailableYears.Max())
+                    {
+                        toYear = AvailableYears.Max();
+                    }
                 }
 
                 var allCompetencyData = await _context.CompetencyTrackers
                     .Where(i => i.UserId == userId)
-                    .Where(i => i.Created.Year <= selectedYear)
+                    .Where(i => i.Created.Year <= toYear)
+                    .Where(i => i.Created.Year >= fromYear)
                     .Include(i => i.Competency) // need the competency table for the display id
 
                     // groups by the competencyId and displayId
