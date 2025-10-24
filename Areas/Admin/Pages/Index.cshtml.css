@@ -1,0 +1,238 @@
+﻿/* Header styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px #0000001a;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.nav-links {
+    display: flex;
+    gap: 24px;
+    font-size: 18px;
+}
+
+.nav-link {
+    color: #4b5563; 
+    text-decoration: none;
+    transition: color 0.15s ease-in-out;
+}
+
+    .nav-link:hover {
+        color: #4f46e5; 
+    }
+
+.logout-link {
+    font-size: 18px;
+    text-decoration: none;
+    transition: color 0.15s ease-in-out;
+}
+
+    .logout-link:hover {
+        color: #b91c1c; 
+    }
+
+/* Dashboard layouts */
+.dashboard-main {
+    padding: 32px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 24px;
+}
+
+/* All Section Base Styles */
+.dashboard-section {
+    padding: 24px;
+    border-radius: 12px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* Overview Section */
+#overview {
+    background-color: #ffffff;
+    border: 1px solid #3b82f680;
+}
+
+.kpi-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.kpi-card {
+    background-color: #FFC4EF;
+    padding: 24px;
+    border-radius: 8px;
+}
+
+    .kpi-card p:first-child {
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    .kpi-card p:nth-child(2) {
+        font-size: 36px;
+        font-weight: 700;
+        margin-top: 8px;
+    }
+
+/* Reminders Section */
+#reminders {
+    height: 100%;
+    border: 1px solid #3b82f680;
+}
+
+.reminder-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.reminder-button {
+    width: 100%;
+    padding: 12px 16px;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+    border: 1px solid #3b82f680;
+}
+
+    .reminder-button:hover {
+        background-color: #059669; 
+    }
+
+/* Actvities Section */
+#activities {
+    border: 1px solid #3b82f680;
+}
+
+.activity-alert {
+    background-color: #4ade80;
+    padding: 16px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 16px;
+    color: #4b5563; 
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Calendar Mockup */
+#calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #3b82f680;
+}
+
+.calendar-box {
+    background-color: #ffffff;
+    padding: 16px;
+    border-radius: 8px;
+    max-width: 320px; 
+    width: 100%;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    color: #4b5563;
+}
+
+.calendar-nav-buttons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+    font-size: 16px;
+    margin-left: 8px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+
+    .calendar-grid span {
+        padding: 4px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+        margin: auto;
+    }
+
+.calendar-day-name {
+    font-weight: 500;
+    color: #9ca3af; 
+}
+
+
+.calendar-date-faded {
+    color: #9ca3af;
+}
+
+.calendar-date-highlight {
+    background-color: #6366f1; 
+    font-weight: 700;
+}
+
+
+@media (min-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto auto;
+    }
+
+    #overview {
+        grid-column: span 3;
+    }
+
+    #reminders {
+        grid-column: span 1;
+        grid-row: span 2;
+    }
+
+    #activities {
+        grid-column: span 2;
+    }
+
+    #calendar {
+        grid-column: span 1;
+    }
+
+    .kpi-container {
+        flex-direction: row;
+    }
+
+    .kpi-card {
+        flex: 1;
+    }
+}
