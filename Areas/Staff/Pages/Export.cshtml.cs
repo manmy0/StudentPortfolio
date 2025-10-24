@@ -57,6 +57,8 @@ namespace StudentPortfolio.Areas.Staff.Pages
         public async Task<IActionResult> OnPostExportAllStudentDataAsync()
         {
             var users = await _userManager.GetUsersInRoleAsync("Student");
+            var date = DateTime.Now;
+            var dateString = date.ToString("dd-MM-yyyy");
 
             // Data contains the byte array that CreateZipFile will return
             var studentZips = new List<(byte[] Data, string FileName)>();
@@ -99,7 +101,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
                 finalZipStream.Position = 0;
 
                 // convert the finalZipStream into a byte array which can then be downloaded by the browser
-                return File(finalZipStream.ToArray(), "application/zip", "All_Student_Portfolios.zip");
+                return File(finalZipStream.ToArray(), "application/zip", $"All_Student_Portfolios_{dateString}.zip");
             }
         }
 
