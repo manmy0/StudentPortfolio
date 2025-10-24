@@ -47,7 +47,9 @@
                     @Html.DisplayFor(modelItem => item.Degree)
                 </td>
                 <td>
-                  
+                <a asp-area="Admin" asp-page="/EditStudent" asp-route-userName="@item.UserName">
+                     <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Student" title="Edit Student Information">
+                </a>
                 </td>
             </tr>
         }
