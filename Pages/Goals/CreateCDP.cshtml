@@ -1,0 +1,139 @@
+﻿@page
+@model StudentPortfolio.Pages.Goals.CreateCDPModel
+@{
+    ViewData["Title"] = "CreateCDP";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-1 rounded-3">
+                <div class="card-header bg-light text-black rounded-top-4">
+                    <h4 class="mb-0">New Career Development Plan</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="NewCDP.Year" />
+
+                        <div class="cdp-grid">
+                            <!-- Professional Interests -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.ProfessionalInterests" class="form-label fw-bold">Professional Interests</label>
+                                    <textarea asp-for="NewCDP.ProfessionalInterests" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.ProfessionalInterests" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;">@Model.LatestCDP.Year</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.ProfessionalInterests</textarea>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Employers of Interest -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.EmployersOfInterest" class="form-label fw-bold">Employers of Interest</label>
+                                    <textarea asp-for="NewCDP.EmployersOfInterest" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.EmployersOfInterest" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;"><br />@*@Model.LatestCDP.Year*@</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.EmployersOfInterest</textarea>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Networking Plan -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.NetworkingPlan" class="form-label fw-bold">Networking Plan</label>
+                                    <textarea asp-for="NewCDP.NetworkingPlan" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.NetworkingPlan" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;"><br />@*@Model.LatestCDP.Year*@</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.NetworkingPlan</textarea>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Personal Values -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.PersonalValues" class="form-label fw-bold">Personal Values</label>
+                                    <textarea asp-for="NewCDP.PersonalValues" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.PersonalValues" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;"><br />@*@Model.LatestCDP.Year*@</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.PersonalValues</textarea>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Extracurricular -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.Extracurricular" class="form-label fw-bold">Extracurricular</label>
+                                    <textarea asp-for="NewCDP.Extracurricular" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.Extracurricular" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;"><br />@*@Model.LatestCDP.Year*@</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.Extracurricular</textarea>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Development Focus -->
+                            <div class="cdp-row">
+                                <div class="cdp-column">
+                                    <label asp-for="NewCDP.DevelopmentFocus" class="form-label fw-bold">Development Focus for This Year</label>
+                                    <textarea asp-for="NewCDP.DevelopmentFocus" class="form-control" rows="4"></textarea>
+                                    <span asp-validation-for="NewCDP.DevelopmentFocus" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.LatestCDP != null)
+                                {
+                                    <div class="cdp-column">
+                                        <label class="form-label text-secondary" style="text-align: right;"><br />@*@Model.LatestCDP.Year*@</label>
+                                        <textarea class="form-control readonly-textarea" rows="4" readonly>@Model.LatestCDP.DevelopmentFocus</textarea>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 pt-4">
+                            <a class="btn btn-danger" asp-page="Goals">Cancel</a>
+                            <input type="submit" value="Save Changes" class="btn btn-success" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

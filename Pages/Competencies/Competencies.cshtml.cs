@@ -56,6 +56,8 @@ namespace StudentPortfolio.Pages.Competencies
                      .Include(i => i.Level)
                      .OrderBy(i => i.CompetencyId)
                      .ThenByDescending(i => i.Level.Rank)
+                     .ThenByDescending(i => i.StartDate)
+                     .ThenByDescending(i => i.EndDate)
                      .ToListAsync();
 
                 // Might be able to remove

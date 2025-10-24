@@ -22,12 +22,17 @@ namespace StudentPortfolio.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
+
+        [BindProperty(Name = "userType", SupportsGet = true)]
+        public string UserType { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -85,12 +90,30 @@ namespace StudentPortfolio.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
+        /// <summary>
+        ///  Sets the ViewData title to the chosen user type that is reflected in the URL.
+        /// </summary>
+        private void SetPageTitle()
+        {
+            if (!string.IsNullOrEmpty(UserType) && (UserType == "Student" || UserType == "Staff" || UserType == "Admin"))
+            {
+                ViewData["Title"] = $"{UserType} Log in";
+            }
+            else
+            {
+                ViewData["Title"] = "Log in";
+            }
+        }
+
         public async Task OnGetAsync(string returnUrl = null)
         {
+            SetPageTitle();
+
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
+          
 
             returnUrl ??= Url.Content("~/");
 
@@ -104,6 +127,8 @@ namespace StudentPortfolio.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            SetPageTitle();
+
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -116,6 +141,27 @@ namespace StudentPortfolio.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+
+                    if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        // If the user is an Admin, redirect them to the Admin Dashboard
+                        return LocalRedirect("/Admin/Index");
+                    }
+
+                    else if (user != null && await _userManager.IsInRoleAsync(user, "Student"))
+                    {
+                        //If the user is a student, redirect them to the Student Dashboard
+                        return LocalRedirect("/Dashboard/Dashboard");
+                    }
+
+                    else if (user != null && await _userManager.IsInRoleAsync(user, "Staff"))
+                    {
+                        //If the user is a student, redirect them to the Staff Dashboard
+                        return LocalRedirect("/Staff/Index");
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

@@ -1,0 +1,36 @@
+﻿@page
+@model StudentPortfolio.Areas.Admin.Pages.CompetenciesModel
+@{
+    ViewData["Title"] = "Competencies";
+}
+
+<a class="btn btn-success" style="margin-bottom: 20px;" asp-area="Admin" asp-page="AddCompetency">Add New Competency</a>
+
+@foreach (var parentComp in Model.ParentCompetencies)
+{
+    <table class="table table-bordered table-striped collapsible-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayFor(modelItem => parentComp.Description)
+                </th>
+            </tr>
+        </thead>
+        @foreach (var comp in Model.Competencies.Where(c => c.ParentCompetencyId == parentComp.CompetencyId))
+        {
+            <tbody class="master-row">
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => comp.CompetencyDisplayId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => comp.Description)
+                    </td>
+            </tbody>
+
+        }
+
+    </table>
+
+}

@@ -1,0 +1,39 @@
+﻿@page
+@model StudentPortfolio.Areas.Staff.Pages.CDLModel
+@{
+    ViewData["Title"] = "CDL";
+}
+
+<a class="btn btn-success" style="margin-bottom: 20px;" asp-area="Staff" asp-page="AddCDL">Register New CDL</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Cdl[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cdl[0].Description)
+            </th>
+            <th>
+                Updated
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Cdl)
+        {
+            <tr>
+                <td>
+                    <a href="@Html.DisplayFor(modelItem => item.Link)">@Html.DisplayFor(modelItem => item.Title)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastUpdated)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

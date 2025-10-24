@@ -10,11 +10,6 @@
     height: 30px;
 }
 
-.info-container {
-    gap: 30px;
-    align-items: center;
-}
-
 .nav {
     margin-bottom: 10px;
 }
@@ -40,5 +35,46 @@
     border: none;
     outline: none;
     background-color: transparent
+}
+
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Each row aligns label and textarea neatly */
+.info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+/* Fixed width labels so all textareas line up */
+.info-row label {
+    width: 250px;
+    font-weight: 600;
+    text-align: left;
+    padding-top: 5px;
+}
+
+/* Textareas align neatly to the right of labels */
+.info-row textarea {
+    flex: 1;
+    height: 60px;
+    min-width: 600px;
+}
+
+/* Larger textarea for long entries */
+.info-row textarea.large {
+    height: 120px;
+}
+
+/* Optional polish */
+.info-row textarea[readonly] {
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
 }
 
