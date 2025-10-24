@@ -1,0 +1,43 @@
+﻿.content-area {
+    display: flex;
+    padding: 20px;
+    gap: 20px; 
+    min-height: 500px; 
+    background-color: #fff; 
+    margin: 20px; 
+}
+
+.goal-preview {
+    flex: 1; 
+    background-color: #e0e0e0; 
+    padding: 20px;
+    min-width: 300px; 
+    height: 400px; 
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 18px;
+}
+
+.feedback-section {
+    flex: 2; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; 
+}
+
+.feedback-textbox {
+    width: 100%;
+    height: 350px; 
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; 
+    resize: none; 
+    font-size: 16px;
+    background-color: #e0e0e0; 
+    color: #555;
+}
+
