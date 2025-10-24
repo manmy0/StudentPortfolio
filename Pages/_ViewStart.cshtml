@@ -1,11 +1,23 @@
 ﻿@{
-    @if (!this.User.Identity.IsAuthenticated || User.IsInRole("Admin"))
+    @if (!this.User.Identity.IsAuthenticated)
     {
           Layout = "_Layout";
     }
-    else if (User.IsInRole("Student"))
+    else if (this.User.Identity.IsAuthenticated && User.IsInRole("Student"))
     {
+        // Change layout to the user layout
         Layout = "_LayoutUser";
     }
+    else if (this.User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        // Change layout to admin layout that is stored in the admin area
+       Layout = "/Areas/Admin/Pages/Shared/_Layout.cshtml";
+    }
+    else if (this.User.Identity.IsAuthenticated && User.IsInRole("Staff"))
+    {
+        // Change layout to staff layout that is stored in the staff area
+        Layout = "/Areas/Staff/Pages/Shared/_Layout.cshtml";
+    }
+    
 
 }

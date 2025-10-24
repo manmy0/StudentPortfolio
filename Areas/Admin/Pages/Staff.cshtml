@@ -12,6 +12,14 @@
     <button class="btn btn-outline-success" type="submit">Search</button>
 </form>
 
+<form method="post" asp-page-handler="Delete">
+  
+    <button type="submit" class="btn btn-danger" style="margin-bottom: 20px;"
+            onclick="return confirm('Are you sure you want to delete the selected staff members?');">
+        Delete Selected
+    </button>
+    
+
 <table class="table table-bordered table-striped" id="myTable" data-toggle="table" data-select-item-name="btSelectItem" data-multiple-select-row="true">
     <thead>
         <tr>
@@ -29,14 +37,56 @@
         @foreach (var item in Model.Users)
         {
             <tr>
-                <td><input type="checkbox" class="rowCheckbox" data-id="1"></td>
+                    <td><input type="checkbox" class="rowCheckbox" name="SelectedStaffIds" value="@item.Id"></td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td>
+                        <a asp-area="Admin" asp-page="/EditStaff" asp-route-userName="@item.UserName">
+                            <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Student" title="Edit Staff Information">
+                        </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+</form>
 
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Get the checkbox for selecting all rows
+            const selectAll = document.getElementById('selectAllRows');
+
+            // Get all the individual row checkboxes
+            const rowCheckboxes = document.querySelectorAll('.rowCheckbox');
+
+            // Add click event listener to selectAll
+            selectAll.addEventListener('change', function () {
+                for (let i = 0; i < rowCheckboxes.length; i++) {
+                    rowCheckboxes[i].checked = this.checked;
+                }
+            });
+
+            // Add click event listeners to each row checkbox to uncheck selectAll checkbox if any row is unchecked
+            for (let i = 0; i < rowCheckboxes.length; i++) {
+                rowCheckboxes[i].addEventListener('change', function () {
+                    if (!this.checked) {
+                        selectAll.checked = false;
+                    }
+
+                    // Check if all row checkboxes are checked and update accordingly.
+                    let allChecked = true;
+                    for(let j = 0; j < rowCheckboxes.length; j++) {
+                        if (!rowCheckboxes[j].checked) {
+                            allChecked = false;
+                            break;
+                        }
+                    }
+                    selectAll.checked = allChecked;
+                });
+            }
+        });
+    </script>
+}

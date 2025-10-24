@@ -4,3 +4,114 @@
 @{
     ViewData["Title"] = "Staff Index";
 }
+
+
+<main class="dashboard-main">
+    <div class="dashboard-grid">
+
+        <!-- Overview Section -->
+        <section id="overview" class="dashboard-section">
+            <h2 class="section-title">Overview</h2>
+            <div class="kpi-container">
+                <!-- Card 1: Students -->
+                <div class="kpi-card">
+                    <p>Student Levels</p>
+                    <p>Proficent: 10</p>
+                </div>
+                <!-- Card 2: Staff -->
+                <div class="kpi-card">
+                    <p>Number of Feedback Remaining</p>
+                    <p>2</p>
+                    <p>For Jane Doe</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reminders Section -->
+        <aside id="reminders" class="dashboard-section">
+            <h2 class="section-title">Reminders</h2>
+            <div class="reminder-buttons">
+                <button class="reminder-button">Feedback for Student</button>
+                <button class="reminder-button">Check SMART Goals</button>
+                <button class="reminder-button">Provide Student Data</button>
+            </div>
+        </aside>
+
+        <!-- Recent Activities -->
+        <section id="activities" class="dashboard-section">
+            <h2 class="section-title">Recent Activities</h2>
+            <!-- Activity Alert -->
+            <div class="activity-alert">
+                <p>Student <strong>Jane Doe</strong> has uploaded a new evidence for Competency 1.1</p>
+            </div>
+            <ul class="activity-list">
+                <li>New Student Bob James</li>
+                <li>New SMART Goals from Lina Smith. Needs Reviewing.</li>
+            </ul>
+        </section>
+
+        <!-- Calendar -->
+        <section id="calendar" class="dashboard-section">
+            <h2 class="section-title">Calendar</h2>
+            <!-- Simple Calendar Mockup -->
+            <div class="calendar-box">
+                <div class="calendar-header">
+                    <span style="font-weight: 500;">October 2025</span>
+                    <div class="calendar-nav-buttons">
+                        <button>&lt;</button>
+                        <button>&gt;</button>
+                    </div>
+                </div>
+                <div class="calendar-grid">
+                    <!-- Days of the week -->
+                    <span class="calendar-day-name">M</span>
+                    <span class="calendar-day-name">T</span>
+                    <span class="calendar-day-name">W</span>
+                    <span class="calendar-day-name">T</span>
+                    <span class="calendar-day-name">F</span>
+                    <span class="calendar-day-name">S</span>
+                    <span class="calendar-day-name">S</span>
+                    <!-- Dates  -->
+                    <span class="calendar-date" style="grid-column-start: 5;">1</span>
+                    <span class="calendar-date">2</span>
+                    <span class="calendar-date">3</span>
+                    <span class="calendar-date">4</span>
+                    <span class="calendar-date">5</span>
+                    <span class="calendar-date">6</span>
+                    <span class="calendar-date">7</span>
+                    <span class="calendar-date">8</span>
+                    <span class="calendar-date">9</span>
+                    <span class="calendar-date">10</span>
+                    <span class="calendar-date">11</span>
+                    <!-- Highlighted Date -->
+                    <span class="calendar-date">12</span>
+                    <span class="calendar-date">13</span>
+                    <span class="calendar-date">14</span>
+                    <span class="calendar-date">15</span>
+                    <span class="calendar-date">16</span>
+                    <span class="calendar-date">17</span>
+                    <span class="calendar-date">18</span>
+                    <span class="calendar-date">19</span>
+                    <span class="calendar-date">20</span>
+                    <span class="calendar-date">21</span>
+                    <span class="calendar-date">22</span>
+                    <span class="calendar-date">23</span>
+                    <span class="calendar-date-highlight">24</span>
+                    <span class="calendar-date">25</span>
+                    <span class="calendar-date">26</span>
+                    <span class="calendar-date">27</span>
+                    <span class="calendar-date">28</span>
+                    <span class="calendar-date">29</span>
+                    <!-- Next month dates -->
+                    <span class="calendar-date-faded">30</span>
+                    <span class="calendar-date-faded">1</span>
+                    <span class="calendar-date-faded">2</span>
+                    <span class="calendar-date-faded">3</span>
+                    <span class="calendar-date-faded">4</span>
+                    <span class="calendar-date-faded">5</span>
+                    <span class="calendar-date-faded">6</span>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
