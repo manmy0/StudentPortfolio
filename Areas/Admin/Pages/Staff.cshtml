@@ -42,6 +42,9 @@
                     @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td>
+                        <a asp-area="Admin" asp-page="/EditStaff" asp-route-userName="@item.UserName">
+                            <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Student" title="Edit Staff Information">
+                        </a>
                 </td>
             </tr>
         }
