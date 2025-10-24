@@ -96,21 +96,45 @@
     </script>
 }
 
-<div class="d-flex justify-content-between align-items-center mt-5">
-    <div>
-        <!-- get puts selectedYear=xxxx in the url for the controller to use -->
-        <form method="get">
-            <label for="select-year" class="form-label fw-bold">Filter by year</label>
-            <select id="select-year" class="form-select w-auto" name="selectedYear" onchange="this.form.submit()">
-                <option value="2024" selected="@(Model.selectedYear == 2024)">2024</option>
-                <option value="2025" selected="@(Model.selectedYear == 2025)">2025</option>
-            </select>
-        </form>
+<!-- filter section aligned with the cards now -->
+<div class="container">
+    <div class="row align-items-end mb-4">
+        <div class="col-md-10">
+            <form method="get" class="row g-3 align-items-end">
+
+                <!-- from year -->
+                <div class="col-sm-6 col-md-4">
+                    <label for="from-year" class="form-label fw-bold">From</label>
+                    <select id="from-year" class="form-select" name="fromYear" onchange="this.form.submit()">
+                        <option disabled selected>Select start year</option>
+                        @foreach (var year in Model.AvailableYears)
+                        {
+                            <option value="@year" selected="@(Model.fromYear == year)">@year</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- to year -->
+                <div class="col-sm-6 col-md-4">
+                    <label for="to-year" class="form-label fw-bold">To</label>
+                    <select id="to-year" class="form-select" name="toYear" onchange="this.form.submit()">
+                        <option disabled selected>Select end year</option>
+                        @foreach (var year in Model.AvailableYears)
+                        {
+                            <option value="@year" selected="@(Model.toYear == year)">@year</option>
+                        }
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <!-- summary button -->
+        <div class="col-md-2 text-md-end mt-3 mt-md-0">
+            <a class="btn btn-primary btn-lg w-100" asp-page="/Summary/Summary">View Summary</a>
+        </div>
     </div>
-
-    <a class="btn btn-primary btn-lg" asp-page="/Summary/Summary">View Summary</a>
-
 </div>
+
 
 <div class="container mt-4">
     <div class="row gy-5">
@@ -150,7 +174,14 @@
                 }
                 else
                 {
-                    <p class="text-muted">No competency tracking data found in @(Model.selectedYear)</p>
+                    @if (Model.fromYear > Model.toYear)
+                    {
+                        <p class="text-muted">Please make sure the "from" year is less than the "to" year.</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No competency tracking data found from @(Model.fromYear) to @(Model.toYear)</p>
+                    }
                 }
             </div>
         </div>
@@ -166,7 +197,14 @@
                     }
                     else
                     {
-                        <p class="text-muted">No competency tracking data found in @(Model.selectedYear)</p>
+                        @if (Model.fromYear > Model.toYear)
+                        {
+                            <p class="text-muted">Please make sure the "from" year is less than the "to" year.</p>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No competency tracking data found from @(Model.fromYear) to @(Model.toYear)</p>
+                        }
                     }
                 </div>
             </div>
@@ -199,7 +237,14 @@
                 }
                 else
                 {
-                    <p class="text-muted">No competency tracking data found in @(Model.selectedYear)</p>
+                    @if (Model.fromYear > Model.toYear)
+                    {
+                        <p class="text-muted">Please make sure the "from" year is less than the "to" year.</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No competency tracking data found from @(Model.fromYear) to @(Model.toYear)</p>
+                    }
                 }
             </div>
         </div>
