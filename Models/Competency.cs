@@ -18,5 +18,7 @@ public partial class Competency
 
     public DateTime LastUpdated { get; set; }
 
+    public DateOnly? EndDate { get; set; }
+
     public virtual ICollection<CompetencyTracker> CompetencyTrackers { get; set; } = [];
 }

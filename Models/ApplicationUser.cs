@@ -8,6 +8,8 @@ namespace StudentPortfolio.Models
 
         public string? LastName { get; set; }
 
+        public string? PreferedFirstName { get; set; }
+
         public string? Degree { get; set; }
 
         public string? Introduction { get; set; }

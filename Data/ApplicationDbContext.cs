@@ -102,6 +102,8 @@ namespace StudentPortfolio.Data
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("title");
+                entity.Property<byte[]>("IconImage")
+                    .HasColumnType("varbinary(max)");
             });
 
             modelBuilder.Entity<Competency>(entity =>
@@ -125,6 +127,7 @@ namespace StudentPortfolio.Data
                     .HasMaxLength(2048)
                     .IsUnicode(false)
                     .HasColumnName("linkToIndicators");
+                entity.Property(e => e.EndDate).HasColumnName("endDate");
                 entity.Property(e => e.ParentCompetencyId).HasColumnName("parentCompetencyId");
             });
 
