@@ -19,4 +19,6 @@ public partial class Cdl
     [DataType(DataType.Date)]
     public DateTime LastUpdated { get; set; }
 
+    public byte[]? IconImage { get; set; }
+
 }
