@@ -32,6 +32,8 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
         public NetworkingData NetworkingData { get; set; }
 
+        public CompetencyData CompetencyData { get; set; }
+
         public async Task OnGetAsync()
         {
             var user = await _userManager.FindByNameAsync(UserName);
@@ -137,6 +139,40 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
             };
 
+            List<Competency> Competencies = new List<Competency>();
+            List<Competency> ParentCompetencies = new List<Competency>();
+            List<CompetencyTracker> CompetencyTrackers = new List<CompetencyTracker>();
+
+            CompetencyTrackers = await _context.CompetencyTrackers
+                     .Where(i => i.UserId == user.Id)
+                     .Include(i => i.User)
+                     .Include(i => i.Level)
+                     .OrderBy(i => i.CompetencyId)
+                     .ThenByDescending(i => i.Level.Rank)
+                     .ThenByDescending(i => i.StartDate)
+                     .ThenByDescending(i => i.EndDate)
+                     .ToListAsync();
+
+            var compIds = await _context.CompetencyTrackers
+                                  .Where(i => i.UserId == user.Id)
+                                  .Select(i => i.CompetencyId)
+                                  .ToListAsync();
+
+            Competencies = await _context.Competencies
+                .ToListAsync();
+
+            ParentCompetencies = await _context.Competencies
+                .Where(i => i.ParentCompetencyId == null)
+                .ToListAsync();
+
+            CompetencyData = new CompetencyData
+            {
+                Competencies = Competencies,
+                ParentCompetencies = ParentCompetencies,
+                CompetencyTrackers = CompetencyTrackers
+
+            };
+
         }
 
 
@@ -158,4 +194,12 @@ public class NetworkingData
     public IList<IndustryContactInfo> NetworkingContactInfo {  get; set; }
     public IList<NetworkingEvent> NetworkingEvents { get; set; }
     public IList<NetworkingQuestion> NetworkingQuestions { get; set; }
+}
+
+public class CompetencyData
+{
+    public IList<Competency> Competencies { get; set; }
+    public IList<Competency> ParentCompetencies { get; set; }
+    public IList<CompetencyTracker> CompetencyTrackers { get; set; }
+
 }
