@@ -111,6 +111,8 @@ namespace StudentPortfolio.Pages.Export
             var exportTrackers = Trackers
                 .Select(c => new
                 {
+                    CompetencyDisplayId = c.Competency.CompetencyDisplayId,
+                    CompetencyDescription = c.Competency.Description,
                     c.CompetencyTrackerId,
                     LevelDescription = c.Level.Name,
                     c.SkillsReview,
@@ -124,10 +126,12 @@ namespace StudentPortfolio.Pages.Export
 
             if (exportTrackers.Any())
             {
-                sbCompetencies.AppendLine("\"Competency Tracker Id\",\"Level\",\"Skills Review\",\"Evidence\",\"Start Date\",\"End Date\",\"Created\",\"Last Updated\"");
+                sbCompetencies.AppendLine("\"Competency Id\",\"Competency Description\",\"Competency Tracker Id\",\"Level\",\"Skills Review\",\"Evidence\",\"Start Date\",\"End Date\",\"Created\",\"Last Updated\"");
                 foreach (var comp in exportTrackers)
                 {
                     sbCompetencies.AppendLine(
+                        $"{CleanCSV(comp.CompetencyDisplayId.ToString())}," +
+                        $"{CleanCSV(comp.CompetencyDescription.ToString())}," +
                         $"{CleanCSV(comp.CompetencyTrackerId.ToString())}," +
                         $"{CleanCSV(comp.LevelDescription)}," +
                         $"{CleanCSV(comp.SkillsReview)}," +
