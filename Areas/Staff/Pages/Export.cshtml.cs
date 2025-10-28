@@ -55,6 +55,39 @@ namespace StudentPortfolio.Areas.Staff.Pages
             return CreateZipFile(exportData, user);
         }
 
+        public async Task<IActionResult> OnPostExportStudentDataOneCSVAsync()
+        {
+            var users = await _userManager.GetUsersInRoleAsync("Student");
+            var date = DateTime.Now;
+            var dateString = date.ToString("dd-MM-yyyy");
+            var exportData = new StringBuilder();
+
+            foreach (var student in users)
+            {
+                var summarySb = GetSummaryCsv(student);
+                var pitchSb = GetPitchCsv(student);
+                var competenciesSb = await GetCompetenciesCsvAsync(student.Id);
+                var goalsSb = await GetGoalsCsvAsync(student.Id);
+                var CDPSb = await GetCDPCsvAsync(student.Id);
+                var statsSb = await GetStatisticsCsvAsync(student.Id);
+
+                exportData
+                    .AppendLine($"{student.FirstName} {student.LastName}")
+                    .Append(summarySb)
+                    .Append(pitchSb)
+                    .Append(competenciesSb)
+                    .Append(goalsSb)
+                    .Append(CDPSb)
+                    .Append(statsSb)
+                    .AppendLine();
+            }
+
+            var csvBytes = Encoding.UTF8.GetBytes(exportData.ToString());
+
+            var fileName = $"All_Student_Data_{dateString}.csv";
+            return File(csvBytes, "text/csv", fileName);
+        }
+
         public async Task<IActionResult> OnPostExportAllStudentDataAsync()
         {
             var users = await _userManager.GetUsersInRoleAsync("Student");
