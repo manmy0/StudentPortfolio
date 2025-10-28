@@ -37,7 +37,8 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
         public async Task OnGetAsync()
         {
-            Users = await _userManager.GetUsersInRoleAsync("Student");
+            var users = await _userManager.GetUsersInRoleAsync("Student");
+            Users = users.OrderBy(u => u.LastName).ToList();
         }
 
         public async Task<IActionResult> OnPostExportIndividualStudentDataAsync(string studentId)
