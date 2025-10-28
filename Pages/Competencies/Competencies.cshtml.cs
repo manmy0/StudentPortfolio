@@ -35,8 +35,12 @@ namespace StudentPortfolio.Pages.Competencies
         [BindProperty(SupportsGet = true)]
         public string CurrentSort { get; set; } = "competencyId";
 
+        public Boolean HasDiscontinuedTrackers { get; set; }
+
         public ApplicationUser CurrentUser { get; set; }
         public IList<CompetencyTracker> CompetencyTracker { get;set; } = default!;
+        public IList<CompetencyTracker> DiscontinuedTrackers { get; set; } = default!;
+
         public IList<Competency> Competencies { get; set; } = default!;
 
         public IList<Competency> ParentCompetencies { get; set; } = default!;
@@ -58,12 +62,18 @@ namespace StudentPortfolio.Pages.Competencies
                      .ThenByDescending(i => i.EndDate)
                      .ToListAsync();
 
-                var compIds = await _context.CompetencyTrackers
-                                      .Where(i => i.UserId == userId)
-                                      .Select(i => i.CompetencyId)
-                                      .ToListAsync();
-                
+                //var compIds = await _context.CompetencyTrackers
+                //                      .Where(i => i.UserId == userId)
+                //                      .Select(i => i.CompetencyId)
+                //                      .ToListAsync();
+
+                DiscontinuedTrackers = await _context.CompetencyTrackers
+                    .Where(c => c.UserId == userId
+                    && c.Competency.EndDate != null)
+                    .ToListAsync();
+
                 Competencies = await _context.Competencies
+                    .Where(i => i.EndDate == null)
                     .ToListAsync();
 
                 ParentCompetencies = await _context.Competencies
@@ -92,6 +102,16 @@ namespace StudentPortfolio.Pages.Competencies
                 else
                 {
                     CompetencyTracker = competencyTracker;
+                }
+
+                foreach (var tracker in CompetencyTracker)
+                {
+                    var comp = Competencies.Where(c => c.CompetencyId == tracker.CompetencyId);
+
+                    if (comp.Select(c => c.EndDate) != null)
+                    {
+                        HasDiscontinuedTrackers = true;
+                    }
                 }
             }
         }

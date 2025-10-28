@@ -44,6 +44,70 @@
     </form>
 </div>
 
+@if (Model.HasDiscontinuedTrackers)
+{
+    <h2>Some of the competencies you have entries for have been deleted.</h2>
+    <h2>Go to this page to check them out and save them.</h2>
+    <div class="text-center mt-4">
+        <a class="btn btn-secondary" asp-page="/Export/ExportDiscontinuedTrackers">Export</a>
+    </div>
+
+    <table class="table table-bordered table-striped collapsible-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>
+                    Levels
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+                <th>
+                    Skill Review
+                </th>
+                <th>
+                    Evidence
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+
+        @foreach (var tracker in Model.DiscontinuedTrackers)
+        {
+            <tbody class="master-row">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        @tracker.Level.Name
+                    </td>
+                    <td>
+                        @tracker.StartDate
+                    </td>
+                    <td>
+                        @tracker.EndDate
+                    </td>
+                    <td>
+                        @tracker.SkillsReview
+                    </td>
+                    <td>
+                        <a href="@tracker.Evidence">Evidence</a>
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        }
+    </table>
+}
+
+
 @foreach (var parentComp in Model.ParentCompetencies)
 {
     <table class="table table-bordered table-striped collapsible-table">
