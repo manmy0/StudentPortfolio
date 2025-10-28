@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StudentPortfolio.Migrations
 {
     /// <inheritdoc />
-    public partial class create : Migration
+    public partial class CreateDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,6 +32,7 @@ namespace StudentPortfolio.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PreferedFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Degree = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Introduction = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Pitch = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -71,7 +72,8 @@ namespace StudentPortfolio.Migrations
                     title = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     description = table.Column<string>(type: "varchar(500)", unicode: false, maxLength: 500, nullable: true),
                     link = table.Column<string>(type: "varchar(2048)", unicode: false, maxLength: 2048, nullable: true),
-                    lastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())")
+                    lastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
+                    IconImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -88,7 +90,8 @@ namespace StudentPortfolio.Migrations
                     parentCompetencyId = table.Column<long>(type: "bigint", nullable: true),
                     description = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     linkToIndicators = table.Column<string>(type: "varchar(2048)", unicode: false, maxLength: 2048, nullable: true),
-                    lastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(sysdatetimeoffset())")
+                    lastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(sysdatetimeoffset())"),
+                    endDate = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
