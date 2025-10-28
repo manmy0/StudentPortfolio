@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using StudentPortfolio.Models;
+using StudentPortfolio.Models.Staff_Models;
 
 namespace StudentPortfolio.Areas.Staff.Pages
 {
@@ -30,7 +31,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
         public ProfileData ProfileData { get; set; }
 
-        public SmartGoals ViewModel { get; set; }
+        public GoalsData GoalsData { get; set; }
 
         public NetworkingData NetworkingData { get; set; }
 
@@ -104,7 +105,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
             }
 
             // 5. Assign the filtered lists to the ViewModel
-            ViewModel = new SmartGoals
+            GoalsData = new GoalsData
             {
                 GoalData = filteredGoals,
                 GoalStepData = filteredGoalSteps
@@ -192,31 +193,4 @@ namespace StudentPortfolio.Areas.Staff.Pages
     }
 }
 
-public class ProfileData
-{
-    public ApplicationUser User { get; set; }
-    public string? ProfileImageBase64 { get; set; }
-}
 
-public class SmartGoals
-{
-    public IList<Goal> GoalData { get; set; }
-    public IList<GoalStep> GoalStepData { get; set; }
-
-}
-
-public class NetworkingData
-{
-    public IList<IndustryContactLog> NetworkingContacts { get; set; }
-    public IList<IndustryContactInfo> NetworkingContactInfo {  get; set; }
-    public IList<NetworkingEvent> NetworkingEvents { get; set; }
-    public IList<NetworkingQuestion> NetworkingQuestions { get; set; }
-}
-
-public class CompetencyData
-{
-    public IList<Competency> Competencies { get; set; }
-    public IList<Competency> ParentCompetencies { get; set; }
-    public IList<CompetencyTracker> CompetencyTrackers { get; set; }
-
-}
