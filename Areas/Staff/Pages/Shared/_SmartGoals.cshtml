@@ -1,0 +1,96 @@
+﻿@using StudentPortfolio.Models
+@model SmartGoals
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                SMART Goal
+            </th>
+            <th>
+                Action Steps
+            </th>
+            @if (Model.GoalData.Any())
+            {
+            <th>
+                @Html.DisplayNameFor(model => model.GoalData[0].Timeline)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GoalData[0].Progress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GoalData[0].Learnings)
+            </th>
+            }
+            else
+            {
+                <th>Timeline</th>
+                <th>Progress</th>
+                <th>Learnings</th>
+            }
+            <th>
+                Start Date
+            </th>
+            <th>
+                End Date
+            </th>
+            <th>
+                Completed
+            </th>
+            <th>
+                Completion Notes
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.GoalData)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+
+                <td style="text-align: center;">
+
+                    @foreach (var step in Model.GoalStepData.Where(s => s.GoalId == item.GoalId))
+                    {
+
+                        <ul style="text-align: left;">
+                            <li>
+                                @Html.DisplayFor(modelItem => step.Step)
+                            </li>
+                        </ul>
+
+                    }
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Timeline)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Progress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Learnings)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompleteDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompletionNotes)
+                </td>
+                <td>
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

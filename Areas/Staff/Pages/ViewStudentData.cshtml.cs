@@ -28,6 +28,8 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
         public IList<short> AvailableYears { get; set; } = default!;
 
+        public SmartGoals ViewModel { get; set; }
+
         public async Task OnGetAsync()
         {
             var user = await _userManager.FindByNameAsync(UserName);
@@ -62,8 +64,44 @@ namespace StudentPortfolio.Areas.Staff.Pages
                 CDP = null;
             }
 
+            List<Goal> filteredGoals = new List<Goal>();
+            List<GoalStep> filteredGoalSteps = new List<GoalStep>();
 
+            if (selectedYear != null)
+            {
+                // Fetch Goals filtered by the selectedYear.
+                filteredGoals = await _context.Goals
+                    .Where(i => i.UserId == user.Id && i.StartDate.Value.Year == selectedYear.Value)
+                    .Include(i => i.User)
+                    .ToListAsync();
 
+                // Get the IDs *from the filtered goals
+                var goalIds = filteredGoals.Select(i => i.GoalId).ToList();
+
+                // Fetch the steps for those filtered goals
+                if (goalIds.Any())
+                {
+                    filteredGoalSteps = await _context.GoalSteps
+                        .Where(i => goalIds.Contains(i.GoalId))
+                        .ToListAsync();
+                }
+            }
+
+            // 5. Assign the filtered lists to the ViewModel
+            ViewModel = new SmartGoals
+            {
+                GoalData = filteredGoals,
+                GoalStepData = filteredGoalSteps
+            };
         }
+
     }
+}
+
+
+public class SmartGoals
+{
+    public IList<Goal> GoalData { get; set; }
+    public IList<GoalStep> GoalStepData { get; set; }
+
 }
