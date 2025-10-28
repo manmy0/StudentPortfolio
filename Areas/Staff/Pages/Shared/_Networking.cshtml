@@ -1,0 +1,114 @@
+﻿@using StudentPortfolio.Models
+@model NetworkingData
+
+<h3>Upcoming Events</h3>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NetworkingEvents[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NetworkingEvents[0].Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NetworkingEvents[0].Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NetworkingEvents[0].Details)
+            </th>
+            <th>
+                Questions to Ask
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.NetworkingEvents)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td style="white-space: nowrap;">
+                    @String.Format("{0:dd/MM/yyyy h:mm tt}", item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Details)
+                </td>
+                <td style="text-align: center;">
+                    @foreach (var question in Model.NetworkingQuestions.Where(s => s.EventId == item.EventId))
+                    {
+                        <ul style="text-align: left;">
+                            <li>
+                                @Html.DisplayFor(modelItem => question.Question)
+                            </li>
+                        </ul>
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<h3>Industry Contact Log</h3>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NetworkingContacts[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NetworkingContacts[0].Company)
+            </th>
+            <th>
+                Contact Information
+            </th>
+            <th>
+                Progress Notes
+            </th>
+            <th>
+                Date Met
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.NetworkingContacts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Company)
+                </td>
+                <td>
+                    @foreach (var info in Model.NetworkingContactInfo.Where(s => s.ContactId == item.ContactId))
+                    {
+                        <ul>
+                            <li>
+                                @Html.DisplayFor(modelItem => info.ContactDetails)
+                            </li>
+                        </ul>
+
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Notes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateMet)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

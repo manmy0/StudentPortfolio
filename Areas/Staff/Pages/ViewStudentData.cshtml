@@ -20,7 +20,7 @@
 <div class="btn-group" role="group" aria-label="Basic example">
     <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#cdpContainer" aria-expanded="false" aria-controls="cdpContainer">Career Development Plan</button>
     <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#goalContainer" aria-expanded="false" aria-controls="goalContainer">SMART Goals</button>
-    <button type="button" class="btn btn-outline-primary">Networking</button>
+    <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#networkingContainer" aria-expanded="false" aria-controls="networkingContainer">Networking</button>
     <button type="button" class="btn btn-outline-primary">Competencies</button>
 </div>
 
@@ -49,6 +49,21 @@
         {
             <div class="alert alert-info" role="alert">
                 No Goals found for the selected year.
+            </div>
+        }
+    </div>
+</div>
+
+<div class="collapse" id="networkingContainer">
+    <div class="mt-3">
+        @if (Model.ViewModel != null)
+        {
+            <partial name="_Networking" model="Model.NetworkingData" />
+        }
+        else
+        {
+            <div class="alert alert-info" role="alert">
+                No Networking Data found.
             </div>
         }
     </div>

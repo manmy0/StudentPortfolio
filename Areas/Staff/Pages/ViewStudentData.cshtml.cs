@@ -30,6 +30,8 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
         public SmartGoals ViewModel { get; set; }
 
+        public NetworkingData NetworkingData { get; set; }
+
         public async Task OnGetAsync()
         {
             var user = await _userManager.FindByNameAsync(UserName);
@@ -75,7 +77,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
                     .Include(i => i.User)
                     .ToListAsync();
 
-                // Get the IDs *from the filtered goals
+                // Get the IDs from the filtered goals
                 var goalIds = filteredGoals.Select(i => i.GoalId).ToList();
 
                 // Fetch the steps for those filtered goals
@@ -93,7 +95,51 @@ namespace StudentPortfolio.Areas.Staff.Pages
                 GoalData = filteredGoals,
                 GoalStepData = filteredGoalSteps
             };
+
+            List<NetworkingEvent> filteredEvents = new List<NetworkingEvent>();
+            List<NetworkingQuestion> filteredQuestions = new List<NetworkingQuestion>();
+            List<IndustryContactLog> filteredContacts = new List<IndustryContactLog>();
+            List<IndustryContactInfo> filteredInfo = new List<IndustryContactInfo>();
+
+
+            filteredEvents = await _context.NetworkingEvents
+                .Where(i => i.UserId == user.Id)
+                .ToListAsync();
+
+            var eventIds = filteredEvents.Select(i => i.EventId).ToList();
+
+            if (eventIds.Any())
+            {
+                filteredQuestions = await _context.NetworkingQuestions
+                    .Where(i => eventIds.Contains(i.EventId))
+                    .ToListAsync();
+            }
+
+            filteredContacts = await _context.IndustryContactLogs
+                .Where(i => i.UserId == user.Id)
+                .ToListAsync();
+
+            var contactIds = filteredQuestions.Select(i => i.EventId).ToList();
+
+            if (contactIds.Any())
+            {
+                filteredInfo = await _context.IndustryContactInfos
+                    .Where(i => contactIds.Contains(i.ContactId))
+                    .ToListAsync();
+            }
+
+            NetworkingData = new NetworkingData
+            {
+                NetworkingContacts = filteredContacts,
+                NetworkingContactInfo = filteredInfo,
+                NetworkingQuestions = filteredQuestions,
+                NetworkingEvents = filteredEvents
+
+            };
+
         }
+
+
 
     }
 }
@@ -104,4 +150,12 @@ public class SmartGoals
     public IList<Goal> GoalData { get; set; }
     public IList<GoalStep> GoalStepData { get; set; }
 
+}
+
+public class NetworkingData
+{
+    public IList<IndustryContactLog> NetworkingContacts { get; set; }
+    public IList<IndustryContactInfo> NetworkingContactInfo {  get; set; }
+    public IList<NetworkingEvent> NetworkingEvents { get; set; }
+    public IList<NetworkingQuestion> NetworkingQuestions { get; set; }
 }
