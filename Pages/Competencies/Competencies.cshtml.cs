@@ -53,24 +53,27 @@ namespace StudentPortfolio.Pages.Competencies
                      .Where(i => i.UserId == userId)
                      .Include(i => i.User)
                      .Include(i => i.Level)
+                     .Include(i => i.Competency)
                      .OrderBy(i => i.CompetencyId)
                      .ThenByDescending(i => i.Level.Rank)
                      .ThenByDescending(i => i.StartDate)
                      .ThenByDescending(i => i.EndDate)
                      .ToListAsync();
+                
 
-                //DiscontinuedTrackers = competencyTrackers
-                //    .Where(c => c.Competency.EndDate != null)
-                //    .ToList();
+                DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
 
+                DiscontinuedTrackers = competencyTrackers
+                    .Where(c => c.Competency.EndDate <= currentDate)
+                    .ToList();
 
                 Competencies = await _context.Competencies
-                    .Where(i => i.EndDate == null)
+                    .Where(i => i.EndDate > currentDate || i.EndDate == null)
                     .OrderBy(i => i.CompetencyDisplayId)
                     .ToListAsync();
 
                 DiscontinuedCompetencies = await _context.Competencies
-                    .Where(i => i.EndDate != null)
+                    .Where(i => i.EndDate <= currentDate)
                     .OrderBy(i => i.CompetencyDisplayId)
                     .ToListAsync();
 
@@ -101,10 +104,6 @@ namespace StudentPortfolio.Pages.Competencies
                 {
                     CompetencyTracker = competencyTrackers;
                 }
-
-                DiscontinuedTrackers = CompetencyTracker
-                    .Where(c => c.Competency.EndDate != null)
-                    .ToList();
 
             }
         }

@@ -67,13 +67,14 @@ namespace StudentPortfolio.Pages.Export
 
         private async Task GetDiscontinuedTrackersAsync(string userId)
         {
-            //var sbCompetencies = new StringBuilder();
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
 
             var discontinuedTrackers = await _context.CompetencyTrackers
                 .Where(c => c.UserId == userId
-                    && c.Competency.EndDate != null)
+                    && c.Competency.EndDate <= currentDate)
                 .Include(i => i.User)
                 .Include(i => i.Level)
+                .Include(i => i.Competency)
                 .OrderBy(i => i.CompetencyId)
                 .ThenByDescending(i => i.Level.Rank)
                 .ThenByDescending(i => i.StartDate)
@@ -81,7 +82,7 @@ namespace StudentPortfolio.Pages.Export
                 .ToListAsync();
 
             var competencies = await _context.Competencies
-                .Where(c => c.EndDate != null)
+                .Where(c => c.EndDate <= currentDate)
                 .OrderBy(i => i.CompetencyDisplayId)
                 .ToListAsync();
 
