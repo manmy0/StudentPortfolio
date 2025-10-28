@@ -4,46 +4,74 @@
     ViewData["Title"] = "ExportDiscontinuedTrackers";
 }
 
-<tr>
-    <td>Export</td>
-    <td>
-        <form method="post" asp-page-handler="ExportPortfolio">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" asp-for="ExportCompetencies" id="competenciesCheckbox">
-                <label class="form-check-label" for="competenciesCheckbox"></label>
-            </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-warning">Export Selected</button>
-            </div>
-        </form>
-    </td>
-</tr>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0" >Export Competency Tracker Entries</h4>
+    <form method="post" asp-page-handler="ExportPortfolio">
+        <div class="text-center">
+            <button type="submit" class="btn btn-warning">Export</button>
+        </div>
+    </form>
+</div>
 
 @if(Model.Trackers != null)
 {
-    @foreach (var track in Model.Trackers)
-    {
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-                @track.Level.Name
-            </td>
-            <td>
-                @track.StartDate
-            </td>
-            <td>
-                @track.EndDate
-            </td>
-            <td>
-                @track.SkillsReview
-            </td>
-            <td>
-                <a href="@track.Evidence">Evidence</a>
-            </td>
-            <td>
-            </td>
-        </tr>
-    }
+    <table class="table table-bordered table-striped collapsible-table">
+        @foreach (var comp in Model.Competencies)
+        {
+            <thead>
+                <tr>
+                    <th>
+                        @comp.CompetencyDisplayId
+                    </th>
+                    <th>
+                        @comp.Description
+                    </th>
+                    <th>
+                        <a href="@comp.LinkToIndicators">Indicators</a>
+                    </th>
+                    <th>
+                        Level
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                    <th>
+                        Skill Review
+                    </th>
+                    <th>
+                        Evidence
+                    </th>
+                </tr>
+            </thead>
+
+            @foreach (var tracker in Model.Trackers.Where(t => t.CompetencyId == comp.CompetencyId))
+            {
+                <tbody class="master-row">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            @tracker.Level.Name
+                        </td>
+                        <td>
+                            @tracker.StartDate
+                        </td>
+                        <td>
+                            @tracker.EndDate
+                        </td>
+                        <td>
+                            @tracker.SkillsReview
+                        </td>
+                        <td>
+                            <a href="@tracker.Evidence">Evidence</a>
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        }
+    </table>
 }

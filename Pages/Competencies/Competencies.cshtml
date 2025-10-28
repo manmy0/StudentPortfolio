@@ -11,6 +11,89 @@
     </li>
 }
 
+@* 
+    Checks if there are any discontinued competencies.
+    Won't show discontinued competencies if trackers have been filtered
+        to prevent confusion when the export page isn't filtered.
+*@
+@if (Model.DiscontinuedCompetencies.Count() > 0 && Model.From == null && Model.To == null)
+{
+    <p style="font-size: 18px; line-height: 1.75; font-weight: 600;">These competencies have been discontinued.</p>
+
+    <table class="table table-bordered table-striped collapsible-table">
+        @foreach (var comp in Model.DiscontinuedCompetencies)
+        {
+            <thead>
+                <tr>
+                    <th>
+                        @comp.CompetencyDisplayId
+                    </th>
+                    <th>
+                        @comp.Description
+                    </th>
+                    <th>
+                        <a href="@comp.LinkToIndicators">Indicators</a>
+                    </th>
+                    <th>
+                        Level
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                    <th>
+                        Skill Review
+                    </th>
+                    <th>
+                        Evidence
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            @foreach (var tracker in Model.DiscontinuedTrackers.Where(t => t.CompetencyId == comp.CompetencyId))
+            {
+                <tbody class="master-row">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            @tracker.Level.Name
+                        </td>
+                        <td>
+                            @tracker.StartDate
+                        </td>
+                        <td>
+                            @tracker.EndDate
+                        </td>
+                        <td>
+                            @tracker.SkillsReview
+                        </td>
+                        <td>
+                            <a href="@tracker.Evidence">Evidence</a>
+                        </td>
+                        <td>
+                            <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
+                                <button class="delete-button" type="submit" title="Delete Entry">
+                                    <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Entry">
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        }
+    </table>
+
+    <div class="d-flex align-items-center gap-3 mb-5">
+        <p class="fw-bold mb-0 me-2">Go to this page to export your entries.</p>
+        <a class="btn btn-warning w-auto d-inline-block" asp-page="/Export/ExportDiscontinuedTrackers">Export</a>
+    </div>
+}
+
 <div class="input-container mb-3">
     <h3>Date Range</h3>
     <form method="get" class="d-flex align-items-center gap-3">
@@ -44,70 +127,6 @@
     </form>
 </div>
 
-@if (Model.HasDiscontinuedTrackers)
-{
-    <h2>Some of the competencies you have entries for have been deleted.</h2>
-    <h2>Go to this page to check them out and save them.</h2>
-    <div class="text-center mt-4">
-        <a class="btn btn-secondary" asp-page="/Export/ExportDiscontinuedTrackers">Export</a>
-    </div>
-
-    <table class="table table-bordered table-striped collapsible-table">
-        <thead>
-            <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>
-                    Levels
-                </th>
-                <th>
-                    Start Date
-                </th>
-                <th>
-                    End Date
-                </th>
-                <th>
-                    Skill Review
-                </th>
-                <th>
-                    Evidence
-                </th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-
-        @foreach (var tracker in Model.DiscontinuedTrackers)
-        {
-            <tbody class="master-row">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        @tracker.Level.Name
-                    </td>
-                    <td>
-                        @tracker.StartDate
-                    </td>
-                    <td>
-                        @tracker.EndDate
-                    </td>
-                    <td>
-                        @tracker.SkillsReview
-                    </td>
-                    <td>
-                        <a href="@tracker.Evidence">Evidence</a>
-                    </td>
-                    <td></td>
-                </tr>
-            </tbody>
-        }
-    </table>
-}
-
-
 @foreach (var parentComp in Model.ParentCompetencies)
 {
     <table class="table table-bordered table-striped collapsible-table">
@@ -121,7 +140,7 @@
                     Link to Indicators
                 </th>
                 <th>
-                    Levels
+                    Level
                 </th>
                 <th>
                     Start Date

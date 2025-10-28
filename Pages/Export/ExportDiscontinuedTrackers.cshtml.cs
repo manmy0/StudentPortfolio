@@ -30,6 +30,8 @@ namespace StudentPortfolio.Pages.Export
 
         public IList<CompetencyTracker> Trackers { get; set; } = default!;
 
+        public IList<Competency> Competencies { get; set; } = default!;
+
         public async Task OnGetAsync()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -79,12 +81,18 @@ namespace StudentPortfolio.Pages.Export
                 .ToListAsync();
 
             var competencies = await _context.Competencies
-                    .ToListAsync();
-
+                .Where(c => c.EndDate != null)
+                .OrderBy(i => i.CompetencyDisplayId)
+                .ToListAsync();
 
             if (discontinuedTrackers.Count() > 0)
             {
                 Trackers = discontinuedTrackers;
+            }
+
+            if (competencies.Count() > 0)
+            {
+                Competencies = competencies;
             }
 
         }
@@ -184,13 +192,9 @@ namespace StudentPortfolio.Pages.Export
 
             var exportData = new Dictionary<string, StringBuilder>();
 
-            if (ExportCompetencies)
-            {
-                var competenciesSb = await GetCompetenciesCsvAsync(userId);
-                if (competenciesSb.Length > 0)
-                    exportData.Add("Competencies.csv", competenciesSb);
-            }
-
+            var competenciesSb = await GetCompetenciesCsvAsync(userId);
+            if (competenciesSb.Length > 0)
+                exportData.Add("Competencies.csv", competenciesSb);
 
             if (exportData.Count == 0)
             {

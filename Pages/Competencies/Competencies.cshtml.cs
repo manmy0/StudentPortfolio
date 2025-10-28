@@ -35,15 +35,15 @@ namespace StudentPortfolio.Pages.Competencies
         [BindProperty(SupportsGet = true)]
         public string CurrentSort { get; set; } = "competencyId";
 
-        public Boolean HasDiscontinuedTrackers { get; set; }
-
         public ApplicationUser CurrentUser { get; set; }
         public IList<CompetencyTracker> CompetencyTracker { get;set; } = default!;
-        public IList<CompetencyTracker> DiscontinuedTrackers { get; set; } = default!;
-
+        
         public IList<Competency> Competencies { get; set; } = default!;
 
         public IList<Competency> ParentCompetencies { get; set; } = default!;
+
+        public IList<CompetencyTracker> DiscontinuedTrackers { get; set; } = default!;
+        public IList<Competency> DiscontinuedCompetencies { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
@@ -52,7 +52,7 @@ namespace StudentPortfolio.Pages.Competencies
             if (userId != null)
             {
                 
-                var competencyTracker = await _context.CompetencyTrackers
+                var competencyTrackers = await _context.CompetencyTrackers
                      .Where(i => i.UserId == userId)
                      .Include(i => i.User)
                      .Include(i => i.Level)
@@ -62,18 +62,19 @@ namespace StudentPortfolio.Pages.Competencies
                      .ThenByDescending(i => i.EndDate)
                      .ToListAsync();
 
-                //var compIds = await _context.CompetencyTrackers
-                //                      .Where(i => i.UserId == userId)
-                //                      .Select(i => i.CompetencyId)
-                //                      .ToListAsync();
+                //DiscontinuedTrackers = competencyTrackers
+                //    .Where(c => c.Competency.EndDate != null)
+                //    .ToList();
 
-                DiscontinuedTrackers = await _context.CompetencyTrackers
-                    .Where(c => c.UserId == userId
-                    && c.Competency.EndDate != null)
-                    .ToListAsync();
 
                 Competencies = await _context.Competencies
                     .Where(i => i.EndDate == null)
+                    .OrderBy(i => i.CompetencyDisplayId)
+                    .ToListAsync();
+
+                DiscontinuedCompetencies = await _context.Competencies
+                    .Where(i => i.EndDate != null)
+                    .OrderBy(i => i.CompetencyDisplayId)
                     .ToListAsync();
 
                 ParentCompetencies = await _context.Competencies
@@ -91,7 +92,7 @@ namespace StudentPortfolio.Pages.Competencies
                         .AddDays(-1);
 
                     // Filter competency trackers that fall within this date range
-                    CompetencyTracker = competencyTracker
+                    CompetencyTracker = competencyTrackers
                         .Where(g =>
                             (g.StartDate >= fromDate && g.StartDate <= toDate) ||  // start date in range
                             (g.EndDate >= fromDate && g.EndDate <= toDate) ||      // end date in range
@@ -101,18 +102,13 @@ namespace StudentPortfolio.Pages.Competencies
                 }
                 else
                 {
-                    CompetencyTracker = competencyTracker;
+                    CompetencyTracker = competencyTrackers;
                 }
 
-                foreach (var tracker in CompetencyTracker)
-                {
-                    var comp = Competencies.Where(c => c.CompetencyId == tracker.CompetencyId);
+                DiscontinuedTrackers = CompetencyTracker
+                    .Where(c => c.Competency.EndDate != null)
+                    .ToList();
 
-                    if (comp.Select(c => c.EndDate) != null)
-                    {
-                        HasDiscontinuedTrackers = true;
-                    }
-                }
             }
         }
 
