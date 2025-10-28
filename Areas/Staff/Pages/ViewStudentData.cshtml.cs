@@ -156,27 +156,25 @@ namespace StudentPortfolio.Areas.Staff.Pages
             List<Competency> ParentCompetencies = new List<Competency>();
             List<CompetencyTracker> CompetencyTrackers = new List<CompetencyTracker>();
 
-            CompetencyTrackers = await _context.CompetencyTrackers
-                     .Where(i => i.UserId == user.Id)
-                     .Include(i => i.User)
-                     .Include(i => i.Level)
-                     .OrderBy(i => i.CompetencyId)
-                     .ThenByDescending(i => i.Level.Rank)
-                     .ThenByDescending(i => i.StartDate)
-                     .ThenByDescending(i => i.EndDate)
-                     .ToListAsync();
+            if (selectedYear != null)
+            {
+                CompetencyTrackers = await _context.CompetencyTrackers
+                               .Where(i => i.UserId == user.Id &&
+                                           i.StartDate.Year != null &&
+                                           i.StartDate.Year == selectedYear.Value)
+                               .Include(i => i.Level)
+                               .OrderBy(i => i.CompetencyId)
+                               .ThenByDescending(i => i.Level.Rank)
+                               .ThenByDescending(i => i.StartDate)
+                               .ThenByDescending(i => i.EndDate)
+                               .ToListAsync();
+            }
 
-            var compIds = await _context.CompetencyTrackers
-                                  .Where(i => i.UserId == user.Id)
-                                  .Select(i => i.CompetencyId)
-                                  .ToListAsync();
+            var allCompetencies = await _context.Competencies.ToListAsync();
 
-            Competencies = await _context.Competencies
-                .ToListAsync();
+            Competencies = allCompetencies;
 
-            ParentCompetencies = await _context.Competencies
-                .Where(i => i.ParentCompetencyId == null)
-                .ToListAsync();
+            ParentCompetencies = allCompetencies.Where(c => c.ParentCompetencyId == null).ToList();
 
             CompetencyData = new CompetencyData
             {

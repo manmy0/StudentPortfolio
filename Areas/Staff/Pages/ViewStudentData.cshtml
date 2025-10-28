@@ -7,7 +7,7 @@
     <input type="hidden" name="userName" value="@Model.UserName" />
 
     <label for="select-year" class="form-label fw-bold">Select year</label>
-    <select id="select-year" class="form-select form-select-sm w-100" name="selectedYear" onchange="this.form.submit()">
+    <select id="select-year" class="form-select form-select-sm w-auto" name="selectedYear" style="margin-bottom: 10px;" onchange="this.form.submit()">
         <option disabled>Select year</option>
         
         @foreach (var year in Model.AvailableYears)
