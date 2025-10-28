@@ -28,20 +28,32 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
         public IList<short> AvailableYears { get; set; } = default!;
 
+        public ProfileData ProfileData { get; set; }
+
         public SmartGoals ViewModel { get; set; }
 
         public NetworkingData NetworkingData { get; set; }
 
         public CompetencyData CompetencyData { get; set; }
 
+
+
         public async Task OnGetAsync()
         {
             var user = await _userManager.FindByNameAsync(UserName);
 
-            if (user == null)
+            if (User == null)
             {
                 return;
             }
+
+            ProfileData = new ProfileData
+            {
+                User = user,
+                ProfileImageBase64 = user?.ProfileImage != null
+                ? $"data:image/jpeg;base64,{Convert.ToBase64String(user.ProfileImage)}"
+                : null
+            };
 
             var allCDPs = await _context.CareerDevelopmentPlans
                         .Where(i => i.UserId == user.Id)
@@ -180,6 +192,11 @@ namespace StudentPortfolio.Areas.Staff.Pages
     }
 }
 
+public class ProfileData
+{
+    public ApplicationUser User { get; set; }
+    public string? ProfileImageBase64 { get; set; }
+}
 
 public class SmartGoals
 {

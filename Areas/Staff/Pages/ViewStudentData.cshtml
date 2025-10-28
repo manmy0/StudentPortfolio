@@ -18,10 +18,20 @@
 </form>
 
 <div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#profileContainer" aria-expanded="false" aria-controls="profileContainer">Profile</button>
     <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#cdpContainer" aria-expanded="false" aria-controls="cdpContainer">Career Development Plan</button>
     <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#goalContainer" aria-expanded="false" aria-controls="goalContainer">SMART Goals</button>
     <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#networkingContainer" aria-expanded="false" aria-controls="networkingContainer">Networking</button>
     <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#competencyContainer" aria-expanded="false" aria-controls="competencyContainer">Competencies</button>
+</div>
+
+<div class="collapse" id="profileContainer">
+    <div class="mt-3">
+        @if (Model.ProfileData != null)
+        {
+            <partial name="_Profile" model="Model.ProfileData" />
+        }
+    </div>
 </div>
 
 <div class="collapse" id="cdpContainer">
