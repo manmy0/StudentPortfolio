@@ -67,9 +67,9 @@ namespace StudentPortfolio.Areas.Staff.Pages
                 var summarySb = GetSummaryCsv(student, true);
                 var pitchSb = GetPitchCsv(student, true);
                 var competenciesSb = await GetCompetenciesCsvAsync(student, true);
-                var goalsSb = await GetGoalsCsvAsync(student.Id);
-                var CDPSb = await GetCDPCsvAsync(student.Id);
-                var statsSb = await GetStatisticsCsvAsync(student.Id);
+                var goalsSb = await GetGoalsCsvAsync(student, true);
+                var CDPSb = await GetCDPCsvAsync(student, true);
+                var statsSb = await GetStatisticsCsvAsync(student, true);
 
                 exportData
                     .Append(summarySb)
@@ -250,16 +250,20 @@ namespace StudentPortfolio.Areas.Staff.Pages
                     }
                 }
             }
+            else
+            {
+                sbCompetencies.AppendLine($"{user.FirstName} {user.LastName},No competencies found");
+            }
 
             return sbCompetencies;
         }
 
-        private async Task<StringBuilder> GetGoalsCsvAsync(string userId)
+        private async Task<StringBuilder> GetGoalsCsvAsync(ApplicationUser user, bool singleCsv)
         {
             var sbGoals = new StringBuilder();
 
             var goals = await _context.Goals
-                .Where(g => g.UserId == userId)
+                .Where(g => g.UserId == user.Id)
                 .Select(g => new
                 {
                     g.Description,
@@ -277,36 +281,65 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
             if (goals.Any())
             {
-                sbGoals.AppendLine("\"Goal\",\"Timeline\",\"Goal Steps\",\"Progress\",\"Learnings\",\"Start Date\",\"End Date\",\"Set Date\",\"Complete Date\",\"Completion Notes\"");
-                foreach (var goal in goals)
+                if (!singleCsv)
                 {
-                    // make all the steps a single string separated by ;
-                    string steps = string.Join("; ", goal.GoalSteps);
+                    sbGoals.AppendLine("\"Goal\",\"Timeline\",\"Goal Steps\",\"Progress\",\"Learnings\",\"Start Date\",\"End Date\",\"Set Date\",\"Complete Date\",\"Completion Notes\"");
+                    foreach (var goal in goals)
+                    {
+                        // make all the steps a single string separated by ;
+                        string steps = string.Join("; ", goal.GoalSteps);
 
-                    sbGoals.AppendLine(
-                        $"{CleanCSV(goal.Description)}," +
-                        $"{CleanCSV(goal.Timeline)}," +
-                        $"{CleanCSV(steps)}," +
-                        $"{CleanCSV(goal.Progress)}," +
-                        $"{CleanCSV(goal.Learnings)}," +
-                        $"{CleanCSV(goal.StartDate.ToString())}," +
-                        $"{CleanCSV(goal.EndDate.ToString())}," +
-                        $"{CleanCSV(goal.DateSet.ToString())}," +
-                        $"{CleanCSV(goal.CompleteDate.ToString())}," +
-                        $"{CleanCSV(goal.CompletionNotes)}"
-                    );
+                        sbGoals.AppendLine(
+                            $"{CleanCSV(goal.Description)}," +
+                            $"{CleanCSV(goal.Timeline)}," +
+                            $"{CleanCSV(steps)}," +
+                            $"{CleanCSV(goal.Progress)}," +
+                            $"{CleanCSV(goal.Learnings)}," +
+                            $"{CleanCSV(goal.StartDate.ToString())}," +
+                            $"{CleanCSV(goal.EndDate.ToString())}," +
+                            $"{CleanCSV(goal.DateSet.ToString())}," +
+                            $"{CleanCSV(goal.CompleteDate.ToString())}," +
+                            $"{CleanCSV(goal.CompletionNotes)}"
+                        );
+                    }
                 }
+                else
+                {
+                    foreach (var goal in goals)
+                    {
+                        // make all the steps a single string separated by ;
+                        string steps = string.Join("; ", goal.GoalSteps);
+
+                        sbGoals.AppendLine(
+                            $"{user.FirstName} {user.LastName}," +
+                            $"{CleanCSV(goal.Description)}," +
+                            $"{CleanCSV(goal.Timeline)}," +
+                            $"{CleanCSV(steps)}," +
+                            $"{CleanCSV(goal.Progress)}," +
+                            $"{CleanCSV(goal.Learnings)}," +
+                            $"{CleanCSV(goal.StartDate.ToString())}," +
+                            $"{CleanCSV(goal.EndDate.ToString())}," +
+                            $"{CleanCSV(goal.DateSet.ToString())}," +
+                            $"{CleanCSV(goal.CompleteDate.ToString())}," +
+                            $"{CleanCSV(goal.CompletionNotes)}"
+                        );
+                    }
+                }
+            }
+            else
+            {
+                sbGoals.AppendLine($"{user.FirstName} {user.LastName},No goals found");
             }
 
             return sbGoals;
         }
 
-        private async Task<StringBuilder> GetCDPCsvAsync(string userId)
+        private async Task<StringBuilder> GetCDPCsvAsync(ApplicationUser user, bool singleCsv)
         {
             var sbCDP = new StringBuilder();
 
             var CDP = await _context.CareerDevelopmentPlans
-                .Where(c => c.UserId == userId)
+                .Where(c => c.UserId == user.Id)
                 .Select(c => new
                 {
                     c.Year,
@@ -321,35 +354,58 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
             if (CDP.Any())
             {
-                sbCDP.AppendLine("\"Year\",\"Professional Interests\",\"Employers of Interest\",\"Personal Values\",\"Development Focus\",\"Extra Curricular\",\"Networking Plan\"");
-                foreach (var cdp in CDP)
+                if (!singleCsv)
                 {
-                    sbCDP.AppendLine(
-                        $"{CleanCSV(cdp.Year.ToString())}," +
-                        $"{CleanCSV(cdp.ProfessionalInterests)}," +
-                        $"{CleanCSV(cdp.EmployersOfInterest)}," +
-                        $"{CleanCSV(cdp.PersonalValues)}," +
-                        $"{CleanCSV(cdp.DevelopmentFocus)}," +
-                        $"{CleanCSV(cdp.Extracurricular)}," +
-                        $"{CleanCSV(cdp.NetworkingPlan)}"
-                    );
+                    sbCDP.AppendLine("\"Year\",\"Professional Interests\",\"Employers of Interest\",\"Personal Values\",\"Development Focus\",\"Extra Curricular\",\"Networking Plan\"");
+                    foreach (var cdp in CDP)
+                    {
+                        sbCDP.AppendLine(
+                            $"{CleanCSV(cdp.Year.ToString())}," +
+                            $"{CleanCSV(cdp.ProfessionalInterests)}," +
+                            $"{CleanCSV(cdp.EmployersOfInterest)}," +
+                            $"{CleanCSV(cdp.PersonalValues)}," +
+                            $"{CleanCSV(cdp.DevelopmentFocus)}," +
+                            $"{CleanCSV(cdp.Extracurricular)}," +
+                            $"{CleanCSV(cdp.NetworkingPlan)}"
+                        );
+                    }
                 }
+                else
+                {
+                    foreach (var cdp in CDP)
+                    {
+                        sbCDP.AppendLine(
+                            $"{user.FirstName} {user.LastName}," +
+                            $"{CleanCSV(cdp.Year.ToString())}," +
+                            $"{CleanCSV(cdp.ProfessionalInterests)}," +
+                            $"{CleanCSV(cdp.EmployersOfInterest)}," +
+                            $"{CleanCSV(cdp.PersonalValues)}," +
+                            $"{CleanCSV(cdp.DevelopmentFocus)}," +
+                            $"{CleanCSV(cdp.Extracurricular)}," +
+                            $"{CleanCSV(cdp.NetworkingPlan)}"
+                        );
+                    }
+                }
+            }
+            else
+            {
+                sbCDP.AppendLine($"{user.FirstName} {user.LastName},No CDP found");
             }
 
             return sbCDP;
         }
 
-        private async Task<StringBuilder> GetStatisticsCsvAsync(string userId)
+        private async Task<StringBuilder> GetStatisticsCsvAsync(ApplicationUser user, bool singleCsv)
         {
             var sbStats = new StringBuilder();
 
             int goalsCompletedCount = await _context.Goals
-                    .Where(g => g.UserId == userId)
+                    .Where(g => g.UserId == user.Id)
                     .Where(g => g.CompleteDate.HasValue)
                     .CountAsync();
 
             var competencies = await _context.CompetencyTrackers
-                .Where(i => i.UserId == userId)
+                .Where(i => i.UserId == user.Id)
                 .ToListAsync();
 
             var distinctCompetencyLevels = competencies
@@ -371,8 +427,10 @@ namespace StudentPortfolio.Areas.Staff.Pages
                 Confident = distinctCompetencyLevels.Count(d => d.LevelId == 4)
             };
 
-            sbStats.AppendLine("\"Goals Completed\",\"Number of Competency Entries\",\"Competencies at Emerging\",\"Competencies at Developing\",\"Competencies at Proficient\",\"Competencies at Confident\"");
-            sbStats.AppendLine(
+            if (!singleCsv)
+            {
+                sbStats.AppendLine("\"Goals Completed\",\"Number of Competency Entries\",\"Competencies at Emerging\",\"Competencies at Developing\",\"Competencies at Proficient\",\"Competencies at Confident\"");
+                sbStats.AppendLine(
                     $"{CleanCSV(Statistics.GoalsCompleted.ToString())}," +
                     $"{CleanCSV(Statistics.NumCompetencies.ToString())}," +
                     $"{CleanCSV(Statistics.Emerging.ToString())}," +
@@ -380,7 +438,20 @@ namespace StudentPortfolio.Areas.Staff.Pages
                     $"{CleanCSV(Statistics.Proficient.ToString())}," +
                     $"{CleanCSV(Statistics.Confident.ToString())},"
                 );
-
+            }
+            else
+            {
+                sbStats.AppendLine(
+                    $"{user.FirstName} {user.LastName}," +
+                    $"{CleanCSV(Statistics.GoalsCompleted.ToString())}," +
+                    $"{CleanCSV(Statistics.NumCompetencies.ToString())}," +
+                    $"{CleanCSV(Statistics.Emerging.ToString())}," +
+                    $"{CleanCSV(Statistics.Developing.ToString())}," +
+                    $"{CleanCSV(Statistics.Proficient.ToString())}," +
+                    $"{CleanCSV(Statistics.Confident.ToString())},"
+                );
+            }
+            
             return sbStats;
         }
 
@@ -394,9 +465,9 @@ namespace StudentPortfolio.Areas.Staff.Pages
             var dateString = date.ToString("dd-MM-yyyy");
 
             var competenciesSb = await GetCompetenciesCsvAsync(user, false);
-            var goalsSb = await GetGoalsCsvAsync(user.Id);
-            var CDPSb = await GetCDPCsvAsync(user.Id);
-            var statsSb = await GetStatisticsCsvAsync(user.Id);
+            var goalsSb = await GetGoalsCsvAsync(user, false);
+            var CDPSb = await GetCDPCsvAsync(user, false);
+            var statsSb = await GetStatisticsCsvAsync(user, false);
 
             exportData.Add($"{userName}_Personal_Summary_{dateString}.csv", GetSummaryCsv(user, false));
             exportData.Add($"{userName}_Elevator_Pitch_{dateString}.csv", GetPitchCsv(user, false));
