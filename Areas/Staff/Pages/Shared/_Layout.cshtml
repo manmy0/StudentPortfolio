@@ -27,7 +27,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Staff" asp-page="Students">Students</a>
+                                <a class="nav-link text-dark" asp-area="Staff" asp-page="/Students">Students</a>
                             </li>
                         }
                         @if (IsSectionDefined("FeedbackNav"))
@@ -37,7 +37,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Staff" asp-page="Feedback">Feedback</a>
+                                <a class="nav-link text-dark" asp-area="Staff" asp-page="/FeedbackDashboard">Feedback</a>
                             </li>
                         }
                         @if (IsSectionDefined("CDLNav"))
@@ -47,7 +47,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Staff" asp-page="CDL">CDL</a>
+                                <a class="nav-link text-dark" asp-area="Staff" asp-page="/CDL">CDL</a>
                             </li>
                         }
                         @if (IsSectionDefined("ExportNav"))
@@ -57,7 +57,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Staff" asp-page="Export">Export</a>
+                                <a class="nav-link text-dark" asp-area="Staff" asp-page="/Export">Export</a>
                             </li>
                         }
                     </ul>
