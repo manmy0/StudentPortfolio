@@ -29,6 +29,13 @@
                             </div>
                         </div>
 
+                        <!-- preferred name -->
+                        <div class="mb-3">
+                            <label class="form-label">Preferred Name</label>
+                            <input asp-for="Input.PreferredName" class="form-control" />
+                            <span asp-validation-for="Input.PreferredName" class="text-danger"></span>
+                        </div>
+
                         <!-- degree and specialisation -->
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -50,17 +57,22 @@
                             <span asp-validation-for="Input.Introduction" class="text-danger"></span>
                         </div>
 
-                        <!-- linkedin and resume -->
+                        <!-- linkedin, resume, and cover letter -->
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label asp-for="Input.LinkedIn" class="form-label"></label>
                                 <input asp-for="Input.LinkedIn" class="form-control" />
                                 <span asp-validation-for="Input.LinkedIn" class="text-danger"></span>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label asp-for="Input.Resume" class="form-label"></label>
                                 <input asp-for="Input.Resume" class="form-control" />
                                 <span asp-validation-for="Input.Resume" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Input.CoverLetter" class="form-label"></label>
+                                <input asp-for="Input.CoverLetter" class="form-control" />
+                                <span asp-validation-for="Input.CoverLetter" class="text-danger"></span>
                             </div>
                         </div>
 
