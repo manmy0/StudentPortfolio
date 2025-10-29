@@ -71,11 +71,12 @@ namespace StudentPortfolio.Pages.Competencies
                     .Where(i => i.EndDate > currentDate || i.EndDate == null)
                     .OrderBy(i => i.CompetencyDisplayId)
                     .ToListAsync();
-
-                DiscontinuedCompetencies = await _context.Competencies
-                    .Where(i => i.EndDate <= currentDate)
+                
+                DiscontinuedCompetencies = DiscontinuedTrackers
+                    .Select(c => c.Competency)
+                    .DistinctBy(c => c.CompetencyId)
                     .OrderBy(i => i.CompetencyDisplayId)
-                    .ToListAsync();
+                    .ToList();
 
                 ParentCompetencies = await _context.Competencies
                     .Where(i => i.ParentCompetencyId == null)
