@@ -13,15 +13,9 @@
     if (user != null)
     {
         // Determine which name to display
-        if (!string.IsNullOrWhiteSpace(user.PreferedFirstName))
+        if (!string.IsNullOrWhiteSpace(user.GetFirstName()))
         {
-            displayName = user.PreferedFirstName;
-            if (!string.IsNullOrWhiteSpace(user.LastName))
-                displayName += $" {user.LastName}";
-        }
-        else if (!string.IsNullOrWhiteSpace(user.FirstName))
-        {
-            displayName = user.FirstName;
+            displayName = user.GetFirstName();
             if (!string.IsNullOrWhiteSpace(user.LastName))
                 displayName += $" {user.LastName}";
         }
