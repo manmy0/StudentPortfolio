@@ -22,12 +22,19 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
         }
 
-        [BindProperty(SupportsGet = true)]
-        public int? goalId { get; set; }
+        [BindProperty(Name="goalId", SupportsGet = true)]
+        public int? GoalId { get; set; }
+
+        [BindProperty(Name = "compId", SupportsGet = true)]
+        public int? CompetencyTrackerId { get; set; }
 
         public ApplicationUser CurrentUser { get; set; }
 
         public Goal SelectedGoal { get; set; }
+
+        public CompetencyTracker SelectedCompetencyRecord { get; set; }
+
+        public Competency SelectedCompetency { get; set; }
 
         [BindProperty]
         public Feedback Feedback { get; set; } = new Feedback();
@@ -37,16 +44,38 @@ namespace StudentPortfolio.Areas.Staff.Pages
         private async Task LoadGoalDataAsync()
         {
 
-            SelectedGoal = await _context.Goals.SingleOrDefaultAsync(i => i.GoalId == goalId);
+            SelectedGoal = await _context.Goals.SingleOrDefaultAsync(i => i.GoalId == GoalId);
 
             GoalSteps = await _context.GoalSteps
-                                .Where(i => i.GoalId == goalId)
+                                .Where(i => i.GoalId == GoalId)
                                 .ToListAsync();
+        }
+
+        private async Task LoadCompetencyDataAsync()
+        {
+
+            SelectedCompetencyRecord = await _context.CompetencyTrackers
+                .Include(t => t.Level)
+                .SingleOrDefaultAsync(i => i.CompetencyTrackerId == CompetencyTrackerId);
+
+            if (SelectedCompetencyRecord != null)
+            {
+                SelectedCompetency = await _context.Competencies.SingleOrDefaultAsync(i => i.CompetencyId == SelectedCompetencyRecord.CompetencyId);
+
+            }
         }
 
         public async Task OnGetAsync()
         {
-            await LoadGoalDataAsync();
+            if (GoalId != null)
+            {
+                await LoadGoalDataAsync();
+            }
+            else if (CompetencyTrackerId != null)
+            {
+                await LoadCompetencyDataAsync();
+            }
+           
 
         }
 
@@ -61,8 +90,18 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
             CurrentUser = await _userManager.FindByIdAsync(userId);
 
+
+          
             Feedback.UserId = CurrentUser.Id;
-            Feedback.GoalId = goalId;
+
+            if (GoalId != null)
+            {
+                Feedback.GoalId = GoalId;
+            }
+            else if (CompetencyTrackerId != null)
+            {
+                Feedback.CompetencyTrackerId = CompetencyTrackerId;
+            }
 
             if (!ModelState.IsValid)
             {
