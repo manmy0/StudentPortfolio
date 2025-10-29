@@ -20,7 +20,7 @@
                         Select an individual student to export their data, or select export all:
                     </p>
 
-                    <div class="row row-cols-1 row-cols-md-2 g-3">
+                    <div class="row row-cols-1 g-3 justify-content-center">
 
                         @foreach (var student in Model.Users)
                         {
@@ -41,6 +41,12 @@
         <form method="post" asp-page-handler="ExportAllStudentData">
             <div class="text-center">
                 <button type="submit" class="btn btn-warning">Export All</button>
+            </div>
+        </form>
+
+        <form method="post" asp-page-handler="ExportStudentDataOneCSV">
+            <div class="text-center">
+                <button type="submit" class="btn btn-warning">Export All to Single File</button>
             </div>
         </form>
     </div>

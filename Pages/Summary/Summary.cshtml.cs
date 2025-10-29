@@ -74,12 +74,12 @@ namespace StudentPortfolio.Pages.Summary
 
                 int goalsCompletedCount = await _context.Goals
                     .Where(g => g.UserId == userId)
-                    .Where(g => g.CompleteDate.HasValue && g.CompleteDate.Value.Year == selectedYear)
+                    .Where(g => g.CompleteDate.HasValue && g.CompleteDate.Value.Year <= selectedYear)
                     .CountAsync();
 
                 var competencies = await _context.CompetencyTrackers
                     .Where(i => i.UserId == userId)
-                    .Where(i => i.Created.Year == selectedYear)
+                    .Where(i => i.Created.Year <= selectedYear)
                     .ToListAsync();
 
                 var distinctCompetencyLevels = competencies
