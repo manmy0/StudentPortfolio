@@ -52,8 +52,12 @@ namespace StudentPortfolio.Pages.Summary
             {
                 CurrentUser = await _userManager.FindByIdAsync(userId);
 
+                DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+
                 AvailableYears = await _context.CompetencyTrackers
+                    .Include(i => i.Competency)
                     .Where(i => i.UserId == userId)
+                    .Where(i => i.Competency.EndDate > currentDate || i.Competency.EndDate == null)
                     .Select(i => i.Created.Year)
                     .Distinct()
                     .OrderBy(year => year)
@@ -78,8 +82,11 @@ namespace StudentPortfolio.Pages.Summary
                     .CountAsync();
 
                 var competencies = await _context.CompetencyTrackers
+                    .Include(i => i.Competency)
+                    .Include(i => i.Level)
                     .Where(i => i.UserId == userId)
                     .Where(i => i.Created.Year == selectedYear)
+                    .Where(i => i.Competency.EndDate > currentDate || i.Competency.EndDate == null)
                     .ToListAsync();
 
                 var distinctCompetencyLevels = competencies
@@ -87,7 +94,8 @@ namespace StudentPortfolio.Pages.Summary
                     .Select(g => new
                     {
                         CompetencyId = g.Key,
-                        LevelId = g.Max(c => c.LevelId)
+                        LevelId = g.Max(c => c.LevelId),
+                        LevelRank = g.Max(c => c.Level.Rank)
                     })
                     .ToList();
 
@@ -95,10 +103,10 @@ namespace StudentPortfolio.Pages.Summary
                 {
                     GoalsCompleted = goalsCompletedCount,
                     NumCompetencies = competencies.Count(),
-                    Emerging = distinctCompetencyLevels.Count(d => d.LevelId == 1),
-                    Developing = distinctCompetencyLevels.Count(d => d.LevelId == 2),
-                    Proficient = distinctCompetencyLevels.Count(d => d.LevelId == 3),
-                    Confident = distinctCompetencyLevels.Count(d => d.LevelId == 4)
+                    Emerging = distinctCompetencyLevels.Count(d => d.LevelRank == 1),
+                    Developing = distinctCompetencyLevels.Count(d => d.LevelRank == 2),
+                    Proficient = distinctCompetencyLevels.Count(d => d.LevelRank == 3),
+                    Confident = distinctCompetencyLevels.Count(d => d.LevelRank == 4)
                 };
             }
 
