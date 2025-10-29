@@ -66,7 +66,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
             {
                 var summarySb = GetSummaryCsv(student, true);
                 var pitchSb = GetPitchCsv(student, true);
-                var competenciesSb = await GetCompetenciesCsvAsync(student.Id);
+                var competenciesSb = await GetCompetenciesCsvAsync(student, true);
                 var goalsSb = await GetGoalsCsvAsync(student.Id);
                 var CDPSb = await GetCDPCsvAsync(student.Id);
                 var statsSb = await GetStatisticsCsvAsync(student.Id);
@@ -191,12 +191,12 @@ namespace StudentPortfolio.Areas.Staff.Pages
             return sb;
         }
 
-        private async Task<StringBuilder> GetCompetenciesCsvAsync(string userId)
+        private async Task<StringBuilder> GetCompetenciesCsvAsync(ApplicationUser user, bool singleCsv)
         {
             var sbCompetencies = new StringBuilder();
 
             var competencies = await _context.CompetencyTrackers
-                .Where(c => c.UserId == userId)
+                .Where(c => c.UserId == user.Id)
                 .Select(c => new
                 {
                     c.CompetencyTrackerId,
@@ -213,20 +213,41 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
             if (competencies.Any())
             {
-                sbCompetencies.AppendLine("\"Competency Number\",\"Competency Description\",\"Level\",\"Skills Review\",\"Evidence\",\"Start Date\",\"End Date\",\"Created\",\"Last Updated\"");
-                foreach (var comp in competencies)
+                if (!singleCsv)
                 {
-                    sbCompetencies.AppendLine(
-                        $"{CleanCSV(comp.CompetencyTrackerId.ToString())}," +
-                        $"{CleanCSV(comp.CompetencyDescription)}," +
-                        $"{CleanCSV(comp.LevelDescription)}," +
-                        $"{CleanCSV(comp.SkillsReview)}," +
-                        $"{CleanCSV(comp.Evidence)}," +
-                        $"{CleanCSV(comp.StartDate.ToString())}," +
-                        $"{CleanCSV(comp.EndDate.ToString())}," +
-                        $"{CleanCSV(comp.Created.ToString())}," +
-                        $"{CleanCSV(comp.LastUpdated.ToString())}"
-                    );
+                    sbCompetencies.AppendLine("\"Competency Number\",\"Competency Description\",\"Level\",\"Skills Review\",\"Evidence\",\"Start Date\",\"End Date\",\"Created\",\"Last Updated\"");
+                    foreach (var comp in competencies)
+                    {
+                        sbCompetencies.AppendLine(
+                            $"{CleanCSV(comp.CompetencyTrackerId.ToString())}," +
+                            $"{CleanCSV(comp.CompetencyDescription)}," +
+                            $"{CleanCSV(comp.LevelDescription)}," +
+                            $"{CleanCSV(comp.SkillsReview)}," +
+                            $"{CleanCSV(comp.Evidence)}," +
+                            $"{CleanCSV(comp.StartDate.ToString())}," +
+                            $"{CleanCSV(comp.EndDate.ToString())}," +
+                            $"{CleanCSV(comp.Created.ToString())}," +
+                            $"{CleanCSV(comp.LastUpdated.ToString())}"
+                        );
+                    }
+                }
+                else
+                {
+                    foreach (var comp in competencies)
+                    {
+                        sbCompetencies.AppendLine(
+                            $"{user.FirstName} {user.LastName}," +
+                            $"{CleanCSV(comp.CompetencyTrackerId.ToString())}," +
+                            $"{CleanCSV(comp.CompetencyDescription)}," +
+                            $"{CleanCSV(comp.LevelDescription)}," +
+                            $"{CleanCSV(comp.SkillsReview)}," +
+                            $"{CleanCSV(comp.Evidence)}," +
+                            $"{CleanCSV(comp.StartDate.ToString())}," +
+                            $"{CleanCSV(comp.EndDate.ToString())}," +
+                            $"{CleanCSV(comp.Created.ToString())}," +
+                            $"{CleanCSV(comp.LastUpdated.ToString())}"
+                        );
+                    }
                 }
             }
 
@@ -372,7 +393,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
             var date = DateTime.Now;
             var dateString = date.ToString("dd-MM-yyyy");
 
-            var competenciesSb = await GetCompetenciesCsvAsync(user.Id);
+            var competenciesSb = await GetCompetenciesCsvAsync(user, false);
             var goalsSb = await GetGoalsCsvAsync(user.Id);
             var CDPSb = await GetCDPCsvAsync(user.Id);
             var statsSb = await GetStatisticsCsvAsync(user.Id);
