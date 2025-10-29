@@ -42,6 +42,8 @@ namespace StudentPortfolio.Models
 
         public virtual required ICollection<UserLink> UserLinks { get; set; }
 
+        public virtual required ICollection<Feedback> Feedbacks { get; set; }
+
     }
 
 }

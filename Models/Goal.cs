@@ -35,5 +35,8 @@ public partial class Goal
     public virtual ICollection<GoalStep> GoalSteps { get; set; } = [];
 
     [ValidateNever]
+    public ICollection<Feedback> Feedbacks { get; set; } = [];
+
+    [ValidateNever]
     public virtual ApplicationUser User { get; set; } = null!;
 }

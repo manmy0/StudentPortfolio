@@ -1,0 +1,35 @@
+﻿@using StudentPortfolio.Models
+@model CareerDevelopmentPlan
+
+<div class="info-container">
+    <div class="info-row">
+        <label for="prof">Professional Interests:</label>
+        <textarea id="prof" class="form-control" readonly>@Html.DisplayFor(model => model.ProfessionalInterests)</textarea>
+    </div>
+
+    <div class="info-row">
+        <label for="emp">Employers of Interest:</label>
+        <textarea id="emp" class="form-control" readonly>@Html.DisplayFor(model => model.EmployersOfInterest)</textarea>
+    </div>
+
+    <div class="info-row">
+        <label for="net">Networking Plan:</label>
+        <textarea id="net" class="form-control" readonly>@Html.DisplayFor(model => model.NetworkingPlan)</textarea>
+    </div>
+
+    <div class="info-row">
+        <label for="per">Personal Values:</label>
+        <textarea id="per" class="form-control" readonly>@Html.DisplayFor(model => model.PersonalValues)</textarea>
+    </div>
+
+    <div class="info-row">
+        <label for="extra">Extracurricular:</label>
+        <textarea id="extra" class="form-control" readonly>@Html.DisplayFor(model => model.Extracurricular)</textarea>
+    </div>
+
+    <div class="info-row">
+        <label for="dev">Development Focus for This Year:</label>
+        <textarea id="dev" class="form-control large" readonly>@Html.DisplayFor(model => model.DevelopmentFocus)</textarea>
+    </div>
+</div>
+
