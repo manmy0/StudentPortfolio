@@ -66,11 +66,6 @@ namespace StudentPortfolio.Pages.Competencies
                 DiscontinuedTrackers = competencyTrackers
                     .Where(c => c.Competency.EndDate <= currentDate)
                     .ToList();
-
-                Competencies = await _context.Competencies
-                    .Where(i => i.EndDate > currentDate || i.EndDate == null)
-                    .OrderBy(i => i.CompetencyDisplayId)
-                    .ToListAsync();
                 
                 DiscontinuedCompetencies = DiscontinuedTrackers
                     .Select(c => c.Competency)
@@ -78,9 +73,16 @@ namespace StudentPortfolio.Pages.Competencies
                     .OrderBy(i => i.CompetencyDisplayId)
                     .ToList();
 
+
+                Competencies = await _context.Competencies
+                    .Where(i => i.EndDate > currentDate || i.EndDate == null)
+                    .OrderBy(i => i.CompetencyDisplayId)
+                    .ToListAsync();
+                
                 ParentCompetencies = await _context.Competencies
                     .Where(i => i.ParentCompetencyId == null)
                     .ToListAsync();
+
 
                 // If the user provided a date range
                 if (!string.IsNullOrEmpty(From) && !string.IsNullOrEmpty(To))
