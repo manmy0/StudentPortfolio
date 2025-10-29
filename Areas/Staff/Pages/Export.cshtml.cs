@@ -148,11 +148,19 @@ namespace StudentPortfolio.Areas.Staff.Pages
         {
             var sbCompetencies = new StringBuilder();
 
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+
             var competencies = await _context.CompetencyTrackers
+                .Include(c => c.Competency)
                 .Where(c => c.UserId == userId)
+                .Where(i => i.Competency.EndDate > currentDate || i.Competency.EndDate == null)
+                .OrderBy(i => i.Competency.CompetencyDisplayId)
+                .ThenByDescending(i => i.Level.Rank)
+                .ThenByDescending(i => i.StartDate)
+                .ThenByDescending(i => i.EndDate)
                 .Select(c => new
                 {
-                    c.CompetencyTrackerId,
+                    CompetencyDisplayId = c.Competency.CompetencyDisplayId,
                     CompetencyDescription = c.Competency.Description,
                     LevelDescription = c.Level.Name,
                     c.SkillsReview,
@@ -170,7 +178,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
                 foreach (var comp in competencies)
                 {
                     sbCompetencies.AppendLine(
-                        $"{CleanCSV(comp.CompetencyTrackerId.ToString())}," +
+                        $"{CleanCSV(comp.CompetencyDisplayId.ToString())}," +
                         $"{CleanCSV(comp.CompetencyDescription)}," +
                         $"{CleanCSV(comp.LevelDescription)}," +
                         $"{CleanCSV(comp.SkillsReview)}," +
@@ -275,13 +283,18 @@ namespace StudentPortfolio.Areas.Staff.Pages
         {
             var sbStats = new StringBuilder();
 
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+
             int goalsCompletedCount = await _context.Goals
                     .Where(g => g.UserId == userId)
                     .Where(g => g.CompleteDate.HasValue)
                     .CountAsync();
 
             var competencies = await _context.CompetencyTrackers
+                .Include(i => i.Competency)
+                .Include(i => i.Level)
                 .Where(i => i.UserId == userId)
+                .Where(i => i.Competency.EndDate > currentDate || i.Competency.EndDate == null)
                 .ToListAsync();
 
             var distinctCompetencyLevels = competencies
@@ -289,7 +302,8 @@ namespace StudentPortfolio.Areas.Staff.Pages
                 .Select(g => new
                 {
                     CompetencyId = g.Key,
-                    LevelId = g.Max(c => c.LevelId)
+                    LevelId = g.Max(c => c.LevelId),
+                    LevelRank = g.Max(c => c.Level.Rank)
                 })
                 .ToList();
 
@@ -297,10 +311,10 @@ namespace StudentPortfolio.Areas.Staff.Pages
             {
                 GoalsCompleted = goalsCompletedCount,
                 NumCompetencies = competencies.Count(),
-                Emerging = distinctCompetencyLevels.Count(d => d.LevelId == 1),
-                Developing = distinctCompetencyLevels.Count(d => d.LevelId == 2),
-                Proficient = distinctCompetencyLevels.Count(d => d.LevelId == 3),
-                Confident = distinctCompetencyLevels.Count(d => d.LevelId == 4)
+                Emerging = distinctCompetencyLevels.Count(d => d.LevelRank == 1),
+                Developing = distinctCompetencyLevels.Count(d => d.LevelRank == 2),
+                Proficient = distinctCompetencyLevels.Count(d => d.LevelRank == 3),
+                Confident = distinctCompetencyLevels.Count(d => d.LevelRank == 4)
             };
 
             sbStats.AppendLine("\"Goals Completed\",\"Number of Competency Entries\",\"Competencies at Emerging\",\"Competencies at Developing\",\"Competencies at Proficient\",\"Competencies at Confident\"");

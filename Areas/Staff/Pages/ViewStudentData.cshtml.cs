@@ -155,14 +155,17 @@ namespace StudentPortfolio.Areas.Staff.Pages
             List<Competency> Competencies = new List<Competency>();
             List<Competency> ParentCompetencies = new List<Competency>();
             List<CompetencyTracker> CompetencyTrackers = new List<CompetencyTracker>();
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
 
             if (selectedYear != null)
             {
                 CompetencyTrackers = await _context.CompetencyTrackers
+                               .Include(i => i.Level)
+                               .Include(i => i.Competency)
                                .Where(i => i.UserId == user.Id &&
                                            i.StartDate.Year != null &&
                                            i.StartDate.Year == selectedYear.Value)
-                               .Include(i => i.Level)
+                               .Where(i => i.Competency.EndDate > currentDate || i.Competency.EndDate == null)
                                .OrderBy(i => i.CompetencyId)
                                .ThenByDescending(i => i.Level.Rank)
                                .ThenByDescending(i => i.StartDate)
@@ -170,7 +173,9 @@ namespace StudentPortfolio.Areas.Staff.Pages
                                .ToListAsync();
             }
 
-            var allCompetencies = await _context.Competencies.ToListAsync();
+            var allCompetencies = await _context.Competencies
+                .Where(c => c.EndDate > currentDate || c.EndDate == null)
+                .ToListAsync();
 
             Competencies = allCompetencies;
 

@@ -250,13 +250,18 @@ namespace StudentPortfolio.Pages.Export
         {
             var sbStats = new StringBuilder();
 
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+
             int goalsCompletedCount = await _context.Goals
                     .Where(g => g.UserId == userId)
                     .Where(g => g.CompleteDate.HasValue)
                     .CountAsync();
 
             var competencies = await _context.CompetencyTrackers
+                .Include(i => i.Competency)
+                .Include(i => i.Level)
                 .Where(i => i.UserId == userId)
+                .Where(i => i.Competency.EndDate > currentDate || i.Competency.EndDate == null)
                 .ToListAsync();
 
             var distinctCompetencyLevels = competencies
@@ -264,7 +269,8 @@ namespace StudentPortfolio.Pages.Export
                 .Select(g => new
                 {
                     CompetencyId = g.Key,
-                    LevelId = g.Max(c => c.LevelId)
+                    LevelId = g.Max(c => c.LevelId),
+                    LevelRank = g.Max(c => c.Level.Rank)
                 })
                 .ToList();
 
@@ -272,10 +278,10 @@ namespace StudentPortfolio.Pages.Export
             {
                 GoalsCompleted = goalsCompletedCount,
                 NumCompetencies = competencies.Count(),
-                Emerging = distinctCompetencyLevels.Count(d => d.LevelId == 1),
-                Developing = distinctCompetencyLevels.Count(d => d.LevelId == 2),
-                Proficient = distinctCompetencyLevels.Count(d => d.LevelId == 3),
-                Confident = distinctCompetencyLevels.Count(d => d.LevelId == 4)
+                Emerging = distinctCompetencyLevels.Count(d => d.LevelRank == 1),
+                Developing = distinctCompetencyLevels.Count(d => d.LevelRank == 2),
+                Proficient = distinctCompetencyLevels.Count(d => d.LevelRank == 3),
+                Confident = distinctCompetencyLevels.Count(d => d.LevelRank == 4)
             };
 
             sbStats.AppendLine("\"Goals Completed\",\"Number of Competency Entries\",\"Competencies at Emerging\",\"Competencies at Developing\",\"Competencies at Proficient\",\"Competencies at Confident\"");
