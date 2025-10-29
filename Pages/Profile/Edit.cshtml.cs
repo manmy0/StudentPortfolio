@@ -42,7 +42,9 @@ namespace StudentPortfolio.Pages.Profile
                 Introduction = user.Introduction,
                 Specialisation = user.Specialisation,
                 LinkedIn = user.LinkedIn,
-                Resume = user.Resume
+                Resume = user.Resume,
+                CoverLetter = user.CoverLetter,
+                PreferredName = user.PreferedFirstName
             };
 
             // display page with user's existing data
@@ -71,6 +73,8 @@ namespace StudentPortfolio.Pages.Profile
             user.Specialisation = Input.Specialisation;
             user.LinkedIn = Input.LinkedIn;
             user.Resume = Input.Resume;
+            user.CoverLetter = Input.CoverLetter;
+            user.PreferedFirstName = Input.PreferredName;
 
             // check if profile image has been uploaded
             if (Input.ProfileImage != null && Input.ProfileImage.Length > 0)
@@ -115,5 +119,7 @@ namespace StudentPortfolio.Pages.Profile
         public string? LinkedIn { get; set; }
         public string? Resume { get; set; }
         public IFormFile? ProfileImage { get; set; }
+        public string? CoverLetter { get; set; }
+        public string? PreferredName { get; set; }
     }
 }

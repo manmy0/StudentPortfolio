@@ -25,7 +25,7 @@
 
         <!-- header with name and course -->
         <div class="profile-info">
-            <h1>@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h1>
+            <h1>@Model.CurrentUser.FirstName @Model.CurrentUser.LastName (@Model.CurrentUser.PreferedFirstName)</h1>
             <p>@Model.CurrentUser.Degree</p>
             <p>@Model.CurrentUser.Specialisation </p>
         </div>
@@ -59,13 +59,10 @@
 
         <div class="box">
             <h3>My Links</h3>
-
-            <!--  links for user to quickly access, NOT WORKING YET -->
             <ul>
                 <li><a href="@Model.CurrentUser.LinkedIn">LinkedIn</a></li>
                 <li><a href="@Model.CurrentUser.Resume">Resume</a></li>
                 <li><a href="@Model.CurrentUser.CoverLetter">Cover Letter</a></li>
-                <li><a href="@Model.CurrentUser.Certificates">Certificates</a></li>
 
                 @foreach (var link in Model.UserLinks)
                 {
