@@ -5,11 +5,107 @@
 }
 
 <main class="content-area">
-    <div class="goal-preview">
-        Preview of SMART Goal/Evidence
+    <div class="goal-section">
+    <table class="table table-bordered table-striped table-style fs-6">
+        <thead>
+            <tr>
+                <th>
+                    SMART Goal
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SelectedGoal.Timeline)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SelectedGoal.Progress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SelectedGoal.Learnings)
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+                <th>
+                    Completed
+                </th>
+                <th>
+                    Completion Notes
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => model.SelectedGoal.Description)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.SelectedGoal.Timeline)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.SelectedGoal.Progress)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.SelectedGoal.Learnings)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.SelectedGoal.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.SelectedGoal.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.SelectedGoal.CompleteDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.SelectedGoal.CompletionNotes)
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+  
+    <hr />
+    
+  
+    <table class="table table-bordered table-striped fs-6">
+        <thead>
+            <tr>
+                <th>
+                    Action Steps
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                
+                <td style="text-align: center;">
+
+                    @foreach (var step in Model.GoalSteps)
+                    {
+
+                        <ul style="text-align: left;">
+                            <li>
+                                @Html.DisplayFor(modelItem => step.Step)
+                            </li>
+                        </ul>
+
+                    }
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
     </div>
+
     <div class="feedback-section">
-        <textarea class="feedback-textbox" placeholder="Write Feedback"></textarea>
-        <button class="btn btn-success">Submit</button>
+        <form method="post">
+            <div class="feedback-textbox">
+                <textarea asp-for="Feedback" class="form-control" rows="12" placeholder="Write Feedback"></textarea>
+            </div>
+            <button type="submit" value="Submit Feedback" class="btn btn-success">Submit</button>
+        </form>
     </div>
 </main>

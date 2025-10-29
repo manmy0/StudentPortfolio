@@ -38,4 +38,7 @@ public partial class CompetencyTracker
 
     [ValidateNever]
     public virtual Level Level { get; set; } = null!;
+
+    [ValidateNever]
+    public ICollection<Feedback> Feedbacks { get; set; } = [];
 }
