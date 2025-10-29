@@ -47,8 +47,12 @@ namespace StudentPortfolio.Pages.Dashboard
 
             if (userId != null)
             {
+                DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+
                 AvailableYears = await _context.CompetencyTrackers
+                    .Include(i => i.Competency)
                     .Where(i => i.UserId == userId)
+                    .Where(i => i.Competency.EndDate > currentDate || i.Competency.EndDate == null)
                     .Select(i => i.Created.Year)
                     .Distinct()
                     .OrderBy(year => year)
@@ -88,11 +92,11 @@ namespace StudentPortfolio.Pages.Dashboard
                 }
 
                 var allCompetencyData = await _context.CompetencyTrackers
+                    .Include(i => i.Competency) // need the competency table for the display id
                     .Where(i => i.UserId == userId)
                     .Where(i => i.Created.Year <= toYear)
                     .Where(i => i.Created.Year >= fromYear)
-                    .Include(i => i.Competency) // need the competency table for the display id
-
+                    .Where(i => i.Competency.EndDate > currentDate || i.Competency.EndDate == null)
                     // groups by the competencyId and displayId
                     // the group will have a key of the competencyId/displayId and values of many competency trackers with the same IDs
                     // now also grouping by description because it is one to one so it works
