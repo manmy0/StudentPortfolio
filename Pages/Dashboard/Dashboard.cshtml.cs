@@ -108,6 +108,7 @@ namespace StudentPortfolio.Pages.Dashboard
                         HighestLevelId = g.Max(i => i.LevelId),
                         Description = g.Key.Description
                     })
+                    .OrderBy(i => i.CompetencyDisplayId)
                     .ToListAsync();
 
                 CompetencyPerformanceSummary = allCompetencyData;
