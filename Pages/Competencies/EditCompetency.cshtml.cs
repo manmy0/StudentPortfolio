@@ -38,10 +38,12 @@ namespace StudentPortfolio.Pages.Competencies
                 return NotFound();
             }
 
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+
             var competencyTracker = await _context.CompetencyTrackers
-                .Include(m => m.Level)
-                .Where(m => m.CompetencyTrackerId == competencyTrackerId)
-                .Where(m => m.UserId == userId)
+                .Include(t => t.Level)
+                .Where(t => t.CompetencyTrackerId == competencyTrackerId
+                    && t.UserId == userId)
                 .FirstOrDefaultAsync();
 
             if (competencyTracker == null)
@@ -51,7 +53,9 @@ namespace StudentPortfolio.Pages.Competencies
 
             CompetencyTracker = competencyTracker;
 
-            var competency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == CompetencyTracker.CompetencyId);
+            var competency = await _context.Competencies
+                .Where(c => c.EndDate > currentDate || c.EndDate == null)
+                .FirstOrDefaultAsync(c => c.CompetencyId == CompetencyTracker.CompetencyId);
 
             if (competency == null)
             {
@@ -59,7 +63,9 @@ namespace StudentPortfolio.Pages.Competencies
             }
             Competency = competency;
 
-            var parentCompetency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == Competency.ParentCompetencyId);
+            var parentCompetency = await _context.Competencies
+                .Where(p => p.EndDate > currentDate || p.EndDate == null)
+                .FirstOrDefaultAsync(p => p.CompetencyId == Competency.ParentCompetencyId);
 
             if (parentCompetency == null)
             {
