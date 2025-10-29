@@ -512,6 +512,61 @@ namespace StudentPortfolio.Migrations
                     b.ToTable("ContactsOfInterest", (string)null);
                 });
 
+            modelBuilder.Entity("StudentPortfolio.Models.Feedback", b =>
+                {
+                    b.Property<int>("FeedbackId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("feedbackId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeedbackId"));
+
+                    b.Property<long?>("CompetencyTrackerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("competencyTrackerId");
+
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("dateCreated")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("dateUpdated")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("FeedbackText")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("FeedbackText");
+
+                    b.Property<long?>("GoalId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("goalId");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("userId");
+
+                    b.HasKey("FeedbackId");
+
+                    b.HasIndex("CompetencyTrackerId");
+
+                    b.HasIndex("GoalId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex(new[] { "FeedbackId" }, "UQ_UserLinks_feedbackID")
+                        .IsUnique();
+
+                    b.ToTable("Feedback", (string)null);
+                });
+
             modelBuilder.Entity("StudentPortfolio.Models.Goal", b =>
                 {
                     b.Property<long>("GoalId")
@@ -927,6 +982,31 @@ namespace StudentPortfolio.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("StudentPortfolio.Models.Feedback", b =>
+                {
+                    b.HasOne("StudentPortfolio.Models.CompetencyTracker", "CompetencyTracker")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("CompetencyTrackerId")
+                        .HasConstraintName("FK_Feedback_CompetencyTracker");
+
+                    b.HasOne("StudentPortfolio.Models.Goal", "Goal")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("GoalId")
+                        .HasConstraintName("FK_Feedback_Goal");
+
+                    b.HasOne("StudentPortfolio.Models.ApplicationUser", "User")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK_Feedback_AspNetUsers");
+
+                    b.Navigation("CompetencyTracker");
+
+                    b.Navigation("Goal");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("StudentPortfolio.Models.Goal", b =>
                 {
                     b.HasOne("StudentPortfolio.Models.ApplicationUser", "User")
@@ -1013,6 +1093,8 @@ namespace StudentPortfolio.Migrations
 
                     b.Navigation("ContactsOfInterests");
 
+                    b.Navigation("Feedbacks");
+
                     b.Navigation("Goals");
 
                     b.Navigation("IndustryContactLogs");
@@ -1027,8 +1109,15 @@ namespace StudentPortfolio.Migrations
                     b.Navigation("CompetencyTrackers");
                 });
 
+            modelBuilder.Entity("StudentPortfolio.Models.CompetencyTracker", b =>
+                {
+                    b.Navigation("Feedbacks");
+                });
+
             modelBuilder.Entity("StudentPortfolio.Models.Goal", b =>
                 {
+                    b.Navigation("Feedbacks");
+
                     b.Navigation("GoalSteps");
                 });
 

@@ -30,6 +30,7 @@ namespace StudentPortfolio.Pages.Profile
         public CareerDevelopmentPlan CDP { get; set; }
         public IList<UserLink> UserLinks { get; set; } = default!;
 
+
         // convert the users byte representation of an image
         // in the database to base64 which can be displayed
         public string? ProfileImageBase64 =>
@@ -53,7 +54,7 @@ namespace StudentPortfolio.Pages.Profile
                 UserLinks = await _context.UserLinks
                     .Where(l => l.UserId == userId)
                     .ToListAsync();
-                   
+
             }
 
         }

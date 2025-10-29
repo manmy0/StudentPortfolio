@@ -33,8 +33,11 @@ namespace StudentPortfolio.Pages.Competencies
         
         public async Task<IActionResult> OnGetAsync(long? competencyId)
         {
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
 
-            var competency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == competencyId);
+            var competency = await _context.Competencies
+                .Where(c => c.EndDate > currentDate || c.EndDate == null)
+                .FirstOrDefaultAsync(c => c.CompetencyId == competencyId);
 
             if (competency == null)
             {
@@ -42,7 +45,9 @@ namespace StudentPortfolio.Pages.Competencies
             }
             Competency = competency;
 
-            var parentCompetency = await _context.Competencies.FirstOrDefaultAsync(m => m.CompetencyId == Competency.ParentCompetencyId);
+            var parentCompetency = await _context.Competencies
+                .Where(p => p.EndDate > currentDate || p.EndDate == null)
+                .FirstOrDefaultAsync(p => p.CompetencyId == Competency.ParentCompetencyId);
 
             if (parentCompetency == null)
             {

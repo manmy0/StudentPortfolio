@@ -1,0 +1,168 @@
+﻿@using StudentPortfolio.Models.Staff_Models
+@model CompetencyData
+
+@foreach (var parentComp in Model.ParentCompetencies)
+{
+    <table class="table table-bordered table-striped collapsible-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayFor(modelItem => parentComp.Description)
+                </th>
+                <th>
+                    Link to Indicators
+                </th>
+                <th>
+                    Levels
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+                <th>
+                    Skill Review
+                </th>
+                <th>
+                    Evidence
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+
+        @foreach (var comp in Model.Competencies.Where(c => c.ParentCompetencyId == parentComp.CompetencyId))
+        {
+            if (Model.CompetencyTrackers.Where(t => t.CompetencyId == comp.CompetencyId).Count() != 0)
+            {
+                var tracker = Model.CompetencyTrackers.Where(t => t.CompetencyId == comp.CompetencyId);/*.First();*/
+
+                <tbody class="master-row">
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => comp.CompetencyDisplayId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => comp.Description)
+                        </td>
+                        <td>
+                            <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
+                        </td>
+                        <td>
+                            @tracker.First().Level.Name
+                        </td>
+                        <td>
+                            @tracker.First().StartDate
+                        </td>
+                        <td>
+                            @tracker.First().EndDate
+                        </td>
+                        <td>
+                            @tracker.First().SkillsReview
+                        </td>
+                        <td>
+                            <a href="@tracker.First().Evidence">Evidence</a>
+                        </td>
+                        <td>
+                            <a asp-area="Staff" asp-page="/Feedback" asp-route-compId="@comp.CompetencyId" title="Provide Feedback">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </a>
+                            
+                        <td>
+                            @if (tracker.Count() > 1)
+                            {
+                                <button class="toggle-details">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7" /></svg>
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="collapsible-content" style="display: none;">
+                    @foreach (var level in tracker)
+                    {
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @level.Level.Name
+                            </td>
+                            <td>
+                                @level.StartDate
+                            </td>
+                            <td>
+                                @level.EndDate
+                            </td>
+                            <td>
+                                @level.SkillsReview
+                            </td>
+                            <td>
+                                <a href="@level.Evidence">Evidence</a>
+                            </td>
+                            <td>
+                                <a asp-area="Staff" asp-page="/Feedback" asp-route-compId="@comp.CompetencyId" title="Provide Feedback">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            }
+            else
+            {
+                <tbody class="master-row">
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => comp.CompetencyDisplayId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => comp.Description)
+                        </td>
+                        <td>
+                            <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
+                        </td>
+                        <td>
+                            <p>Emerging</p>
+                        </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td>
+                            <a asp-area="Staff" asp-page="/Feedback" asp-route-compId="@comp.CompetencyId" title="Provide Feedback">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </a>
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        }
+    </table>
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var iconUp = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6M5 12l7-7 7 7"/></svg>';
+        var iconDown = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7"/></svg>';
+
+        $('.collapsible-table').on('click', '.toggle-details', function () {
+            var $button = $(this);
+            var $masterRow = $button.closest('.master-row');
+            var $detailRow = $masterRow.next('.collapsible-content');
+
+            $detailRow.toggle(); // Toggles display: none and display: block
+            $button.html($detailRow.is(':visible') ? iconUp : iconDown); 
+
+        });
+
+        $('.toggle-details').html(iconDown);
+    });
+</script>
+

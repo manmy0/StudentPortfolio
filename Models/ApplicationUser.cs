@@ -42,6 +42,21 @@ namespace StudentPortfolio.Models
 
         public virtual required ICollection<UserLink> UserLinks { get; set; }
 
+        public virtual required ICollection<Feedback> Feedbacks { get; set; }
+
+        public String GetFirstName()
+        {
+            if (!string.IsNullOrWhiteSpace(this.PreferedFirstName))
+            {
+                return this.PreferedFirstName;
+            }
+            else if (!string.IsNullOrWhiteSpace(this.FirstName))
+            {
+                return this.FirstName;
+            }
+            return null;
+        }
     }
+
 
 }
