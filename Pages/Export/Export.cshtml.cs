@@ -115,11 +115,19 @@ namespace StudentPortfolio.Pages.Export
         {
             var sbCompetencies = new StringBuilder();
 
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+
             var competencies = await _context.CompetencyTrackers
+                .Include(c => c.Competency)
                 .Where(c => c.UserId == userId)
+                .Where(i => i.Competency.EndDate > currentDate || i.Competency.EndDate == null)
+                .OrderBy(i => i.Competency.CompetencyDisplayId)
+                .ThenByDescending(i => i.Level.Rank)
+                .ThenByDescending(i => i.StartDate)
+                .ThenByDescending(i => i.EndDate)
                 .Select(c => new
                 {
-                    c.CompetencyTrackerId,
+                    CompetencyDisplayId = c.Competency.CompetencyDisplayId,
                     CompetencyDescription = c.Competency.Description,
                     LevelDescription = c.Level.Name,
                     c.SkillsReview,
@@ -137,7 +145,7 @@ namespace StudentPortfolio.Pages.Export
                 foreach (var comp in competencies)
                 {
                     sbCompetencies.AppendLine(
-                        $"{CleanCSV(comp.CompetencyTrackerId.ToString())}," +
+                        $"{CleanCSV(comp.CompetencyDisplayId.ToString())}," +
                         $"{CleanCSV(comp.CompetencyDescription)}," +
                         $"{CleanCSV(comp.LevelDescription)}," +
                         $"{CleanCSV(comp.SkillsReview)}," +
