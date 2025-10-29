@@ -64,15 +64,14 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
             foreach (var student in users)
             {
-                var summarySb = GetSummaryCsv(student);
-                var pitchSb = GetPitchCsv(student);
+                var summarySb = GetSummaryCsv(student, true);
+                var pitchSb = GetPitchCsv(student, true);
                 var competenciesSb = await GetCompetenciesCsvAsync(student.Id);
                 var goalsSb = await GetGoalsCsvAsync(student.Id);
                 var CDPSb = await GetCDPCsvAsync(student.Id);
                 var statsSb = await GetStatisticsCsvAsync(student.Id);
 
                 exportData
-                    .AppendLine($"{student.FirstName} {student.LastName}")
                     .Append(summarySb)
                     .Append(pitchSb)
                     .Append(competenciesSb)
@@ -156,25 +155,39 @@ namespace StudentPortfolio.Areas.Staff.Pages
             return value;
         }
 
-        private StringBuilder GetSummaryCsv(ApplicationUser user)
+        private StringBuilder GetSummaryCsv(ApplicationUser user, bool singleCsv)
         {
             var sb = new StringBuilder();
             var summary = user.Introduction ?? "No personal summary found.";
 
-            sb.AppendLine("Personal Summary");
-            sb.AppendLine(CleanCSV(summary));
-            sb.AppendLine();
+            if (!singleCsv)
+            {
+                sb.AppendLine("Personal Summary");
+                sb.AppendLine(CleanCSV(summary));
+            }
+            else
+            {
+                sb.AppendLine($"{user.FirstName} {user.LastName},{CleanCSV(summary)}");
+            }
             return sb;
+            
         }
 
-        private StringBuilder GetPitchCsv(ApplicationUser user)
+        private StringBuilder GetPitchCsv(ApplicationUser user, bool singleCsv)
         {
             var sb = new StringBuilder();
             var pitch = user.Pitch ?? "No elevator pitch found.";
 
-            sb.AppendLine("Elevator Pitch");
-            sb.AppendLine(CleanCSV(pitch));
-            sb.AppendLine();
+            if (!singleCsv)
+            {
+                sb.AppendLine("Elevator Pitch");
+                sb.AppendLine(CleanCSV(pitch));
+            }
+            else
+            {
+                sb.AppendLine($"{user.FirstName} {user.LastName},{CleanCSV(pitch)}");
+            }
+
             return sb;
         }
 
@@ -364,8 +377,8 @@ namespace StudentPortfolio.Areas.Staff.Pages
             var CDPSb = await GetCDPCsvAsync(user.Id);
             var statsSb = await GetStatisticsCsvAsync(user.Id);
 
-            exportData.Add($"{userName}_Personal_Summary_{dateString}.csv", GetSummaryCsv(user));
-            exportData.Add($"{userName}_Elevator_Pitch_{dateString}.csv", GetPitchCsv(user));
+            exportData.Add($"{userName}_Personal_Summary_{dateString}.csv", GetSummaryCsv(user, false));
+            exportData.Add($"{userName}_Elevator_Pitch_{dateString}.csv", GetPitchCsv(user, false));
             exportData.Add($"{userName}_Competencies_{dateString}.csv", competenciesSb);
             exportData.Add($"{userName}_Goals_{dateString}.csv", goalsSb);
             exportData.Add($"{userName}_CDP_{dateString}.csv", CDPSb);
