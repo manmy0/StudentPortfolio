@@ -42,7 +42,8 @@ namespace StudentPortfolio.Models
                     Goals = new List<Goal>(),
                     IndustryContactLogs = new List<IndustryContactLog>(),
                     NetworkingEvents = new List<NetworkingEvent>(),
-                    UserLinks = new List<UserLink>()
+                    UserLinks = new List<UserLink>(),
+                    Feedbacks = new List<Feedback>()
 
                 };
 

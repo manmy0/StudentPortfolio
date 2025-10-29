@@ -34,7 +34,9 @@ namespace StudentPortfolio.Data
 
         public virtual DbSet<NetworkingQuestion> NetworkingQuestions { get; set; }
 
-        public virtual DbSet<UserLink> UserLinks { get; set; }  
+        public virtual DbSet<UserLink> UserLinks { get; set; }
+
+        public virtual DbSet<Feedback> Feedbacks { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -396,6 +398,50 @@ namespace StudentPortfolio.Data
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK_UserLinks_AspNetUsers");
             });
+
+          modelBuilder.Entity<Feedback>(entity => {
+
+              entity.HasKey(e => e.FeedbackId);
+
+              entity.ToTable("Feedback");
+
+              entity.HasIndex(e => e.FeedbackId, "UQ_UserLinks_feedbackID").IsUnique();
+
+              entity.Property(e => e.FeedbackId).HasColumnName("feedbackId");
+
+              entity.Property(e => e.UserId)
+                    .HasMaxLength(450)
+                    .HasColumnName("userId");
+              entity.Property(e => e.GoalId).HasColumnName("goalId");
+              entity.Property(e => e.CompetencyTrackerId).HasColumnName("competencyTrackerId");
+              entity.Property(e => e.FeedbackText)
+                    .HasMaxLength(255)
+                    .HasColumnName("FeedbackText");
+              entity.Property(e => e.DateCreated)
+                    .HasDefaultValueSql("(getdate())")
+                    .HasColumnName("dateCreated");
+              entity.Property(e => e.DateUpdated)
+                    .HasDefaultValueSql("(getdate())")
+                    .HasColumnName("dateUpdated");
+
+              entity.HasOne(d => d.User).WithMany(p => p.Feedbacks)
+                   .HasForeignKey(d => d.UserId)
+                   .OnDelete(DeleteBehavior.ClientSetNull)
+                   .HasConstraintName("FK_Feedback_AspNetUsers");
+
+              entity.HasOne(d => d.Goal).WithMany(p => p.Feedbacks)
+                  .HasForeignKey(d => d.GoalId)
+                  .IsRequired(false) 
+                  .HasConstraintName("FK_Feedback_Goal"); 
+
+              entity.HasOne(d => d.CompetencyTracker).WithMany(p => p.Feedbacks) 
+                  .HasForeignKey(d => d.CompetencyTrackerId)
+                  .IsRequired(false) 
+                  .HasConstraintName("FK_Feedback_CompetencyTracker"); 
+
+
+
+          });
 
 
         }
