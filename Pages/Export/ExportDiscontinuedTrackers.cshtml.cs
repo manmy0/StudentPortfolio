@@ -127,7 +127,7 @@ namespace StudentPortfolio.Pages.Export
 
             if (exportTrackers.Any())
             {
-                sbCompetencies.AppendLine("\"Competency Id\",\"Competency Description\",\"Competency Tracker Id\",\"Level\",\"Skills Review\",\"Evidence\",\"Start Date\",\"End Date\",\"Created\",\"Last Updated\"");
+                sbCompetencies.AppendLine("\"Competency Number\",\"Competency Description\",\"Competency Tracker Id\",\"Level\",\"Skills Review\",\"Evidence\",\"Start Date\",\"End Date\",\"Created\",\"Last Updated\"");
                 foreach (var comp in exportTrackers)
                 {
                     sbCompetencies.AppendLine(
@@ -181,7 +181,7 @@ namespace StudentPortfolio.Pages.Export
                 }
 
                 // export the zip file
-                return File(memoryStream.ToArray(), "application/zip", "Competency_Trackers_Export.zip");
+                return File(memoryStream.ToArray(), "application/zip", "Discontinued_Competencies_Trackers_Export.zip");
             }
         }
 
