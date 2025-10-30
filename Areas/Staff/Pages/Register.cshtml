@@ -34,6 +34,12 @@
                             </div>
 
                             <div class="form-group mb-3">
+                                <label asp-for="Input.Specialisation" class="form-label fw-bold">Specialisation</label>
+                                <input asp-for="Input.Specialisation" class="form-control" autocomplete="lastName" aria-required="true" placeholder="Specialisation" />
+                                <span asp-validation-for="Input.Specialisation" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
                                 <label asp-for="Input.Password" class="form-label fw-bold">Password</label>
                                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Password" />
                                 <span asp-validation-for="Input.Password" class="text-danger"></span>
