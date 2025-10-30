@@ -156,11 +156,11 @@
             var $detailRow = $masterRow.next('.collapsible-content');
 
             $detailRow.toggle(); // Toggles display: none and display: block
-            $button.html($detailRow.is(':visible') ? iconUp : iconDown); 
+            $button.html($detailRow.is(':visible') ? iconUp : iconDown); // Changes icon accordingly
 
         });
 
-        $('.toggle-details').html(iconDown);
+        $('.toggle-details').html(iconDown); // Initally sets all arrows to down
     });
 </script>
 

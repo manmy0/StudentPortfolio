@@ -200,7 +200,9 @@
                         <td>
                             @if (tracker.Count() > 1)
                             {
-                                <button class="toggle-details">↓</button>
+                                <button class="toggle-details">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7" /></svg>
+                                </button>
                             }
                         </td>
                     </tr>
@@ -278,13 +280,20 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
+        var iconUp = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6M5 12l7-7 7 7"/></svg>';
+        var iconDown = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7"/></svg>';
+
         $('.collapsible-table').on('click', '.toggle-details', function () {
             var $button = $(this);
             var $masterRow = $button.closest('.master-row');
             var $detailRow = $masterRow.next('.collapsible-content');
 
             $detailRow.toggle(); // Toggles display: none and display: block
-            $button.text($detailRow.is(':visible') ? '↑' : '↓'); // Change button text
+            $button.html($detailRow.is(':visible') ? iconUp : iconDown); // Changes arrow accordingly
+
         });
+
+        $('.toggle-details').html(iconDown); // Initally sets all arrows to down
     });
 </script>
+
