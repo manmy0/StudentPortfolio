@@ -1,0 +1,182 @@
+﻿@page
+@model StudentPortfolio.Areas.Staff.Pages.EditFeedbackModel
+@{
+}
+
+<main class="content-area">
+
+    @if (Model.GoalId.HasValue)
+    {
+        <div class="goal-section">
+            <table class="table table-bordered table-striped table-style fs-6">
+                <thead>
+                    <tr>
+                        <th>
+                            SMART Goal
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SelectedGoal.Timeline)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SelectedGoal.Progress)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SelectedGoal.Learnings)
+                        </th>
+                        <th>
+                            Start Date
+                        </th>
+                        <th>
+                            End Date
+                        </th>
+                        <th>
+                            Completed
+                        </th>
+                        <th>
+                            Completion Notes
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => model.SelectedGoal.Description)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(model => model.SelectedGoal.Timeline)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SelectedGoal.Progress)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SelectedGoal.Learnings)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SelectedGoal.StartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SelectedGoal.EndDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SelectedGoal.CompleteDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SelectedGoal.CompletionNotes)
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <hr />
+
+
+            <table class="table table-bordered table-striped fs-6">
+                <thead>
+                    <tr>
+                        <th>
+                            Action Steps
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+
+                        <td style="text-align: center;">
+
+                            @foreach (var step in Model.GoalSteps)
+                            {
+
+                                <ul style="text-align: left;">
+                                    <li>
+                                        @Html.DisplayFor(modelItem => step.Step)
+                                    </li>
+                                </ul>
+
+                            }
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    }
+    else if (Model.CompetencyTrackerId.HasValue)
+    {
+
+        <div class="competency-section">
+            <table class="table table-bordered table-striped collapsible-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>
+                            Competency
+                        </th>
+                        <th>
+                            Link to Indicators
+                        </th>
+                        <th>
+                            Levels
+                        </th>
+                        <th>
+                            Start Date
+                        </th>
+                        <th>
+                            End Date
+                        </th>
+                        <th>
+                            Skill Review
+                        </th>
+                        <th>
+                            Evidence
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="master-row">
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => Model.SelectedCompetency.CompetencyDisplayId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.SelectedCompetency.Description)
+                        </td>
+                        <td>
+                            <a href="@Html.DisplayFor(modelItem => Model.SelectedCompetency.LinkToIndicators)">Indicators</a>
+                        </td>
+                        <td>
+                            @Model.SelectedCompetencyRecord.Level.Name
+                        </td>
+                        <td>
+                            @Model.SelectedCompetencyRecord.StartDate
+                        </td>
+                        <td>
+                            @Model.SelectedCompetencyRecord.EndDate
+                        </td>
+                        <td>
+                            @Model.SelectedCompetencyRecord.SkillsReview
+                        </td>
+                        <td>
+                            <a href="@Model.SelectedCompetencyRecord.Evidence">Evidence</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    }
+
+    <div class="feedback-section">
+        <form method="post">
+            <input type="hidden" asp-for="FeedbackId" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="feedback-textbox">
+                <textarea asp-for="Feedback.FeedbackText" class="form-control" rows="12" placeholder="Write Feedback"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success">Save Changes</button>
+        </form>
+    </div>
+</main>

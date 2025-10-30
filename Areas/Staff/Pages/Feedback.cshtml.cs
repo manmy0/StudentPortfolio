@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace StudentPortfolio.Areas.Staff.Pages
 {
-    [Authorize(Roles="Staff")]
+    [Authorize(Roles = "Staff")]
     public class FeedbackModel : PageModel
     {
         private readonly StudentPortfolio.Data.ApplicationDbContext _context;
@@ -22,7 +22,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
         }
 
-        [BindProperty(Name="goalId", SupportsGet = true)]
+        [BindProperty(Name = "goalId", SupportsGet = true)]
         public int? GoalId { get; set; }
 
         [BindProperty(Name = "compId", SupportsGet = true)]
@@ -75,7 +75,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
             {
                 await LoadCompetencyDataAsync();
             }
-           
+
 
         }
 
@@ -91,7 +91,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
             CurrentUser = await _userManager.FindByIdAsync(userId);
 
 
-          
+
             Feedback.UserId = CurrentUser.Id;
 
             if (GoalId != null)
