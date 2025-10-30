@@ -37,13 +37,12 @@ else
                         <h4>Goal Feedback</h4>
                         @if (studentData.GoalFeedback.Any())
                         {
-                            <table class="table table-striped table-sm">
+                            <table class="table table-sm">
                                 <thead>
                                     <tr>
                                         <th>Goal</th>
                                         <th>Feedback</th>
-                                        <th>Date Created</th>
-                                        <th>Date Updated</th>
+                                        <th>Date</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -54,11 +53,17 @@ else
                                             <td>@Html.DisplayFor(modelItem => item.Goal.Description)</td>
                                             <td>@Html.DisplayFor(modelItem => item.FeedbackText)</td>
                                             <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.DateUpdated)</td>
                                             <td>
-                                                <a asp-page="./Edit" asp-route-id="@item.FeedbackId">Edit</a> |
-                                                <a asp-page="./Details" asp-route-id="@item.FeedbackId">Details</a> |
-                                                <a asp-page="./Delete" asp-route-id="@item.FeedbackId">Delete</a>
+                                                <div class="icon-display">
+                                                    <a asp-page="EditFeedback" asp-route-feedbackId="@item.FeedbackId">
+                                                        <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Feedback">
+                                                    </a>
+                                                    <form asp-page-handler="Delete" method="post" asp-route-id="@item.FeedbackId" onsubmit="return confirm('Are you sure you want to delete this feedback?');">
+                                                        <button class="delete-button" type="submit">
+                                                            <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Feedback" title="Delete Feedback">
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     }
@@ -75,13 +80,13 @@ else
                         <h4>Competency Feedback</h4>
                         @if (studentData.CompFeedback.Any())
                         {
-                            <table class="table table-striped table-sm">
+                            <table class="table table-sm">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th>Competency</th>
                                         <th>Feedback</th>
-                                        <th>Date Created</th>
-                                        <th>Date Updated</th>
+                                        <th>Date</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -89,14 +94,21 @@ else
                                     @foreach (var item in studentData.CompFeedback)
                                     {
                                         <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.CompetencyTracker.Competency.CompetencyDisplayId)</td>
                                             <td>@Html.DisplayFor(modelItem => item.CompetencyTracker.Competency.Description)</td>
                                             <td>@Html.DisplayFor(modelItem => item.FeedbackText)</td>
                                             <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.DateUpdated)</td>
                                             <td>
-                                                <a asp-page="./Edit" asp-route-id="@item.FeedbackId">Edit</a> |
-                                                <a asp-page="./Details" asp-route-id="@item.FeedbackId">Details</a> |
-                                                <a asp-page="./Delete" asp-route-id="@item.FeedbackId">Delete</a>
+                                                <div class="icon-display">
+                                                    <a asp-page="EditFeedback" asp-route-feedbackId="@item.FeedbackId">
+                                                        <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Feedback">
+                                                    </a>
+                                                    <form asp-page-handler="Delete" method="post" asp-route-id="@item.FeedbackId" onsubmit="return confirm('Are you sure you want to delete this feedback?');">
+                                                        <button class="delete-button" type="submit">
+                                                            <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Feedback" title="Delete Feedback">
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     }

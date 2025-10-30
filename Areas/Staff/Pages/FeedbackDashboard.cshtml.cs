@@ -87,8 +87,27 @@ namespace StudentPortfolio.Areas.Staff.Pages
             }
 
         }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var feedbackToDelete = await _context.Feedbacks
+                .FirstOrDefaultAsync(g => g.FeedbackId == id && g.UserId == userId);
+
+            if (feedbackToDelete == null)
+            {
+                return NotFound();
+            }
+
+            _context.Feedbacks.Remove(feedbackToDelete);
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("/FeedbackDashboard");
+        }
     }
 }
+
 
 public class StudentFeedbackViewModel
 {
