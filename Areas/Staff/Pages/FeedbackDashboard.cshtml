@@ -1,67 +1,120 @@
 ﻿@page
-@model StudentPortfolio.Areas.Staff.Pages.FeedbackDashboard2Model
+@model StudentPortfolio.Areas.Staff.Pages.FeedbackDashboardModel
 
 @{
-    ViewData["Title"] = "FeedbackDashboard2";
-    Layout = "~/Areas/Staff/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "FeedbackDashboard";
+    var i = 0; // var for the increment 
+
 }
 
-<h1>FeedbackDashboard</h1>
+<h2>Your Feedback</h2>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Feedback[0].FeedbackText)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Feedback[0].DateCreated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Feedback[0].DateUpdated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Feedback[0].User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Feedback[0].Goal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Feedback[0].CompetencyTracker)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Feedback) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FeedbackText)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateUpdated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Goal.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CompetencyTracker.CompetencyTrackerId)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.FeedbackId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.FeedbackId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.FeedbackId">Delete</a>
-            </td>
-        </tr>
+@if (Model.StudentFeedback.Count() == 0)
+{
+    <div class="alert alert-info" role="alert">
+        No Feedback Given Yet.
+    </div>
+
 }
-    </tbody>
-</table>
+else
+{
+    <div class="accordion" id="studentFeedbackAccordion">
+
+        @foreach (var studentData in Model.StudentFeedback.OrderBy(s => s.Student.LastName))
+        {
+            var collapseId = $"collapse-{i}";
+            var headingId = $"heading-{i}";
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="@headingId">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                        <strong>@studentData.Student.FirstName @studentData.Student.LastName</strong>
+                    </button>
+                </h2>
+                <div id="@collapseId" class="accordion-collapse collapse" aria-labelledby="@headingId" data-bs-parent="#studentFeedbackAccordion">
+                    <div class="accordion-body">
+
+                        <h4>Goal Feedback</h4>
+                        @if (studentData.GoalFeedback.Any())
+                        {
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Goal</th>
+                                        <th>Feedback</th>
+                                        <th>Date Created</th>
+                                        <th>Date Updated</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in studentData.GoalFeedback)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.Goal.Description)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.FeedbackText)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.DateUpdated)</td>
+                                            <td>
+                                                <a asp-page="./Edit" asp-route-id="@item.FeedbackId">Edit</a> |
+                                                <a asp-page="./Details" asp-route-id="@item.FeedbackId">Details</a> |
+                                                <a asp-page="./Delete" asp-route-id="@item.FeedbackId">Delete</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>No goal feedback for this student.</p>
+                        }
+
+                        <hr />
+
+                        <h4>Competency Feedback</h4>
+                        @if (studentData.CompFeedback.Any())
+                        {
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Competency</th>
+                                        <th>Feedback</th>
+                                        <th>Date Created</th>
+                                        <th>Date Updated</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in studentData.CompFeedback)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.CompetencyTracker.Competency.Description)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.FeedbackText)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.DateUpdated)</td>
+                                            <td>
+                                                <a asp-page="./Edit" asp-route-id="@item.FeedbackId">Edit</a> |
+                                                <a asp-page="./Details" asp-route-id="@item.FeedbackId">Details</a> |
+                                                <a asp-page="./Delete" asp-route-id="@item.FeedbackId">Delete</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>No competency feedback for this student.</p>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+            i++; // Increment the counter
+        }
+
+    </div>
+
+}

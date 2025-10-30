@@ -1,0 +1,9 @@
+﻿#studentFeedbackAccordion .accordion-item {
+    margin-bottom: 16px;
+    border-top: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+    border-radius: var(--bs-accordion-border-radius);
+}
+
+h2 {
+    margin-bottom: 20px;
+}
