@@ -43,6 +43,8 @@ namespace StudentPortfolio.Pages.Goals
         public IList<CareerDevelopmentPlan> CDP { get; set; } = default!;
         public IList<GoalStep> GoalSteps { get; set; } = default!;
 
+        public IList<Feedback> Feedbacks { get; set; } = default!;
+
         public async Task OnGetAsync()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -128,6 +130,13 @@ namespace StudentPortfolio.Pages.Goals
                 {
                     PossibleYears.Add(thisYear);
                 }
+
+                Feedbacks = await _context.Feedbacks
+                    .Where(i => goalIds.Contains((long)i.GoalId))
+                    .Include(i => i.Goal)
+                    .Include(i => i.User)
+                    .ToListAsync();
+
             }
         }
 

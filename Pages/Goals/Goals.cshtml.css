@@ -37,6 +37,14 @@
     background-color: transparent
 }
 
+.feedback-button {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    justify-content: center;
+    align-items:center;
+}
+
 
 .info-container {
     display: flex;

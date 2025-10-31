@@ -183,9 +183,107 @@
                             </button>
                         </form>
                     </div>
+                    @if (Model.Feedbacks != null && Model.Feedbacks.Any(i => i.GoalId == item.GoalId))
+                    {
+
+                        // 1. Filter the feedback for the current goal
+                        var goalFeedbacks = Model.Feedbacks.Where(i => i.GoalId == item.GoalId).ToList();
+
+                        // 2. Project the data into a simpler format for JSON serialization
+                        var dataToSerialize = goalFeedbacks.Select(f => new
+                        {
+                            FeedbackText = f.FeedbackText,
+                            DateCreated = f.DateCreated.ToString("yyyy-MM-dd"), // Format date 
+                            Reviewer = f.User != null ? f.User.FirstName + " " + f.User.LastName: "Unknown Reviewer"
+                        });
+
+                        // 3. Serialize the simplified data
+                        var jsonFeedbacks = System.Text.Json.JsonSerializer.Serialize(dataToSerialize);
+
+                        <button type="button"
+                                class="feedback-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#feedbackModal"
+                                data-goal-description="@item.Description"
+                                data-feedbacks="@jsonFeedbacks">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-4z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        </button>
+                    }
+                    
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="feedbackModalLabel">Feedback</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div id="feedbackContent">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+</div>
+
+@section Scripts {
+    <script>
+        // Get the modal element
+        var feedbackModal = document.getElementById('feedbackModal');
+
+        // Check if the modal exists before adding the event listener
+        if (feedbackModal) {
+            // Listen for the 'show.bs.modal' event, which fires just before the modal is shown
+            feedbackModal.addEventListener('show.bs.modal', function (event) {
+                // Button that triggered the modal
+                var button = event.relatedTarget;
+
+                // Extract info from data attributes
+                var goalDescription = button.getAttribute('data-goal-description');
+                var feedbacksJson = button.getAttribute('data-feedbacks');
+
+                // Parse the JSON string back into a JavaScript object (array)
+                var feedbacks;
+                try {
+                    feedbacks = JSON.parse(feedbacksJson);
+                } catch (e) {
+                    console.error("Error parsing feedback JSON:", e);
+                    feedbacks = [];
+                }
+
+                // Prepare the content for the modal body
+                var feedbackContent = feedbackModal.querySelector('#feedbackContent');
+                feedbackContent.innerHTML = ''; // Clear previous content
+
+                if (feedbacks.length > 0) {
+                    var htmlContent = '<div class="list-group">';
+
+                    feedbacks.forEach(function(feedback) {
+                        htmlContent += '<div class="list-group-item list-group-item-action flex-column align-items-start">';
+                        htmlContent += '  <div class="d-flex w-100 justify-content-between">';
+                        htmlContent += '    <h5 class="mb-1 text-primary">Staff Member: ' + (feedback.Reviewer || 'N/A') + '</h5>';
+                        htmlContent += '    <small class="text-muted">' + (feedback.DateCreated || 'N/A') + '</small>';
+                        htmlContent += '  </div>';
+                        htmlContent += '  <p class="mb-1">' + (feedback.FeedbackText || 'No feedback provided.') + '</p>';
+                        htmlContent += '</div>';
+                    });
+
+                    htmlContent += '</div>';
+                    feedbackContent.innerHTML = htmlContent;
+
+                } else {
+                    feedbackContent.innerHTML = '<p class="alert alert-info">No feedback available for this goal.</p>';
+                }
+            });
+        }
+    </script>
+}
