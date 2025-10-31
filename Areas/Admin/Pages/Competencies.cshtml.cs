@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using StudentPortfolio.Models;
+using System.Security.Claims;
 
 namespace StudentPortfolio.Areas.Admin.Pages
 {
@@ -25,11 +26,29 @@ namespace StudentPortfolio.Areas.Admin.Pages
         public async Task OnGetAsync()
         {
             Competencies = await _context.Competencies
-                    .ToListAsync();
+                .Include(i => i.CompetencyTrackers)
+                .ToListAsync();
 
             ParentCompetencies = await _context.Competencies
                 .Where(i => i.ParentCompetencyId == null)
                 .ToListAsync();
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            
+            var competencyToDelete = await _context.Competencies
+                .FirstOrDefaultAsync(g => g.CompetencyId == id);
+
+            if (competencyToDelete == null)
+            {
+                return NotFound();
+            }
+
+            _context.Competencies.Remove(competencyToDelete);
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("/Competencies");
         }
     }
 }
