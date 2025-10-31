@@ -1,7 +1,7 @@
 ﻿@page
-@model StudentPortfolio.Areas.Admin.Pages.AddCompetencyModel
+@model StudentPortfolio.Areas.Admin.Pages.EditCompetencyModel
 @{
-    ViewData["Title"] = "AddCompetency";
+    ViewData["Title"] = "EditCompetency";
 }
 
 <div class="container mt-5">
@@ -14,10 +14,14 @@
 
                 <div class="card-body p-4">
 
-                    <form method="post">
+                    
+                        <h5 class="card-title">@Model.ParentCompetency.CompetencyDisplayId. @Model.ParentCompetency.Description</h5>
+                    
 
+                    <form method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
+                        @* Make sure it's set to the current parent comp (leave selector in case they want to change it)*@
                         <div class="form-group mb-3">
                             <label asp-for="Competency.ParentCompetencyId" class="form-label fw-bold">Competency Group</label>
                             <select asp-for="Competency.ParentCompetencyId" class="form-control w-50">
@@ -41,9 +45,7 @@
                                     <textarea asp-for="Competency.CompetencyDisplayId" class="form-control" rows="1"></textarea>
                                     <span asp-validation-for="Competency.CompetencyDisplayId" class="text-danger"></span>
                                 </div>
-
                             </div>
-
                         </div>
 
                         <div class="form-group mb-3">
@@ -56,6 +58,16 @@
                             <label asp-for="Competency.LinkToIndicators" class="form-label fw-bold">Link to Indicators</label>
                             <input asp-for="Competency.LinkToIndicators" class="form-control" rows="2" />
                             <span asp-validation-for="Competency.LinkToIndicators" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Competency.EndDate" class="form-label fw-bold">Discontinue Competency Date? (will hide the competency from students after this date)</label>
+                                    <input asp-for="Competency.EndDate" class="form-control" type="date" />
+                                    <span asp-validation-for="Competency.EndDate" class="text-danger"></span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-end gap-2 pt-3">

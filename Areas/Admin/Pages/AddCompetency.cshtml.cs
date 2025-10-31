@@ -22,12 +22,13 @@ namespace StudentPortfolio.Areas.Admin.Pages
 
         public IList<Competency> ParentCompetencies { get; set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
             ParentCompetencies = await _context.Competencies
                     .Where(i => i.ParentCompetencyId == null)
                     .ToListAsync();
 
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
