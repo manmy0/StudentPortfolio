@@ -127,9 +127,6 @@
                             End Date
                         </th>
                         <th>
-                            Skill Review
-                        </th>
-                        <th>
                             Evidence
                         </th>
                     </tr>
@@ -155,14 +152,31 @@
                             @Model.SelectedCompetencyRecord.EndDate
                         </td>
                         <td>
-                            @Model.SelectedCompetencyRecord.SkillsReview
-                        </td>
-                        <td>
                             <a href="@Model.SelectedCompetencyRecord.Evidence">Evidence</a>
                         </td>
                     </tr>
                 </tbody>
             </table>
+
+            <hr />
+
+            <table class="table table-bordered table-striped collapsible-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Skill Review
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="master-row">
+                    <tr>
+                        <td>
+                            @Model.SelectedCompetencyRecord.SkillsReview
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
     </div>
 
     }
@@ -170,9 +184,9 @@
     <div class="feedback-section">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-            <div class="feedback-textbox">
-                <textarea asp-for="Feedback.FeedbackText" class="form-control" rows="12" placeholder="Write Feedback"></textarea>
-            </div>
+
+            <textarea asp-for="Feedback.FeedbackText" class="form-control" rows="12" placeholder="Write Feedback"></textarea>
+
             <button type="submit" value="Submit Feedback" class="btn btn-success">Submit</button>
         </form>
     </div>

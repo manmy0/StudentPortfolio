@@ -37,22 +37,22 @@ else
                         <h4>Goal Feedback</h4>
                         @if (studentData.GoalFeedback.Any())
                         {
-                            <table class="table table-sm">
+                            <table class="table table-sm custom-equal-table">
                                 <thead>
                                     <tr>
-                                        <th>Goal</th>
-                                        <th>Feedback</th>
-                                        <th>Date</th>
-                                        <th></th>
+                                        <th class="goal-col">Goal</th>
+                                        <th class="feedback-col">Feedback</th>
+                                        <th class="date-col">Date</th>
+                                        <th class="action-col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in studentData.GoalFeedback)
                                     {
                                         <tr>
-                                            <td>@Html.DisplayFor(modelItem => item.Goal.Description)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.FeedbackText)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                                            <td class="goal-col">@Html.DisplayFor(modelItem => item.Goal.Description)</td>
+                                            <td class="date-col">@Html.DisplayFor(modelItem => item.FeedbackText)</td>
+                                            <td class="action-col">@Html.DisplayFor(modelItem => item.DateCreated)</td>
                                             <td>
                                                 <div class="icon-display">
                                                     <a asp-page="EditFeedback" asp-route-feedbackId="@item.FeedbackId">
@@ -80,25 +80,25 @@ else
                         <h4>Competency Feedback</h4>
                         @if (studentData.CompFeedback.Any())
                         {
-                            <table class="table table-sm">
+                            <table class="table table-sm custom-equal-table">
                                 <thead>
                                     <tr>
-                                        <th></th>
-                                        <th>Competency</th>
-                                        <th>Feedback</th>
-                                        <th>Date</th>
-                                        <th></th>
+                                        <th class="id-col"></th>
+                                        <th class="goal-col">Competency</th>
+                                        <th class="comp-description-col">Feedback</th>
+                                        <th class="date-col">Date</th>
+                                        <th class="action-col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in studentData.CompFeedback)
                                     {
                                         <tr>
-                                            <td>@Html.DisplayFor(modelItem => item.CompetencyTracker.Competency.CompetencyDisplayId)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.CompetencyTracker.Competency.Description)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.FeedbackText)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
-                                            <td>
+                                            <td class="id-col">@Html.DisplayFor(modelItem => item.CompetencyTracker.Competency.CompetencyDisplayId)</td>
+                                            <td class="goal-col">@Html.DisplayFor(modelItem => item.CompetencyTracker.Competency.Description)</td>
+                                            <td class="comp-description-col">@Html.DisplayFor(modelItem => item.FeedbackText)</td>
+                                            <td class="date-col">@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                                            <td class="action-col">
                                                 <div class="icon-display">
                                                     <a asp-page="EditFeedback" asp-route-feedbackId="@item.FeedbackId">
                                                         <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Feedback">
