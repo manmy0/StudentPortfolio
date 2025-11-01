@@ -25,7 +25,15 @@
 
         <!-- header with name and course -->
         <div class="profile-info">
-            <h1>@Model.CurrentUser.FirstName @Model.CurrentUser.LastName (@Model.CurrentUser.PreferedFirstName)</h1>
+            @if (Model.CurrentUser.PreferedFirstName != null)
+            {
+                <h1>@Model.CurrentUser.FirstName @Model.CurrentUser.LastName (@Model.CurrentUser.PreferedFirstName)</h1>
+            }
+            else
+            {
+                <h1>@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h1>
+            }
+            
             <p>@Model.CurrentUser.Degree</p>
             <p>@Model.CurrentUser.Specialisation </p>
         </div>
