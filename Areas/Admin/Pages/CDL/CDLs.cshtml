@@ -27,14 +27,16 @@
         {
             <tr>
                 <td>
-                    @* @if (item.IconImage.Count() > 0)
+                    @if (item.IconImage != null && item.IconImage.Length > 0)
                     {
-                        <img src="@item.IconImage" alt="CDL icon image" class="small-svg" />
+                        var base64 = Convert.ToBase64String(item.IconImage);
+                        var imgSrc = $"data:image/jpeg;base64,{base64}";
+                        <img src="@imgSrc" alt="Icon" width="40" height="40" />
                     }
                     else
                     {
-                        <p>No Icon</p>
-                    } *@
+                        <span>No icon</span>
+                    }
                 </td>
                 <td>
                     <a href="@Html.DisplayFor(modelItem => item.Link)">@Html.DisplayFor(modelItem => item.Title)</a>

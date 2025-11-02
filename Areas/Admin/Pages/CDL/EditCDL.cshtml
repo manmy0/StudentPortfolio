@@ -14,21 +14,15 @@
 
                 <div class="card-body p-4">
 
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                         <input type="hidden" asp-for="Cdl.CdlId" />
                         <input type="hidden" asp-for="Cdl.DateCreated" />
 
-                        
-
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label asp-for="Cdl.Title" class="form-label fw-bold">Title</label>
-                                    <textarea asp-for="Cdl.Title" class="form-control" rows="1"></textarea>
-                                    <span asp-validation-for="Cdl.Title" class="text-danger"></span>
-                                </div>
-                            </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="Cdl.Title" class="form-label fw-bold">Title</label>
+                            <input asp-for="Cdl.Title" class="form-control" rows="2" />
+                            <span asp-validation-for="Cdl.Title" class="text-danger"></span>
                         </div>
 
                         <div class="form-group mb-3">
@@ -38,15 +32,25 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label asp-for="Cdl.Link" class="form-label fw-bold">Link to Indicators</label>
+                            <label asp-for="Cdl.Link" class="form-label fw-bold">External Link</label>
                             <input asp-for="Cdl.Link" class="form-control" rows="2" />
                             <span asp-validation-for="Cdl.Link" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label asp-for="Cdl.Link" class="form-label fw-bold">External Link</label>
-                            <input asp-for="Cdl.Link" class="form-control" rows="2" />
-                            <span asp-validation-for="Cdl.Link" class="text-danger"></span>
+                        @if (Model.Cdl.IconImage != null && Model.Cdl.IconImage.Length > 0)
+                        {
+                            var base64 = Convert.ToBase64String(Model.Cdl.IconImage);
+                            var imgSrc = $"data:image/jpeg;base64,{base64}";
+                            <div>
+                                <p>Current icon:</p>
+                                <img src="@imgSrc" alt="Icon" width="64" height="64" />
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label class="form-label">Icon Image</label>
+                            <input asp-for="IconImage" type="file" class="form-control" accept="image/*" />
+                            <span asp-validation-for="IconImage" class="text-danger"></span>
                         </div>
 
                         <div class="d-flex justify-content-end gap-2 pt-3">
