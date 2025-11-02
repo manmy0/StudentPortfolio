@@ -1,0 +1,61 @@
+﻿@page
+@model StudentPortfolio.Areas.Admin.Pages.CDL.CDLsModel
+@{
+    ViewData["Title"] = "CDLs";
+}
+
+<h3>Career Development Learning Files</h3>
+
+<table class="table  table-bordered table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                Title
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Last Updated
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Cdls)
+        {
+            <tr>
+                <td>
+                    @* @if (item.IconImage.Count() > 0)
+                    {
+                        <img src="@item.IconImage" alt="CDL icon image" class="small-svg" />
+                    }
+                    else
+                    {
+                        <p>No Icon</p>
+                    } *@
+                </td>
+                <td>
+                    <a href="@Html.DisplayFor(modelItem => item.Link)">@Html.DisplayFor(modelItem => item.Title)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastUpdated)
+                </td>
+                <td>
+                    <a asp-area="Admin" asp-page="EditCDL" asp-route-cdlId="@item.CdlId">
+                        <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit CDL" title="Edit CDL">
+                    </a>
+                    <form asp-page-handler="Delete" method="post" asp-route-id="@item.CdlId" onsubmit="return confirm('Are you sure you want to delete this CDL?');">
+                        <button class="delete-button" type="submit" title="Delete CDL">
+                            <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete CDL">
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
