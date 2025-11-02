@@ -16,11 +16,12 @@
 <table class="table  table-bordered table-striped">
     <thead>
         <tr>
+            <th></th>
             <th>
-                @Html.DisplayNameFor(model => model.Cdl[0].Title)
+                Title
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Cdl[0].Description) 
+                Description
             </th>
             <th>
                 Updated
@@ -31,6 +32,18 @@
         @foreach (var item in Model.Cdl)
         {
             <tr>
+                <td>
+                    @if (item.IconImage != null && item.IconImage.Length > 0)
+                    {
+                        var base64 = Convert.ToBase64String(item.IconImage);
+                        var imgSrc = $"data:image/jpeg;base64,{base64}";
+                        <img src="@imgSrc" alt="Icon" width="40" height="40" />
+                    }
+                    else
+                    {
+                        <span>No icon</span>
+                    }
+                </td>
                 <td>
                     <a href="@Html.DisplayFor(modelItem => item.Link)">@Html.DisplayFor(modelItem => item.Title)</a>
                 </td>
