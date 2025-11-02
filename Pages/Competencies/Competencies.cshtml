@@ -11,87 +11,9 @@
     </li>
 }
 
-@* 
-    Checks if there are any discontinued competencies.
-    Won't show discontinued competencies if trackers have been filtered
-        to prevent confusion when the export page isn't filtered.
-*@
 @if (Model.DiscontinuedCompetencies.Count() > 0 && Model.From == null && Model.To == null)
 {
-    <p style="font-size: 18px; line-height: 1.75; font-weight: 600;">These competencies have been discontinued.</p>
-
-    <table class="table table-bordered table-striped collapsible-table">
-        @foreach (var comp in Model.DiscontinuedCompetencies)
-        {
-            <thead>
-                <tr>
-                    <th>
-                        @comp.CompetencyDisplayId
-                    </th>
-                    <th>
-                        @comp.Description
-                    </th>
-                    <th>
-                        <a href="@comp.LinkToIndicators">Indicators</a>
-                    </th>
-                    <th>
-                        Level
-                    </th>
-                    <th>
-                        Start Date
-                    </th>
-                    <th>
-                        End Date
-                    </th>
-                    <th>
-                        Skill Review
-                    </th>
-                    <th>
-                        Evidence
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-
-            @foreach (var tracker in Model.DiscontinuedTrackers.Where(t => t.CompetencyId == comp.CompetencyId))
-            {
-                <tbody class="master-row">
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            @tracker.Level.Name
-                        </td>
-                        <td>
-                            @tracker.StartDate
-                        </td>
-                        <td>
-                            @tracker.EndDate
-                        </td>
-                        <td>
-                            @tracker.SkillsReview
-                        </td>
-                        <td>
-                            <a href="@tracker.Evidence">Evidence</a>
-                        </td>
-                        <td>
-                            <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
-                                <button class="delete-button" type="submit" title="Delete Entry">
-                                    <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Entry">
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            }
-        }
-    </table>
-
-    <div class="d-flex align-items-center gap-3 mb-5">
-        <p class="fw-bold mb-0 me-2">Go to this page to export your entries.</p>
-        <a class="btn btn-warning w-auto d-inline-block" asp-page="/Export/ExportDiscontinuedTrackers">Export</a>
-    </div>
+    <p style="font-size: 18px; line-height: 1.75; font-weight: 600;">You have entries for <b>discontinued competencies</b>.<br /> Go to the bottom of the page to export and delete your entries.</p>
 }
 
 <div class="input-container mb-3">
@@ -273,6 +195,89 @@
             }
         }
     </table>
+}
+
+@* 
+    Checks if there are any discontinued competencies.
+    Won't show discontinued competencies if trackers have been filtered
+        to prevent confusion when the export page isn't filtered.
+*@
+@if (Model.DiscontinuedCompetencies.Count() > 0 && Model.From == null && Model.To == null)
+{
+    <p style="font-size: 18px; line-height: 1.75; font-weight: 600;">These competencies have been discontinued.</p>
+
+    <table class="table table-bordered table-striped collapsible-table">
+        @foreach (var comp in Model.DiscontinuedCompetencies)
+        {
+            <thead>
+                <tr>
+                    <th>
+                        @comp.CompetencyDisplayId
+                    </th>
+                    <th>
+                        @comp.Description
+                    </th>
+                    <th>
+                        <a href="@comp.LinkToIndicators">Indicators</a>
+                    </th>
+                    <th>
+                        Level
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                    <th>
+                        Skill Review
+                    </th>
+                    <th>
+                        Evidence
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            @foreach (var tracker in Model.DiscontinuedTrackers.Where(t => t.CompetencyId == comp.CompetencyId))
+            {
+                <tbody class="master-row">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            @tracker.Level.Name
+                        </td>
+                        <td>
+                            @tracker.StartDate
+                        </td>
+                        <td>
+                            @tracker.EndDate
+                        </td>
+                        <td>
+                            @tracker.SkillsReview
+                        </td>
+                        <td>
+                            <a href="@tracker.Evidence">Evidence</a>
+                        </td>
+                        <td>
+                            <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
+                                <button class="delete-button" type="submit" title="Delete Entry">
+                                    <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Entry">
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        }
+    </table>
+
+    <div class="d-flex align-items-center gap-3 mb-5">
+        <p class="fw-bold mb-0 me-2">Go to this page to export your entries.</p>
+        <a class="btn btn-warning w-auto d-inline-block" asp-page="/Export/ExportDiscontinuedTrackers">Export</a>
+    </div>
 }
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
