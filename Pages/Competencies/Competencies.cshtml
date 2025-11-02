@@ -72,6 +72,7 @@
             if (Model.CompetencyTracker.Where(t => t.CompetencyId == comp.CompetencyId).Count() != 0)
             {
                 var tracker = Model.CompetencyTracker.Where(t => t.CompetencyId == comp.CompetencyId);/*.First();*/
+                var mainTracker = tracker.First();
 
                 <tbody class="master-row">
                     <tr>
@@ -119,6 +120,36 @@
                                     </form>
                                 }
                             </div>
+
+                            @if (Model.Feedbacks != null && Model.Feedbacks.Any(i => i.CompetencyTrackerId == mainTracker.CompetencyTrackerId))
+                            {
+                                // 1. Filter the feedback for the current competency
+                                var compFeedbacks = Model.Feedbacks
+                                .Where(i => i.CompetencyTrackerId == mainTracker.CompetencyTrackerId)
+                                .ToList();
+
+                                // 2. Project the data into a simpler format for JSON serialization
+                                var dataToSerialize = compFeedbacks.Select(f => new
+                                {
+                                    FeedbackText = f.FeedbackText,
+                                    DateCreated = f.DateCreated.ToString("yyyy-MM-dd"),
+                                    Reviewer = f.User != null ? f.User.FirstName + " " + f.User.LastName : "Unknown Reviewer"
+                                });
+
+                                // 3. Serialize the simplified data
+                                var jsonFeedbacks = System.Text.Json.JsonSerializer.Serialize(dataToSerialize);
+
+                                <div class="feedback-button-container">
+                                    <button type="button"
+                                            class="feedback-button"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#feedbackModal"
+                                            data-goal-description="@comp.Description"
+                                            data-feedbacks="@jsonFeedbacks">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-4z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                    </button>
+                                </div>
+                            }
                         </td>
                         <td>
                             @if (tracker.Count() > 1)
