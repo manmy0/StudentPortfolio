@@ -11,6 +11,193 @@
     </li>
 }
 
+@if (Model.DiscontinuedCompetencies.Count() > 0 && Model.From == null && Model.To == null)
+{
+    <p style="font-size: 18px; line-height: 1.75; font-weight: 600;">You have entries for <b>discontinued competencies</b>.<br /> Go to the bottom of the page to export and delete your entries.</p>
+}
+
+<div class="input-container mb-3">
+    <h3>Date Range</h3>
+    <form method="get" class="d-flex align-items-center gap-3">
+        <label for="fromInput">From:</label>
+        <input class="form-control w-auto" type="month" id="fromInput" name="from" value="@Model.From">
+
+        <label for="toInput">To:</label>
+        <input class="form-control w-auto" type="month" id="toInput" name="to" value="=@Model.To">
+
+        <button type="submit" class="btn btn-primary">Filter</button>
+
+        @if (Model.From != null && Model.To != null)
+        {
+            <a asp-page="Competencies" class="btn btn-secondary">Clear</a>
+        }
+    </form>
+</div>
+
+<table class="table table-bordered table-striped collapsible-table">
+
+    @foreach (var parentComp in Model.ParentCompetencies)
+    {
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayFor(modelItem => parentComp.Description)
+                </th>
+                <th>
+                    Link to Indicators
+                </th>
+                <th>
+                    Level
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+                <th>
+                    Skill Review
+                </th>
+                <th>
+                    Evidence
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+
+        @foreach (var comp in Model.Competencies.Where(c => c.ParentCompetencyId == parentComp.CompetencyId))
+        {
+            if (Model.CompetencyTracker.Where(t => t.CompetencyId == comp.CompetencyId).Count() != 0)
+            {
+                var tracker = Model.CompetencyTracker.Where(t => t.CompetencyId == comp.CompetencyId);/*.First();*/
+
+                <tbody class="master-row">
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => comp.CompetencyDisplayId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => comp.Description)
+                        </td>
+                        <td>
+                            <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
+                        </td>
+                        <td>
+                            @tracker.First().Level.Name
+                        </td>
+                        <td>
+                            @tracker.First().StartDate
+                        </td>
+                        <td>
+                            @tracker.First().EndDate
+                        </td>
+                        <td>
+                            @tracker.First().SkillsReview
+                        </td>
+                        <td>
+                            <a href="@tracker.First().Evidence">Evidence</a>
+                        </td>
+                        <td>
+                            <div class="icon-display">
+                                <a asp-page="CreateCompetency" asp-route-competencyId="@comp.CompetencyId">
+                                    <img src="~/img/plus-black-symbol.png" style="height: 30px; width: 30px; margin-right: 13px;" alt="Edit Competency" title="Add Entry">
+                                </a>
+
+                                <a asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">
+                                    <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Entry">
+                                </a>
+
+                                @* Hides the delete button if the entries have been filtered by year so that lower levels can't be deleted *@
+                                @if (Model.From == null && Model.To == null)
+                                {
+                                    <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.First().CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
+                                        <button class="delete-button" type="submit" title="Delete Entry">
+                                            <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Entry">
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            @if (tracker.Count() > 1)
+                            {
+                                <button class="toggle-details">↓</button>
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="collapsible-content" style="display: none;">
+                    @foreach (var level in tracker)
+                    {
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @level.Level.Name
+                            </td>
+                            <td>
+                                @level.StartDate
+                            </td>
+                            <td>
+                                @level.EndDate
+                            </td>
+                            <td>
+                                @level.SkillsReview
+                            </td>
+                            <td>
+                                <a href="@level.Evidence">Evidence</a>
+                            </td>
+                            <td>
+                                <div class="icon-display">
+                                    <a asp-page="EditCompetency" asp-route-competencyTrackerId="@tracker.First().CompetencyTrackerId">
+                                        <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Entry">
+                                    </a>
+                                    @* <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.First().CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
+                                    <button type="submit" class="btn btn-danger">Delete</button> @*Delete the entry for this level(can't delete lower levels)
+                                </form> *@
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            }
+            else if (Model.From == null && Model.To == null)
+            {
+                <tbody class="master-row">
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => comp.CompetencyDisplayId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => comp.Description)
+                        </td>
+                        <td>
+                            <a href="@Html.DisplayFor(modelItem => comp.LinkToIndicators)">Indicators</a>
+                        </td>
+                        <td>
+                            <p>Emerging</p>
+                        </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td>
+                            <a asp-page="CreateCompetency" asp-route-competencyId="@comp.CompetencyId">
+                                <img src="~/img/plus-black-symbol.png" style="height: 30px; width: 30px; margin-right: 13px;" alt="Edit Competency" title="Add Entry">
+                            </a>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        }
+    }
+</table>
+
 @* 
     Checks if there are any discontinued competencies.
     Won't show discontinued competencies if trackers have been filtered

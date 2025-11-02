@@ -60,6 +60,16 @@
                                 <a class="nav-link text-dark" asp-area="Admin" asp-page="/Competencies">Competencies</a>
                             </li>
                         }
+                        @if (IsSectionDefined("CDLNav"))
+                        {
+                            @RenderSection("CDLNav", required: false)
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-page="/CDL/CDLs">CDLs</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

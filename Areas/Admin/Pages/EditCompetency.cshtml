@@ -1,0 +1,94 @@
+﻿@page
+@model StudentPortfolio.Areas.Admin.Pages.EditCompetencyModel
+@{
+    ViewData["Title"] = "EditCompetency";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 col-lg-6 mx-auto">
+            <div class="card shadow-sm border-1 rounded-3">
+                <div class="card-header bg-light text-black text-center rounded-top-4">
+                    <h4 class="mb-0">Edit Competency</h4>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="Competency.CompetencyId" />
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Competency.ParentCompetencyId" class="form-label fw-bold">Competency Group</label>
+                                    <select asp-for="Competency.ParentCompetencyId" class="form-select">
+                                        <option value="">(No competency group/Create new competency group)</option>
+                                        @if (Model.ParentCompetencies != null)
+                                        {
+                                            @foreach (var parent in Model.ParentCompetencies)
+                                            {
+                                                <option value="@parent.CompetencyId">@parent.CompetencyDisplayId. @parent.Description</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Competency.ParentCompetencyId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Competency.CompetencyDisplayId" class="form-label fw-bold">Competency Display ID</label>
+                                    <textarea asp-for="Competency.CompetencyDisplayId" class="form-control" rows="1"></textarea>
+                                    <span asp-validation-for="Competency.CompetencyDisplayId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Competency.Description" class="form-label fw-bold">Description</label>
+                            <textarea asp-for="Competency.Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Competency.Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Competency.LinkToIndicators" class="form-label fw-bold">Link to Indicators</label>
+                            <input asp-for="Competency.LinkToIndicators" class="form-control" rows="2" />
+                            <span asp-validation-for="Competency.LinkToIndicators" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-4">
+                            <label asp-for="Competency.EndDate" class="form-label fw-bold">Discontinue Competency Date? <br /> (will hide the competency from students after this date)</label>
+                            @if (Model.Competency.ParentCompetencyId == null)
+                            {
+                                <p class="fw-bold"><b>WARNING:</b> Setting a Discontinue Date for a competency group will update the discontinue date of each competency in this group</p>
+                            }
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input asp-for="Competency.EndDate" class="form-control" type="date" />
+                                    <span asp-validation-for="Competency.EndDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 pt-3">
+                            <a class="btn btn-danger" asp-page="/Competencies">Cancel</a>
+                            <input type="submit" value="Update Competency" class="btn btn-success" />
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
