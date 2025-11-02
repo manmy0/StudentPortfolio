@@ -42,9 +42,14 @@
     outline: none;
     background-color: transparent;
     justify-content: center;
-    align-items:center;
+    align-items: center;
 }
 
+.feedback-button-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 5px;
+}
 
 .info-container {
     display: flex;

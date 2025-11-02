@@ -200,14 +200,16 @@
                         // 3. Serialize the simplified data
                         var jsonFeedbacks = System.Text.Json.JsonSerializer.Serialize(dataToSerialize);
 
-                        <button type="button"
-                                class="feedback-button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#feedbackModal"
-                                data-goal-description="@item.Description"
-                                data-feedbacks="@jsonFeedbacks">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-4z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        </button>
+                        <div class="feedback-button-container">
+                            <button type="button"
+                                    class="feedback-button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#feedbackModal"
+                                    data-goal-description="@item.Description"
+                                    data-feedbacks="@jsonFeedbacks">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-4z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </button>
+                        </div>
                     }
                     
                 </td>
@@ -242,13 +244,13 @@
 
         // Check if the modal exists before adding the event listener
         if (feedbackModal) {
-            // Listen for the 'show.bs.modal' event, which fires just before the modal is shown
+
+            // Listen for the 'show.bs.modal' event, which starts just before the modal is shown
             feedbackModal.addEventListener('show.bs.modal', function (event) {
                 // Button that triggered the modal
                 var button = event.relatedTarget;
 
                 // Extract info from data attributes
-                var goalDescription = button.getAttribute('data-goal-description');
                 var feedbacksJson = button.getAttribute('data-feedbacks');
 
                 // Parse the JSON string back into a JavaScript object (array)

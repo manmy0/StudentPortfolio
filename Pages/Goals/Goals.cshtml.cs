@@ -131,6 +131,7 @@ namespace StudentPortfolio.Pages.Goals
                     PossibleYears.Add(thisYear);
                 }
 
+                // Get feedback data
                 Feedbacks = await _context.Feedbacks
                     .Where(i => goalIds.Contains((long)i.GoalId))
                     .Include(i => i.Goal)
