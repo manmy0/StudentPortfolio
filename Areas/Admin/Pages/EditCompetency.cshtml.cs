@@ -57,10 +57,27 @@ namespace StudentPortfolio.Areas.Admin.Pages
         public async Task<IActionResult> OnPostAsync()
         {
             Competency.LastUpdated = DateTime.Now;
-
-            //_context.Attach(Competency).State = EntityState.Modified;
             
             _context.Competencies.Update(Competency);
+
+            // Check if this competency is a parent (ParentCompetencyId == null)
+            if (Competency.ParentCompetencyId == null && Competency.EndDate != null)
+            {
+                // Find all child competencies linked to this parent
+                var childCompetencies = await _context.Competencies
+                    .Where(c => c.ParentCompetencyId == Competency.CompetencyId)
+                    .ToListAsync();
+
+                // Update their EndDate and LastUpdated values
+                foreach (var child in childCompetencies)
+                {
+                    child.EndDate = Competency.EndDate;
+                    child.LastUpdated = DateTime.Now;
+                }
+
+                // Apply those updates to EF
+                _context.Competencies.UpdateRange(childCompetencies);
+            }
 
             try
             {
@@ -78,8 +95,6 @@ namespace StudentPortfolio.Areas.Admin.Pages
                 }
             }
 
-            //_context.Competencies.Add(Competency);
-            //await _context.SaveChangesAsync();
             return RedirectToPage("/Competencies");
         }
 
