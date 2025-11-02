@@ -16,6 +16,14 @@
                     @Html.DisplayFor(modelItem => parentComp.Description)
                 </th>
                 <th>
+                    <p>Last Updated</p>
+                    @parentComp.LastUpdated
+                </th>
+                <th>
+                    <p>Discontinued Date</p>
+                    @parentComp.EndDate
+                </th>
+                <th>
                     <a asp-area="Admin" asp-page="EditCompetency" asp-route-competencyTrackerId="@parentComp.CompetencyId">
                         <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Competency group" title="Edit Competency Group">
                     </a>
@@ -31,6 +39,12 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => comp.Description)
+                    </td>
+                    <td>
+                        @comp.LastUpdated
+                    </td>
+                    <td>
+                        @comp.EndDate
                     </td>
                     <td>
                         <a asp-area="Admin" asp-page="EditCompetency" asp-route-competencyId="@comp.CompetencyId">

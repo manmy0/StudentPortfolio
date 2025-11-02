@@ -51,8 +51,6 @@ namespace StudentPortfolio.Areas.Admin.Pages
                 .Where(i => i.ParentCompetencyId == null)
                 .ToListAsync();
 
-            
-
             return Page();
         }
 
@@ -60,9 +58,34 @@ namespace StudentPortfolio.Areas.Admin.Pages
         {
             Competency.LastUpdated = DateTime.Now;
 
-            _context.Competencies.Add(Competency);
-            await _context.SaveChangesAsync();
+            //_context.Attach(Competency).State = EntityState.Modified;
+            
+            _context.Competencies.Update(Competency);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CompetencyExists(Competency.CompetencyId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            //_context.Competencies.Add(Competency);
+            //await _context.SaveChangesAsync();
             return RedirectToPage("/Competencies");
+        }
+
+        private bool CompetencyExists(long id)
+        {
+            return _context.Competencies.Any(e => e.CompetencyId == id);
         }
     }
 }

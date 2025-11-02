@@ -14,29 +14,28 @@
 
                 <div class="card-body p-4">
 
-                    
-                        <h5 class="card-title">@Model.ParentCompetency.CompetencyDisplayId. @Model.ParentCompetency.Description</h5>
-                    
-
                     <form method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="Competency.CompetencyId" />
 
-                        @* Make sure it's set to the current parent comp (leave selector in case they want to change it)*@
-                        <div class="form-group mb-3">
-                            <label asp-for="Competency.ParentCompetencyId" class="form-label fw-bold">Competency Group</label>
-                            <select asp-for="Competency.ParentCompetencyId" class="form-control w-50">
-                                <option value="">(No competency group/Create new competency group)</option>
-                                @if (Model.ParentCompetencies != null)
-                                {
-                                    @foreach (var parent in Model.ParentCompetencies)
-                                    {
-                                        <option value="@parent.CompetencyId">@parent.CompetencyDisplayId. @parent.Description</option>
-                                    }
-                                }
-                            </select>
-                            <span asp-validation-for="Competency.ParentCompetencyId" class="text-danger"></span>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Competency.ParentCompetencyId" class="form-label fw-bold">Competency Group</label>
+                                    <select asp-for="Competency.ParentCompetencyId" class="form-select">
+                                        <option value="">(No competency group/Create new competency group)</option>
+                                        @if (Model.ParentCompetencies != null)
+                                        {
+                                            @foreach (var parent in Model.ParentCompetencies)
+                                            {
+                                                <option value="@parent.CompetencyId">@parent.CompetencyDisplayId. @parent.Description</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Competency.ParentCompetencyId" class="text-danger"></span>
+                                </div>
+                            </div>
                         </div>
-
 
                         <div class="row mb-4">
                             <div class="col-md-6">
@@ -61,9 +60,10 @@
                         </div>
 
                         <div class="row mb-4">
+                            <label asp-for="Competency.EndDate" class="form-label fw-bold">Discontinue Competency Date? (will hide the competency from students after this date)</label>
+
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Competency.EndDate" class="form-label fw-bold">Discontinue Competency Date? (will hide the competency from students after this date)</label>
                                     <input asp-for="Competency.EndDate" class="form-control" type="date" />
                                     <span asp-validation-for="Competency.EndDate" class="text-danger"></span>
                                 </div>
@@ -72,7 +72,7 @@
 
                         <div class="d-flex justify-content-end gap-2 pt-3">
                             <a class="btn btn-danger" asp-page="/Competencies">Cancel</a>
-                            <input type="submit" value="Create Competency" class="btn btn-success" />
+                            <input type="submit" value="Update Competency" class="btn btn-success" />
                         </div>
 
                     </form>

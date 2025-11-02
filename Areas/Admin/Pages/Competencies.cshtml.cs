@@ -27,10 +27,12 @@ namespace StudentPortfolio.Areas.Admin.Pages
         {
             Competencies = await _context.Competencies
                 .Include(i => i.CompetencyTrackers)
+                .OrderBy(i => i.CompetencyDisplayId)
                 .ToListAsync();
 
             ParentCompetencies = await _context.Competencies
                 .Where(i => i.ParentCompetencyId == null)
+                .OrderBy(i => i.CompetencyDisplayId)
                 .ToListAsync();
         }
 
