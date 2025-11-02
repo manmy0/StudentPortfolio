@@ -60,7 +60,11 @@
                         </div>
 
                         <div class="row mb-4">
-                            <label asp-for="Competency.EndDate" class="form-label fw-bold">Discontinue Competency Date? (will hide the competency from students after this date)</label>
+                            <label asp-for="Competency.EndDate" class="form-label fw-bold">Discontinue Competency Date? <br /> (will hide the competency from students after this date)</label>
+                            @if (Model.Competency.ParentCompetencyId == null)
+                            {
+                                <p class="fw-bold"><b>WARNING:</b> Setting a Discontinue Date for a competency group will update the discontinue date of each competency in this group</p>
+                            }
 
                             <div class="col-md-6">
                                 <div class="form-group">
