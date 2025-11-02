@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,5 +21,6 @@ public partial class Competency
 
     public DateOnly? EndDate { get; set; }
 
+    [ValidateNever]
     public virtual ICollection<CompetencyTracker> CompetencyTrackers { get; set; } = [];
 }

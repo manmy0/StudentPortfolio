@@ -41,37 +41,37 @@
 
 <div class="info-container">
     <div class="info-row">
-        <label for="prof">Professional Interests:</label>
+        <label class="mb-1" for="prof">Professional Interests:</label>
         <textarea id="prof" class="form-control" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().ProfessionalInterests)</textarea>
     </div>
 
     <div class="info-row">
-        <label for="emp">Employers of Interest:</label>
+        <label class="mb-1" for="emp">Employers of Interest:</label>
         <textarea id="emp" class="form-control" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().EmployersOfInterest)</textarea>
     </div>
 
     <div class="info-row">
-        <label for="net">Networking Plan:</label>
+        <label class="mb-1" for="net">Networking Plan:</label>
         <textarea id="net" class="form-control" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().NetworkingPlan)</textarea>
     </div>
 
     <div class="info-row">
-        <label for="per">Personal Values:</label>
+        <label class="mb-1" for="per">Personal Values:</label>
         <textarea id="per" class="form-control" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().PersonalValues)</textarea>
     </div>
 
     <div class="info-row">
-        <label for="extra">Extracurricular:</label>
+        <label class="mb-1" for="extra">Extracurricular:</label>
         <textarea id="extra" class="form-control" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().Extracurricular)</textarea>
     </div>
 
     <div class="info-row">
-        <label for="dev">Development Focus for This Year:</label>
+        <label class="mb-1" for="dev">Development Focus for This Year:</label>
         <textarea id="dev" class="form-control large" readonly>@Html.DisplayFor(model => model.CDP.FirstOrDefault().DevelopmentFocus)</textarea>
     </div>
 </div>
 
-<a class="btn btn-primary" asp-page="Create">New Goal</a>
+<a class="btn btn-primary mt-4" asp-page="Create">New Goal</a>
 
 <div class="input-container mb-3">
     <h3>Date Range</h3>
