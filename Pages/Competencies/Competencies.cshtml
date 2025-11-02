@@ -24,7 +24,7 @@
 
         <label for="toInput">To:</label>
         <input class="form-control w-auto" type="month" id="toInput" name="to" value="=@Model.To">
-        
+
         <button type="submit" class="btn btn-primary">Filter</button>
 
         @if (Model.From != null && Model.To != null)
@@ -34,9 +34,10 @@
     </form>
 </div>
 
-@foreach (var parentComp in Model.ParentCompetencies)
-{
-    <table class="table table-bordered table-striped collapsible-table">
+<table class="table table-bordered table-striped collapsible-table">
+
+    @foreach (var parentComp in Model.ParentCompetencies)
+    {
         <thead>
             <tr>
                 <th></th>
@@ -114,7 +115,7 @@
                                     <form asp-page-handler="Delete" method="post" asp-route-id="@tracker.First().CompetencyTrackerId" onsubmit="return confirm('Are you sure you want to delete this competency entry?');">
                                         <button class="delete-button" type="submit" title="Delete Entry">
                                             <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Entry">
-                                        </button> 
+                                        </button>
                                     </form>
                                 }
                             </div>
@@ -194,8 +195,8 @@
                 </tbody>
             }
         }
-    </table>
-}
+    }
+</table>
 
 @* 
     Checks if there are any discontinued competencies.
