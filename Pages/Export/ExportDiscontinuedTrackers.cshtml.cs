@@ -81,10 +81,11 @@ namespace StudentPortfolio.Pages.Export
                 .ThenByDescending(i => i.EndDate)
                 .ToListAsync();
 
-            var competencies = await _context.Competencies
-                .Where(c => c.EndDate <= currentDate)
+            var competencies = discontinuedTrackers
+                    .Select(c => c.Competency)
+                    .DistinctBy(c => c.CompetencyId)
                 .OrderBy(i => i.CompetencyDisplayId)
-                .ToListAsync();
+                .ToList();
 
             if (discontinuedTrackers.Count() > 0)
             {

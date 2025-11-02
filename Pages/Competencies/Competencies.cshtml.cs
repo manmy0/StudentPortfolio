@@ -81,6 +81,7 @@ namespace StudentPortfolio.Pages.Competencies
                 
                 ParentCompetencies = await _context.Competencies
                     .Where(i => i.ParentCompetencyId == null)
+                    .Where(i => i.EndDate > currentDate || i.EndDate == null)
                     .ToListAsync();
 
 
