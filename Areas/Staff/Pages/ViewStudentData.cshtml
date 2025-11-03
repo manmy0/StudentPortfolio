@@ -52,11 +52,11 @@
 
 <div class="collapse" id="goalContainer">
     <div class="mt-3">
-        @if (Model.GoalsData!= null)
+        @if (Model.GoalsData != null && Model.GoalsData.GoalData.Any())
         {
             <partial name="_SmartGoals" model="Model.GoalsData" />
         }
-        else
+        else 
         {
             <div class="alert alert-info" role="alert">
                 No Goals found for the selected year.
@@ -67,11 +67,11 @@
 
 <div class="collapse" id="networkingContainer">
     <div class="mt-3">
-        @if (Model.NetworkingData != null)
+        @if (Model.NetworkingData != null && Model.NetworkingData.NetworkingEvents.Any())
         {
             <partial name="_Networking" model="Model.NetworkingData" />
         }
-        else
+        else 
         {
             <div class="alert alert-info" role="alert">
                 No Networking Data found.
@@ -82,7 +82,7 @@
 
 <div class="collapse" id="competencyContainer">
     <div class="mt-3">
-        @if (Model.CompetencyData != null)
+        @if (Model.CompetencyData != null && Model.CompetencyData.CompetencyTrackers.Any())
         {
             <partial name="_Competencies" model="Model.CompetencyData" />
         }

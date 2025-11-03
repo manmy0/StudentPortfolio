@@ -28,6 +28,9 @@
                 Name
             </th>
             <th>
+                Specialisation
+            </th>
+            <th>
                 View Data
             </th>
         </tr>
@@ -40,6 +43,9 @@
                     <td><input type="checkbox" class="rowCheckbox" name="SelectedStaffIds" value="@item.Id"></td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Specialisation)
                 </td>
                 <td>
                         <a asp-area="Admin" asp-page="/EditStaff" asp-route-userName="@item.UserName">

@@ -1,0 +1,48 @@
+﻿h2 {
+    margin-bottom: 20px;
+}
+
+.icon-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.delete-button {
+    border: none;
+    outline: none;
+    background-color: transparent
+}
+
+.custom-equal-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+    .custom-equal-table .id-col {
+        width: 5%;
+        white-space: nowrap;
+    }
+
+    .custom-equal-table .comp-description-col {
+        width: 25%;
+    }
+
+    .custom-equal-table .goal-col {
+        width: 30%;
+    }
+
+    .custom-equal-table .feedback-col {
+        width: 45%;
+    }
+
+    .custom-equal-table .date-col {
+        width: 15%;
+        white-space: nowrap;
+    }
+
+    .custom-equal-table .action-col {
+        width: 10%;
+        white-space: nowrap;
+    }

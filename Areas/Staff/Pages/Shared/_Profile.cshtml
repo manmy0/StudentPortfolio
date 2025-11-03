@@ -7,7 +7,7 @@
             <img src="@Model.ProfileImageBase64" alt="Profile image"
                  class="img-fluid rounded-circle mb-3"
                  style="width: 150px; height: 150px; object-fit: cover;">
-            <h3 class="card-title">@Model.User.FirstName @Model.User.LastName</h3>
+            <h3 class="card-title">@Model.User.FirstName @Model.User.LastName (@Model.User.PreferedFirstName)</h3>
             <p class="card-text text-muted">@Model.User.Degree</p>
         </div>
     </div>
@@ -17,10 +17,63 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-body py-2">
-            <p>@Model.User.Introduction</p>
+            @if (Model.User.Introduction != null) {
+                <p>@Model.User.Introduction</p>
+
+            }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    No Introduction Set.
+                </div>
+            }
           
         </div>
     </div>
 </div>
+
+<div class="col-12 col-md-5 d-flex flex-column">
+    <h4 class="align-content-center">Upcoming Actions for Personal Development</h4>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body py-2">
+            @if (Model.CDP?.NetworkingPlan != null)
+            {
+                <p>@Model.CDP.NetworkingPlan</p>
+
+            }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    No Upcoming Actions for Personal Development
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-md-5 d-flex flex-column">
+    <h4 class="align-content-center">Links</h4>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body py-2">
+
+            <ul>
+                <li><a href="@Model.User.LinkedIn">LinkedIn</a></li>
+                <li><a href="@Model.User.Resume">Resume</a></li>
+                <li><a href="@Model.User.CoverLetter">Cover Letter</a></li>
+
+                @foreach (var link in Model.UserLinks)
+                {
+                    <li><a href="@link.Link">External Link</a></li>
+                }
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
 
 

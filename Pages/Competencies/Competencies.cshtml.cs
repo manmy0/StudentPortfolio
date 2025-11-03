@@ -42,6 +42,8 @@ namespace StudentPortfolio.Pages.Competencies
         public IList<CompetencyTracker> DiscontinuedTrackers { get; set; } = default!;
         public IList<Competency> DiscontinuedCompetencies { get; set; } = default!;
 
+        public IList<Feedback> Feedbacks { get; set; } = default!;
+
         public async Task OnGetAsync()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -108,6 +110,15 @@ namespace StudentPortfolio.Pages.Competencies
                 {
                     CompetencyTracker = competencyTrackers;
                 }
+
+                var trackerIds = competencyTrackers.Select(t => t.CompetencyTrackerId).ToList(); // Gets all trackerIds 
+
+                // Get feedback data 
+                Feedbacks = await _context.Feedbacks
+                    .Where(i => trackerIds.Contains((long)i.CompetencyTrackerId))
+                    .Include(i => i.CompetencyTracker)
+                    .Include(i => i.User)
+                    .ToListAsync();
 
             }
         }

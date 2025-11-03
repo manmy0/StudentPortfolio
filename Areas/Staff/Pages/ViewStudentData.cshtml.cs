@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using StudentPortfolio.Models;
 using StudentPortfolio.Models.Staff_Models;
@@ -48,27 +49,53 @@ namespace StudentPortfolio.Areas.Staff.Pages
                 return;
             }
 
-            ProfileData = new ProfileData
-            {
-                User = user,
-                ProfileImageBase64 = user?.ProfileImage != null
-                ? $"data:image/jpeg;base64,{Convert.ToBase64String(user.ProfileImage)}"
-                : null
-            };
+            
+            // Get all the years from each area
+            var cdpYears = await _context.CareerDevelopmentPlans
+                   .Where(i => i.UserId == user.Id)
+                   .Select(c => c.Year)
+                   .ToListAsync();
 
-            var allCDPs = await _context.CareerDevelopmentPlans
-                        .Where(i => i.UserId == user.Id)
-                        .OrderByDescending(c => c.Year) 
-                        .ToListAsync();
+            var goalYears = await _context.Goals
+                    .Where(i => i.UserId == user.Id && i.StartDate.HasValue)
+                    .Select(i => (short)i.StartDate.Value.Year)
+                    .ToListAsync();
 
-            AvailableYears = allCDPs.Select(c => c.Year).Distinct().ToList();
+            var networkingYears = await _context.NetworkingEvents
+                    .Where(i => i.UserId == user.Id)
+                    .Select(i => (short)i.Date.Value.Year)
+                    .ToListAsync();
+
+            var competencyYears = await _context.CompetencyTrackers
+                    .Where(i => i.UserId == user.Id && i.StartDate.Year != null)
+                    .Select(i => (short)i.StartDate.Year)
+                    .ToListAsync();
+
+            // Combine all years
+            var allYears = cdpYears
+                .Union(goalYears)
+                .Union(networkingYears)
+                .Union(competencyYears);
+
+            // Get distinct years
+            AvailableYears = allYears
+                 .Distinct()
+                 .OrderByDescending(y => y)
+                 .ToList();
+
 
             // Determine which year to display
             if (selectedYear == null && AvailableYears.Any())
             {
                 // If no year is selected, default to the most recent year
                 selectedYear = AvailableYears.First();
-            }
+            }   
+            
+ 
+            var allCDPs = await _context.CareerDevelopmentPlans
+                        .Where(i => i.UserId == user.Id)
+                        .OrderByDescending(c => c.Year) 
+                        .ToListAsync();
 
             // Find the specific CDP for the selected year
             if (selectedYear != null)
@@ -80,6 +107,20 @@ namespace StudentPortfolio.Areas.Staff.Pages
                 // No CDPs exist for this user
                 CDP = null;
             }
+
+            var links = await _context.UserLinks
+                .Where(i => i.UserId == user.Id)
+                .ToListAsync();
+
+            ProfileData = new ProfileData
+            {
+                User = user,
+                ProfileImageBase64 = user?.ProfileImage != null
+                ? $"data:image/jpeg;base64,{Convert.ToBase64String(user.ProfileImage)}"
+                : null,
+                CDP = CDP,
+                UserLinks = links
+            };
 
             List<Goal> filteredGoals = new List<Goal>();
             List<GoalStep> filteredGoalSteps = new List<GoalStep>();
@@ -118,7 +159,8 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
 
             filteredEvents = await _context.NetworkingEvents
-                .Where(i => i.UserId == user.Id)
+                .Where(i => i.UserId == user.Id &&
+                    i.Date.Value.Year == selectedYear.Value)
                 .ToListAsync();
 
             var eventIds = filteredEvents.Select(i => i.EventId).ToList();
@@ -131,7 +173,8 @@ namespace StudentPortfolio.Areas.Staff.Pages
             }
 
             filteredContacts = await _context.IndustryContactLogs
-                .Where(i => i.UserId == user.Id)
+                .Where(i => i.UserId == user.Id 
+                        && i.DateMet.Value.Year == selectedYear.Value)
                 .ToListAsync();
 
             var contactIds = filteredQuestions.Select(i => i.EventId).ToList();
@@ -145,6 +188,7 @@ namespace StudentPortfolio.Areas.Staff.Pages
 
             NetworkingData = new NetworkingData
             {
+                User = user,
                 NetworkingContacts = filteredContacts,
                 NetworkingContactInfo = filteredInfo,
                 NetworkingQuestions = filteredQuestions,

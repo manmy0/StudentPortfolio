@@ -17,6 +17,7 @@ namespace StudentPortfolio.Areas.Admin.Pages
             _userManager = userManager;
         }
 
+        // Gets the username from the URL
         [BindProperty(Name = "userName", SupportsGet = true)]
         public string UserName { get; set; }
 
@@ -32,10 +33,12 @@ namespace StudentPortfolio.Areas.Admin.Pages
                 return NotFound($"Unable to load user");
             }
 
+            // Adds the user's information to the AdminInputModel
             Input = new AdminInputModel
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                Email = user.Email
 
             };
 
@@ -56,8 +59,10 @@ namespace StudentPortfolio.Areas.Admin.Pages
                 return NotFound($"Unable to load user");
             }
 
+            // Sets each of the user values to the values in the form
             user.FirstName = Input.FirstName;
             user.LastName = Input.LastName;
+            user.Email = Input.Email;
 
             var result = await _userManager.UpdateAsync(user);
 
@@ -74,10 +79,12 @@ namespace StudentPortfolio.Areas.Admin.Pages
         }
     }
 
+    // AdminInputModel is only used in this class, so it is here
     public class AdminInputModel
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public string? Email { get; set; }
    
     }
 }
