@@ -30,7 +30,15 @@
                     <img src="@Model.ProfileImageBase64" alt="Profile image"
                          class="img-fluid rounded-circle mb-3"
                          style="width: 150px; height: 150px; object-fit: cover;">
-                    <h3 class="card-title">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h3>
+                    @if (Model.CurrentUser.PreferedFirstName != null)
+                    {
+                        <h3 class="card-title">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName (@Model.CurrentUser.PreferedFirstName)</h3>
+                    }
+                    else
+                    {
+                        <h3 class="card-title">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h3>
+                    }
+
                     <p class="card-text text-muted">@Model.CurrentUser.Degree</p>
                 </div>
             </div>
