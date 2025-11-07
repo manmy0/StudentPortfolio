@@ -18,8 +18,6 @@ namespace StudentPortfolio.Data
 
         public virtual DbSet<CompetencyTracker> CompetencyTrackers { get; set; }
 
-        public virtual DbSet<ContactsOfInterest> ContactsOfInterests { get; set; }
-
         public virtual DbSet<Goal> Goals { get; set; }
 
         public virtual DbSet<GoalStep> GoalSteps { get; set; }
@@ -180,27 +178,6 @@ namespace StudentPortfolio.Data
                 //    .HasForeignKey(d => d.LevelId)
                 //    .OnDelete(DeleteBehavior.ClientSetNull)
                 //    .HasConstraintName("FK_CompetencyTracker_Level");
-            });
-
-            modelBuilder.Entity<ContactsOfInterest>(entity =>
-            {
-                entity.HasKey(e => e.ContactOfInterestId);
-
-                entity.ToTable("ContactsOfInterest");
-
-                entity.HasIndex(e => e.ContactOfInterestId, "UQ_ContactsOfInterest_Id").IsUnique();
-
-                entity.Property(e => e.ContactOfInterestId).HasColumnName("contactOfInterestId");
-                entity.Property(e => e.ContactDetails)
-                    .HasMaxLength(255)
-                    .HasColumnName("contactDetails");
-                entity.Property(e => e.UserId)
-                    .HasMaxLength(450)
-                    .HasColumnName("userId");
-
-                entity.HasOne(d => d.User).WithMany(p => p.ContactsOfInterests)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_ContactsOfInterest_Users");
             });
 
             modelBuilder.Entity<Goal>(entity =>

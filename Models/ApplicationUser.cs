@@ -32,8 +32,6 @@ namespace StudentPortfolio.Models
 
         public virtual required ICollection<CompetencyTracker> CompetencyTrackers{ get; set; }
 
-        public virtual required ICollection<ContactsOfInterest> ContactsOfInterests { get; set; }
-
         public virtual required ICollection<Goal> Goals { get; set; }
 
         public virtual required ICollection<IndustryContactLog> IndustryContactLogs { get; set; }
