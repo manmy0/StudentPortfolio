@@ -1,0 +1,132 @@
+﻿@page
+@model StudentPortfolio.Areas.Staff.Pages.Feedbacks.FeedbackDashboardModel
+
+@{
+    ViewData["Title"] = "FeedbackDashboard";
+    var i = 0; // var for the increment 
+
+}
+
+<h2>Your Feedback</h2>
+
+@if (Model.StudentFeedback.Count() == 0)
+{
+    <div class="alert alert-info" role="alert">
+        No Feedback Given Yet.
+    </div>
+
+}
+else
+{
+    <div class="accordion" id="studentFeedbackAccordion">
+
+        @foreach (var studentData in Model.StudentFeedback.OrderBy(s => s.Student.LastName))
+        {
+            var collapseId = $"collapse-{i}";
+            var headingId = $"heading-{i}";
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="@headingId">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                        <strong>@studentData.Student.FirstName @studentData.Student.LastName</strong>
+                    </button>
+                </h2>
+                <div id="@collapseId" class="accordion-collapse collapse" aria-labelledby="@headingId" data-bs-parent="#studentFeedbackAccordion">
+                    <div class="accordion-body">
+
+                        <h4>Goal Feedback</h4>
+                        @if (studentData.GoalFeedback.Any())
+                        {
+                            <table class="table table-sm custom-equal-table">
+                                <thead>
+                                    <tr>
+                                        <th class="goal-col">Goal</th>
+                                        <th class="feedback-col">Feedback</th>
+                                        <th class="date-col">Date</th>
+                                        <th class="action-col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in studentData.GoalFeedback)
+                                    {
+                                        <tr>
+                                            <td class="goal-col">@Html.DisplayFor(modelItem => item.Goal.Description)</td>
+                                            <td class="date-col">@Html.DisplayFor(modelItem => item.FeedbackText)</td>
+                                            <td class="action-col">@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                                            <td>
+                                                <div class="icon-display">
+                                                    <a asp-page="/Feedbacks/EditFeedback" asp-route-feedbackId="@item.FeedbackId">
+                                                        <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Feedback">
+                                                    </a>
+                                                    <form asp-page-handler="Delete" method="post" asp-route-id="@item.FeedbackId" onsubmit="return confirm('Are you sure you want to delete this feedback?');">
+                                                        <button class="delete-button" type="submit">
+                                                            <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Feedback" title="Delete Feedback">
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>No goal feedback for this student.</p>
+                        }
+
+                        <hr />
+
+                        <h4>Competency Feedback</h4>
+                        @if (studentData.CompFeedback.Any())
+                        {
+                            <table class="table table-sm custom-equal-table">
+                                <thead>
+                                    <tr>
+                                        <th class="id-col"></th>
+                                        <th class="goal-col">Competency</th>
+                                        <th class="comp-description-col">Feedback</th>
+                                        <th class="date-col">Date</th>
+                                        <th class="action-col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in studentData.CompFeedback)
+                                    {
+                                        <tr>
+                                            <td class="id-col">@Html.DisplayFor(modelItem => item.CompetencyTracker.Competency.CompetencyDisplayId)</td>
+                                            <td class="goal-col">@Html.DisplayFor(modelItem => item.CompetencyTracker.Competency.Description)</td>
+                                            <td class="comp-description-col">@Html.DisplayFor(modelItem => item.FeedbackText)</td>
+                                            <td class="date-col">@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                                            <td class="action-col">
+                                                <div class="icon-display">
+                                                    <a asp-page="/Feedbacks/EditFeedback" asp-route-feedbackId="@item.FeedbackId">
+                                                        <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit Entry" title="Edit Feedback">
+                                                    </a>
+                                                    <form asp-page-handler="Delete" method="post" asp-route-id="@item.FeedbackId" onsubmit="return confirm('Are you sure you want to delete this feedback?');">
+                                                        <button class="delete-button" type="submit">
+                                                            <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete Feedback" title="Delete Feedback">
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>No competency feedback for this student.</p>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+            i++; // Increment the counter
+        }
+
+    </div>
+
+}

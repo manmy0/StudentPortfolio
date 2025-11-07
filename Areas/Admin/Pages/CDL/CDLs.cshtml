@@ -48,14 +48,16 @@
                     @Html.DisplayFor(modelItem => item.LastUpdated)
                 </td>
                 <td>
-                    <a asp-area="Admin" asp-page="EditCDL" asp-route-cdlId="@item.CdlId">
-                        <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit CDL" title="Edit CDL">
-                    </a>
-                    <form asp-page-handler="Delete" method="post" asp-route-id="@item.CdlId" onsubmit="return confirm('Are you sure you want to delete this CDL?');">
-                        <button class="delete-button" type="submit" title="Delete CDL">
-                            <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete CDL">
-                        </button>
-                    </form>
+                    <div class="icon-display">
+                        <a asp-area="Admin" asp-page="EditCDL" asp-route-cdlId="@item.CdlId">
+                            <img src="~/img/edit-icon-png-3602.png" style="height: 30px; width: 30px;" alt="Edit CDL" title="Edit CDL">
+                        </a>
+                        <form asp-page-handler="Delete" method="post" asp-route-id="@item.CdlId" onsubmit="return confirm('Are you sure you want to delete this CDL?');">
+                            <button class="delete-button" type="submit" title="Delete CDL">
+                                <img src="~/img/garbage-bin-png-10491.png" style="height: 40px; width: 40px;" alt="Delete CDL">
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         }

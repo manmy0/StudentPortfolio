@@ -1,0 +1,12 @@
+﻿.icon-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.delete-button {
+    border: none;
+    outline: none;
+    background-color: transparent
+}
