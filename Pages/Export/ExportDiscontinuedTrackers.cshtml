@@ -4,6 +4,12 @@
     ViewData["Title"] = "ExportDiscontinuedTrackers";
 }
 
+@section CompetenciesNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-page="/Competencies/Competencies">Competencies</a>
+    </li>
+}
+
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0" >Export Competency Tracker Entries</h4>
     <form method="post" asp-page-handler="ExportPortfolio">
