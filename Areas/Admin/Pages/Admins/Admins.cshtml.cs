@@ -39,11 +39,19 @@ namespace StudentPortfolio.Areas.Admin.Pages.Admins
                 // Normalize the search string into lowercase and remove leading spaces
                 var search = searchString.Trim().ToLower();
 
-                // Filter users whose FirstName OR LastName contains the search string
+                // Filter users whose FirstName or LastName contains the search string
                 query = query.Where(s =>
-                    (s.FirstName != null && s.FirstName.ToLower().Contains(search)) ||
-                    (s.LastName != null && s.LastName.ToLower().Contains(search))
-                );
+
+                   // Checks if the search matches the first name
+                   (s.FirstName != null && s.FirstName.ToLower().Contains(search)) ||
+
+                   // Checks if the search matches the last name
+                   (s.LastName != null && s.LastName.ToLower().Contains(search)) ||
+
+                   // Checks if the search matches the combined full name 
+                   (s.FirstName != null && s.LastName != null && (s.FirstName + " " + s.LastName).ToLower().Contains(search))
+            );
+
             }
 
             Users = query.ToList();
