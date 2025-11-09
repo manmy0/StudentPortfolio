@@ -5,6 +5,12 @@
     ViewData["Title"] = "Admins";
 }
 
+@section AdminNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-area="Admin" asp-page="/Admins/Admins">Admins</a>
+    </li>
+}
+
 <a class="btn btn-success" style="margin-bottom: 20px;" asp-area="Admin" asp-page="/Register">Register New Admin</a>
 
 <form asp-page-handler="Search" method="get" style="margin-bottom: 20px;" class="d-flex">

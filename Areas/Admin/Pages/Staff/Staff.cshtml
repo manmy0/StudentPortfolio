@@ -1,8 +1,13 @@
 ﻿@page
 @model StudentPortfolio.Areas.Admin.Pages.Staff.StaffModel
-
 @{
     ViewData["Title"] = "Staff";
+}
+
+@section StaffNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-area="Admin" asp-page="/Staff/Staff">Staff</a>
+    </li>
 }
 
 <a class="btn btn-success" style="margin-bottom: 20px;" asp-area="Staff" asp-page="/Register">Register New Staff</a>

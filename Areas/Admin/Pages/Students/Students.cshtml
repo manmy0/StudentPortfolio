@@ -4,6 +4,12 @@
     ViewData["Title"] = "Students";
 }
 
+@section StudentNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-area="Admin" asp-page="/Students/Students">Students</a>
+    </li>
+}
+
 <a class="btn btn-success" style="margin-bottom: 20px;" asp-area="Identity" asp-page="/Account/Register">Register New Student</a>
 
 <form asp-page-handler="Search" method="get" style="margin-bottom: 20px;" class="d-flex">

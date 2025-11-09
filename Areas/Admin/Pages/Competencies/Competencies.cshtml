@@ -4,6 +4,12 @@
     ViewData["Title"] = "Competencies";
 }
 
+@section CompetenciesNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-area="Admin" asp-page="/Competencies/Competencies">Competencies</a>
+    </li>
+}
+
 <a class="btn btn-success" style="margin-bottom: 20px;" asp-area="Admin" asp-page="/Competencies/AddCompetency">Add New Competency</a>
 
 <p style="font-size: 18px; line-height: 1.75; font-weight: 600;">

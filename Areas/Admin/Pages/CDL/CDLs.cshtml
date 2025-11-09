@@ -4,6 +4,12 @@
     ViewData["Title"] = "CDLs";
 }
 
+@section CDLNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-area="Admin" asp-page="/CDL/CDLs">CDLs</a>
+    </li>
+}
+
 <a class="btn btn-success" style="margin-bottom: 20px;" asp-area="Admin" asp-page="CreateCDL">Add New CDL</a>
 
 <table class="table  table-bordered table-striped">
