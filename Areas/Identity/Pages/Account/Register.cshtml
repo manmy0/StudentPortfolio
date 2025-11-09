@@ -4,12 +4,20 @@
     ViewData["Title"] = "Register a Student";
 }
 
-<h1 style="text-align:center; margin-top:100px; margin-bottom: 10px;">@ViewData["Title"]</h1>
+@section StudentNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-area="Admin" asp-page="/Students/Students">Students</a>
+    </li>
+}
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card shadow-sm border-1 rounded-4">
+                <div class="card-header bg-light text-black text-center rounded-top-4">
+                    <h4 class="mb-0">@ViewData["Title"]</h4>
+                </div>
+
                 <div class="card-body p-4">
                     <section>
                         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
@@ -57,9 +65,9 @@
                                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                             </div>
 
-
-                            <div>
-                                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                            <div class="d-flex justify-content-end gap-2 pt-3">
+                                <a class="btn btn-danger" asp-area="Admin" asp-page="/Students/Students">Cancel</a>
+                                <button id="registerSubmit" type="submit" class="btn btn-success">Register Student</button>
                             </div>
                         </form>
                     </section>
