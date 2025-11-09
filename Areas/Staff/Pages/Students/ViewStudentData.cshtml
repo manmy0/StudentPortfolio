@@ -4,6 +4,12 @@
     ViewData["Title"] = "View Data";
 }
 
+@section StudentNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-area="Staff" asp-page="/Students/Students">Students</a>
+    </li>
+}
+
 <form method="get">
     <input type="hidden" name="userName" value="@Model.UserName" />
 

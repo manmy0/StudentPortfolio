@@ -157,33 +157,35 @@ namespace StudentPortfolio.Areas.Staff.Pages.Students
             List<IndustryContactLog> filteredContacts = new List<IndustryContactLog>();
             List<IndustryContactInfo> filteredInfo = new List<IndustryContactInfo>();
 
-
-            filteredEvents = await _context.NetworkingEvents
+            if (selectedYear != null)
+            {
+                filteredEvents = await _context.NetworkingEvents
                 .Where(i => i.UserId == user.Id &&
                     i.Date.Value.Year == selectedYear.Value)
                 .ToListAsync();
 
-            var eventIds = filteredEvents.Select(i => i.EventId).ToList();
+                var eventIds = filteredEvents.Select(i => i.EventId).ToList();
 
-            if (eventIds.Any())
-            {
-                filteredQuestions = await _context.NetworkingQuestions
-                    .Where(i => eventIds.Contains(i.EventId))
+                if (eventIds.Any())
+                {
+                    filteredQuestions = await _context.NetworkingQuestions
+                        .Where(i => eventIds.Contains(i.EventId))
+                        .ToListAsync();
+                }
+
+                filteredContacts = await _context.IndustryContactLogs
+                    .Where(i => i.UserId == user.Id
+                            && i.DateMet.Value.Year == selectedYear.Value)
                     .ToListAsync();
-            }
 
-            filteredContacts = await _context.IndustryContactLogs
-                .Where(i => i.UserId == user.Id 
-                        && i.DateMet.Value.Year == selectedYear.Value)
-                .ToListAsync();
+                var contactIds = filteredQuestions.Select(i => i.EventId).ToList();
 
-            var contactIds = filteredQuestions.Select(i => i.EventId).ToList();
-
-            if (contactIds.Any())
-            {
-                filteredInfo = await _context.IndustryContactInfos
-                    .Where(i => contactIds.Contains(i.ContactId))
-                    .ToListAsync();
+                if (contactIds.Any())
+                {
+                    filteredInfo = await _context.IndustryContactInfos
+                        .Where(i => contactIds.Contains(i.ContactId))
+                        .ToListAsync();
+                }
             }
 
             NetworkingData = new NetworkingData

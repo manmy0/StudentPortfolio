@@ -4,6 +4,12 @@
     ViewData["Title"] = "Feedback";
 }
 
+@section StudentNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-area="Staff" asp-page="/Students/Students">Students</a>
+    </li>
+}
+
 <main class="content-area">
 
     @if (Model.GoalId.HasValue) {

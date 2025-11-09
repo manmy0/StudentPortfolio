@@ -1,10 +1,15 @@
 ﻿@page
 @model StudentPortfolio.Areas.Staff.Pages.Feedbacks.FeedbackDashboardModel
-
 @{
     ViewData["Title"] = "FeedbackDashboard";
     var i = 0; // var for the increment 
 
+}
+
+@section FeedbackNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-area="Staff" asp-page="/Feedbacks/FeedbackDashboard">Feedback</a>
+    </li>
 }
 
 <h2>Your Feedback</h2>

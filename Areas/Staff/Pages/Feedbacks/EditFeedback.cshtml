@@ -3,6 +3,12 @@
 @{
 }
 
+@section FeedbackNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-area="Staff" asp-page="/Feedbacks/FeedbackDashboard">Feedback</a>
+    </li>
+}
+
 <main class="content-area">
 
     @if (Model.GoalId.HasValue)

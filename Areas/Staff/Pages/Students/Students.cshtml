@@ -4,6 +4,12 @@
     ViewData["Title"] = "Students";
 }
 
+@section StudentNav {
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" asp-area="Staff" asp-page="/Students/Students">Students</a>
+    </li>
+}
+
 <form asp-page-handler="Search" method="get" style="margin-bottom: 20px;" class="d-flex">
     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="SearchString" value="@Model.SearchString">
     <button class="btn btn-outline-success" type="submit">Search</button>
